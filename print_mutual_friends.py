@@ -2,29 +2,25 @@
 # This file is licensed under the terms of the MIT License.
 # See LICENSE.txt for details.
 
-import api
+import api, sys
 
 def users_get(user_ids):
-    return api.users_get(user_ids=','.join(user_ids))
+    response = api.users_get(user_ids=','.join(user_ids),
+                             fields='screen_name')
+    if len(response) < len(user_ids):
+        print('Error: couldn\'t find at least one of the users!',
+              file=sys.stderr)
+        sys.exit(1)
+    return response
 
 def friends_get(user_id):
     return api.friends_get(user_id=user_id)
 
-def format_user_name(user):
-    return '{} {}'.format(user['last_name'], user['first_name'])
-
-def join_user_names(user_names):
-    return '{} and {}'.format(', '.join(user_names[:-1]), user_names[-1])
-
-def print_mutual_friends(users, mutual_friends):
-    user_names = list(map(format_user_name, users))
-    user_names = join_user_names(user_names)
-    if not mutual_friends:
-        print('{} don\'t have any mutual friends'.format(user_names))
-    else:
-        print('{} are friends with these guys:'.format(user_names))
-        for friend in mutual_friends:
-            print('\t{}'.format(format_user_name(friend)))
+def format_friend(user):
+    s = '{} {}'.format(user['last_name'], user['first_name'])
+    if 'screen_name' in user:
+        s += ' ({})'.format(user['screen_name'])
+    return s
 
 if __name__ == '__main__':
     import argparse
@@ -34,9 +30,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
     users = users_get(args.user_ids)
     user_ids = map(lambda user: user['uid'], users)
-    friend_lists = map(friends_get, user_ids)
-    friend_lists = map(frozenset, friend_lists)
+    friend_lists = map(frozenset, map(friends_get, user_ids))
     mutual_friends = frozenset.intersection(*friend_lists)
     if mutual_friends:
-        mutual_friends = users_get(map(str, mutual_friends))
-    print_mutual_friends(users, mutual_friends)
+        mutual_friends = users_get(list(map(str, mutual_friends)))
+        for friend in mutual_friends:
+            print(format_friend(friend))

@@ -10,7 +10,7 @@ def call_method(method_name, **kwargs):
     response = json.loads(urllib.request.urlopen(url).read().decode())
     if 'response' not in response:
         print(response, file=sys.stderr)
-        sys.exit(-1)
+        sys.exit(1)
     return response['response']
 
 def users_get(**kwargs):

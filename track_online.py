@@ -4,12 +4,18 @@
 
 from datetime import datetime
 import time
+import sys
 
 import api
 
 def users_get(user_ids):
-    return api.users_get(user_ids=','.join(user_ids),
-                         fields='online,last_seen')
+    response = api.users_get(user_ids=','.join(user_ids),
+                             fields='online,last_seen')
+    if len(response) < len(user_ids):
+        print('Error: couldn\'t find at least one of the users!',
+              file=sys.stderr)
+        sys.exit(1)
+    return response
 
 def log(s):
     print('[{}] {}'.format(datetime.now().replace(microsecond=0), s))
