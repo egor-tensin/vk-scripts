@@ -10,7 +10,7 @@ To use this software, you need to be able to run Python 3 scripts.
 
 Track when people go online/offline:
 
-    track_online.py [SCREEN_NAME...]
+    track_online.py [-h] [-t TIMEOUT] [-l LOG] UID [UID ...]
 
 For example,
 
@@ -20,7 +20,7 @@ For example,
 
 Learn who your ex and her new boyfriend are both friends with:
 
-    print_mutual_friends.py [SCREEN_NAME...]
+    print_mutual_friends.py [-h] UID [UID ...]
 
 For example,
 
