@@ -6,7 +6,7 @@ import json, sys, urllib.request
 
 def call_method(method_name, **kwargs):
     get_args = '&'.join(map(lambda k: '{}={}'.format(k, kwargs[k]), kwargs))
-    url = 'https://api.vk.com/method/{}?{}'.format(method_name, get_args)
+    url = 'https://api.vk.com/method/{}?lang=en&{}'.format(method_name, get_args)
     response = json.loads(urllib.request.urlopen(url).read().decode())
     if 'response' not in response:
         print(response, file=sys.stderr)
