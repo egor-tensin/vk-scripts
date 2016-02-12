@@ -4,27 +4,28 @@ A collection of scripts abusing VK.com API.
 
 ## Usage
 
-To use this software, you need to be able to run Python 3 scripts.
+To use this software, you need to be able to run Python 3 scripts (3.4 or higher
+is required).
 
-### track_online.py
+### track_status.py
 
 Track when people go online/offline:
 
-    track_online.py [-h] [-t TIMEOUT] [-l LOG] UID [UID ...]
+    track_status.py [-h] [-t TIMEOUT] [-l LOG] UID [UID ...]
 
 For example,
 
-    track_online.py egor.tensin id5245998
+    track_status.py egor.tensin id5245998
 
-### print_mutual_friends.py
+### mutual_friends.py
 
 Learn who your ex and her new boyfriend are both friends with:
 
-    print_mutual_friends.py [-h] UID [UID ...]
+    mutual_friends.py [-h] UID [UID ...]
 
 For example,
 
-    print_mutual_friends.py egor.tensin durov
+    mutual_friends.py egor.tensin durov
 
 ## Licensing
 
