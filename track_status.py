@@ -30,6 +30,9 @@ def format_user_went_online(user):
 def format_user_went_offline(user):
     return '{} went OFFLINE'.format(format_user(user))
 
+def user_is_online(user):
+    logging.info(format_user_is_online(user))
+
 def user_is_offline(user):
     logging.info(format_user_is_offline(user))
     logging.info(format_user_last_seen(user))

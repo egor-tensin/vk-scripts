@@ -81,11 +81,20 @@ class API:
     def _lang_is_specified(self):
         return self.lang != Language.DEFAULT
 
-    def _call_method(self, method, **kwargs):
-        get_args = '&'.join(map(lambda k: '{}={}'.format(k, kwargs[k]), kwargs))
+    def _format_method_params(self, **kwargs):
+        params = '&'.join(map(lambda k: '{}={}'.format(k, kwargs[k]), kwargs))
         if self._lang_is_specified():
-            get_args += '&lang={}'.format(self.lang.value)
-        url = 'https://api.vk.com/method/{}?{}'.format(method, get_args)
+            if params:
+                params += '&'
+            params += 'lang={}'.format(self.lang)
+        return params
+
+    def _build_method_url(self, method, **kwargs):
+        return 'https://api.vk.com/method/{}?{}'.format(
+            method, self._format_method_params(**kwargs))
+
+    def _call_method(self, method, **kwargs):
+        url = self._build_method_url(method, **kwargs)
         response = json.loads(urllib.request.urlopen(url).read().decode())
         if 'response' not in response:
             raise self.Error(response)
