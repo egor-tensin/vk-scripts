@@ -41,7 +41,7 @@ def user_went_online(user):
     logging.info(format_user_went_online(user))
 
 def user_went_offline(user):
-    logging.info(format_usre_went_offline(user))
+    logging.info(format_user_went_offline(user))
 
 def print_status(user):
     if user.is_online():
