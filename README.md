@@ -1,4 +1,4 @@
-# VK scripts
+# VK tools
 
 A collection of scripts abusing VK.com API.
 
@@ -9,26 +9,26 @@ is required).
 
 ### track_status.py
 
-Track when people go online/offline:
+Track when people go online/offline.
 
-    track_status.py [-h] [-t TIMEOUT] [-l LOG] UID [UID ...]
+    usage: track_status.py [-h] [-t TIMEOUT] [-l LOG] UID [UID ...]
 
 For example,
 
-    track_status.py egor.tensin id5245998
+    > track_status.py egor.tensin id1
 
 ### mutual_friends.py
 
-Learn who your ex and her new boyfriend are both friends with:
+Learn who your ex and her new boyfriend are both friends with.
 
-    mutual_friends.py [-h] UID [UID ...]
+    usage: mutual_friends.py [-h] UID [UID ...]
 
 For example,
 
-    mutual_friends.py egor.tensin durov
+    > mutual_friends.py egor.tensin durov
 
 ## Licensing
 
 This project, including all of the files and their contents, is licensed under
 the terms of the MIT License.
-See [LICENSE.txt](LICENSE.txt) for details.
+See LICENSE.txt for details.
