@@ -1,4 +1,4 @@
-# VK tools
+# VK scripts
 
 A collection of scripts abusing VK.com API.
 
