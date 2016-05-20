@@ -27,8 +27,12 @@ For example,
 
     > mutual_friends.py egor.tensin durov
 
-## Licensing
+## License
 
 This project, including all of the files and their contents, is licensed under
 the terms of the MIT License.
-See LICENSE.txt for details.
+See [LICENSE.txt] for details.
+
+
+
+[LICENSE.txt]: LICENSE.txt
