@@ -2,10 +2,11 @@
 
 A collection of scripts abusing VK.com API.
 
-## Usage
+## Prerequisites
 
-To use this software, you need to be able to run Python 3 scripts (3.4 or
-higher is required).
+* Python (3.4 or higher)
+
+## Usage
 
 ### track_status.py
 
