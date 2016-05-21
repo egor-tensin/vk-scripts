@@ -4,8 +4,8 @@ A collection of scripts abusing VK.com API.
 
 ## Usage
 
-To use this software, you need to be able to run Python 3 scripts (3.4 or higher
-is required).
+To use this software, you need to be able to run Python 3 scripts (3.4 or
+higher is required).
 
 ### track_status.py
 
@@ -32,7 +32,5 @@ For example,
 This project, including all of the files and their contents, is licensed under
 the terms of the MIT License.
 See [LICENSE.txt] for details.
-
-
 
 [LICENSE.txt]: LICENSE.txt
