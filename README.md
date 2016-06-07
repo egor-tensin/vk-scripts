@@ -1,12 +1,11 @@
-# VK scripts
+VK scripts
+==========
 
 A collection of scripts abusing VK.com API.
+Requires Python 3.4 or higher.
 
-## Prerequisites
-
-* Python (3.4 or higher)
-
-## Usage
+Usage
+-----
 
 ### track_status.py
 
@@ -28,7 +27,8 @@ For example,
 
     > mutual_friends.py egor.tensin durov
 
-## License
+License
+-------
 
 This project, including all of the files and their contents, is licensed under
 the terms of the MIT License.
