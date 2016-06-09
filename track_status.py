@@ -65,7 +65,10 @@ def loop_update_status(api, uids, timeout=DEFAULT_TIMEOUT):
         print_status(users[uid])
     while True:
         time.sleep(timeout)
-        updated_users = update_status(api, uids)
+        try:
+            updated_users = update_status(api, uids)
+        except API.ConnectionError:
+            continue
         for uid in updated_users:
             if users[uid].is_online() != updated_users[uid].is_online():
                 users[uid] = updated_users[uid]

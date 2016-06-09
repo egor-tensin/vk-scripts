@@ -7,6 +7,7 @@ from datetime import datetime
 from enum import Enum
 import json
 import sys
+from urllib.error import URLError
 import urllib.request
 
 class Language(Enum):
@@ -74,6 +75,20 @@ class User:
         def __str__(self):
             return self.value
 
+
+class Error(RuntimeError):
+    pass
+
+class InvalidResponseError(Error):
+    def __init__(self, response):
+        self.response = response
+
+    def __str__(self):
+        return str(self.response)
+
+class ConnectionError(Error):
+    pass
+
 class API:
     def __init__(self, lang=Language.DEFAULT):
         self.lang = lang
@@ -95,10 +110,14 @@ class API:
 
     def _call_method(self, method, **kwargs):
         url = self._build_method_url(method, **kwargs)
-        response = json.loads(urllib.request.urlopen(url).read().decode())
-        if 'response' not in response:
-            raise self.Error(response)
-        return response['response']
+        try:
+            with urllib.request.urlopen(url) as request:
+                response = json.loads(request.read().decode())
+                if 'response' not in response:
+                    raise InvalidResponseError(response)
+                return response['response']
+        except URLError:
+            raise ConnectionError()
 
     @staticmethod
     def _format_param_values(xs):
@@ -119,10 +138,3 @@ class API:
             Method.FRIENDS_GET,
             user_id=str(user_id),
             fields=self._format_param_values(fields)))
-
-    class Error(RuntimeError):
-        def __init__(self, impl):
-            self._impl = impl
-
-        def __str__(self):
-            return repr(self._impl)
