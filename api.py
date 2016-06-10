@@ -75,18 +75,17 @@ class User:
         def __str__(self):
             return self.value
 
-
-class Error(RuntimeError):
+class APIError(RuntimeError):
     pass
 
-class InvalidResponseError(Error):
+class InvalidAPIResponseError(APIError):
     def __init__(self, response):
         self.response = response
 
     def __str__(self):
         return str(self.response)
 
-class ConnectionError(Error):
+class APIConnectionError(APIError):
     pass
 
 class API:
@@ -114,10 +113,10 @@ class API:
             with urllib.request.urlopen(url) as request:
                 response = json.loads(request.read().decode())
                 if 'response' not in response:
-                    raise InvalidResponseError(response)
+                    raise InvalidAPIResponseError(response)
                 return response['response']
         except URLError:
-            raise ConnectionError()
+            raise APIConnectionError()
 
     @staticmethod
     def _format_param_values(xs):
