@@ -4,7 +4,9 @@
 
 import logging, time
 
-from api import *
+import vk.api
+import vk.error
+import vk.user
 
 def format_user(user):
     if user.has_last_name():
@@ -52,7 +54,7 @@ def print_status_update(user):
     else:
         user_went_offline(user)
 
-USER_FIELDS = User.Field.ONLINE, User.Field.LAST_SEEN
+USER_FIELDS = vk.user.Field.ONLINE, vk.user.Field.LAST_SEEN
 
 def update_status(api, uids):
     return {user.get_uid(): user for user in api.users_get(uids, USER_FIELDS)}
@@ -67,7 +69,7 @@ def loop_update_status(api, uids, timeout=DEFAULT_TIMEOUT):
         time.sleep(timeout)
         try:
             updated_users = update_status(api, uids)
-        except APIConnectionError:
+        except vk.error.ConnectionError:
             continue
         for uid in updated_users:
             if users[uid].is_online() != updated_users[uid].is_online():
@@ -101,7 +103,7 @@ if __name__ == '__main__':
                         level=logging.INFO,
                         datefmt='%Y-%m-%d %H:%M:%S')
 
-    api = API(Language.EN)
+    api = vk.api.API(vk.api.Language.EN)
 
     try:
         loop_update_status(api, args.uids, timeout=args.timeout)

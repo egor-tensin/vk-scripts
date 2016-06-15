@@ -2,13 +2,14 @@
 # This file is licensed under the terms of the MIT License.
 # See LICENSE.txt for details.
 
-import collections
-from datetime import datetime
+from collections import Iterable
 from enum import Enum
 import json
-import sys
 from urllib.error import URLError
 import urllib.request
+
+import vk.error
+from vk.user import User
 
 class Language(Enum):
     DEFAULT = None
@@ -23,70 +24,6 @@ class Method(Enum):
 
     def __str__(self):
         return self.value
-
-class User:
-    def __init__(self, impl):
-        self._impl = impl
-
-    def get_uid(self):
-        return self._impl[self.Field.UID.value]
-
-    def get_first_name(self):
-        return self._impl[self.Field.FIRST_NAME.value]
-
-    def get_last_name(self):
-        return self._impl[self.Field.LAST_NAME.value]
-
-    def has_last_name(self):
-        return self.Field.LAST_NAME.value in self._impl and self.get_last_name()
-
-    def has_screen_name(self):
-        return self.Field.SCREEN_NAME.value in self._impl
-
-    def get_screen_name(self):
-        if self.has_screen_name():
-            return self._impl[self.Field.SCREEN_NAME.value]
-        else:
-            return 'id' + str(self.get_uid())
-
-    def is_online(self):
-        return self._impl[self.Field.ONLINE.value]
-
-    def get_last_seen(self):
-        return datetime.fromtimestamp(self._impl[self.Field.LAST_SEEN.value]['time'])
-
-    def __str__(self):
-        return repr(self._impl)
-
-    def __hash__(self):
-        return hash(self.get_uid())
-
-    def __eq__(self, other):
-        return self.get_uid() == other.get_uid()
-
-    class Field(Enum):
-        UID = 'uid'
-        FIRST_NAME = 'first_name'
-        LAST_NAME = 'last_name'
-        SCREEN_NAME = 'screen_name'
-        ONLINE = 'online'
-        LAST_SEEN = 'last_seen'
-
-        def __str__(self):
-            return self.value
-
-class APIError(RuntimeError):
-    pass
-
-class InvalidAPIResponseError(APIError):
-    def __init__(self, response):
-        self.response = response
-
-    def __str__(self):
-        return str(self.response)
-
-class APIConnectionError(APIError):
-    pass
 
 class API:
     def __init__(self, lang=Language.DEFAULT):
@@ -113,16 +50,16 @@ class API:
             with urllib.request.urlopen(url) as request:
                 response = json.loads(request.read().decode())
                 if 'response' not in response:
-                    raise InvalidAPIResponseError(response)
+                    raise vk.error.InvalidResponseError(response)
                 return response['response']
         except URLError:
-            raise APIConnectionError()
+            raise vk.error.ConnectionError()
 
     @staticmethod
     def _format_param_values(xs):
         if isinstance(xs, str):
             return xs
-        if isinstance(xs, collections.Iterable):
+        if isinstance(xs, Iterable):
             return ','.join(map(str, xs))
         return str(xs)
 

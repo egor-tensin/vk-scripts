@@ -2,10 +2,11 @@
 # This file is licensed under the terms of the MIT License.
 # See LICENSE.txt for details.
 
-from api import *
+import vk.api
+import vk.user
 
 def query_friends(api, user):
-    return api.friends_get(user.get_uid(), fields=User.Field.SCREEN_NAME)
+    return api.friends_get(user.get_uid(), fields=vk.user.Field.SCREEN_NAME)
 
 def format_user(user):
     if user.has_last_name():
@@ -23,8 +24,8 @@ if __name__ == '__main__':
                         help='user IDs or "screen names"')
     args = parser.parse_args()
 
-    api = API(Language.EN)
-    users = api.users_get(args.uids, fields=User.Field.SCREEN_NAME)
+    api = vk.api.API(vk.api.Language.EN)
+    users = api.users_get(args.uids, fields=vk.user.Field.SCREEN_NAME)
 
     friend_lists = map(lambda user: frozenset(query_friends(api, user)), users)
     mutual_friends = frozenset.intersection(*friend_lists)
