@@ -14,7 +14,7 @@ from vk.user import Field
 def query_friend_list(api, user):
     return api.friends_get(user.get_uid(), fields=Field.SCREEN_NAME)
 
-OUTPUT_FIELDS = Field.FIRST_NAME, Field.LAST_NAME, Field.SCREEN_NAME
+OUTPUT_FIELDS = Field.UID, Field.FIRST_NAME, Field.LAST_NAME, Field.SCREEN_NAME
 
 def extract_output_fields(user):
     new_user = OrderedDict()
@@ -23,7 +23,7 @@ def extract_output_fields(user):
     return new_user
 
 def print_mutual_friends_csv(mutual_friends):
-    writer = csv.writer(sys.stdout)
+    writer = csv.writer(sys.stdout, lineterminator='\n')
     for user in mutual_friends:
         user = extract_output_fields(user)
         writer.writerow(user.values())
