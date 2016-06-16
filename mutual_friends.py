@@ -9,12 +9,12 @@ import json
 import sys
 
 import vk.api
-from vk.user import Field
+from vk.user import UserField
+
+OUTPUT_FIELDS = UserField.UID, UserField.FIRST_NAME, UserField.LAST_NAME, UserField.SCREEN_NAME
 
 def query_friend_list(api, user):
-    return api.friends_get(user.get_uid(), fields=Field.SCREEN_NAME)
-
-OUTPUT_FIELDS = Field.UID, Field.FIRST_NAME, Field.LAST_NAME, Field.SCREEN_NAME
+    return api.friends_get(user.get_uid(), fields=OUTPUT_FIELDS)
 
 def extract_output_fields(user):
     new_user = OrderedDict()
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     api = vk.api.API(vk.api.Language.EN)
-    users = api.users_get(args.uids, fields=Field.SCREEN_NAME)
+    users = api.users_get(args.uids)
 
     friend_lists = map(lambda user: frozenset(query_friend_list(api, user)), users)
     mutual_friends = frozenset.intersection(*friend_lists)

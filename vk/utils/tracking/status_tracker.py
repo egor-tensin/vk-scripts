@@ -6,7 +6,7 @@ from collections import Callable
 import time
 
 import vk.error
-from vk.user import Field
+from vk.user import UserField
 
 class StatusTracker:
     DEFAULT_TIMEOUT = 5
@@ -38,7 +38,7 @@ class StatusTracker:
         if not isinstance(fn, Callable):
             raise TypeError()
 
-    _USER_FIELDS = Field.SCREEN_NAME, Field.ONLINE, Field.LAST_SEEN
+    _USER_FIELDS = UserField.SCREEN_NAME, UserField.ONLINE, UserField.LAST_SEEN
 
     def _query_status(self, uids):
         return {user.get_uid(): user for user in self._api.users_get(uids, self._USER_FIELDS)}

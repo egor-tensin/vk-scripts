@@ -50,7 +50,7 @@ class Logger:
 
     @staticmethod
     def _format_user_last_seen(user):
-        return '{} was last seen at {}'.format(Logger._format_user(user), user.get_last_seen_local())
+        return '{} was last seen at {}'.format(Logger._format_user(user), user.get_last_seen_time_local())
 
     @staticmethod
     def _format_user_went_online(user):

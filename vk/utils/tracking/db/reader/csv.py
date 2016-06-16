@@ -2,11 +2,12 @@
 # This file is licensed under the terms of the MIT License.
 # See LICENSE.txt for details.
 
+from collections.abc import Iterable
 import csv
 
-from ..record import Record
+from ..record import Record, Timestamp
 
-class Reader:
+class Reader(Iterable):
     def __init__(self, path):
         self._fd = open(path)
         self._reader = csv.reader(self._fd)
@@ -19,4 +20,11 @@ class Reader:
         self._fd.__exit__(*args)
 
     def __iter__(self):
-        return map(Record.from_row, self._reader)
+        return map(Reader._record_from_row, self._reader)
+
+    @staticmethod
+    def _record_from_row(row):
+        record = Record(Timestamp.from_string(row[0]))
+        for i in range(len(Record.FIELDS)):
+            record[Record.FIELDS[i]] = row[i + 1]
+        return record

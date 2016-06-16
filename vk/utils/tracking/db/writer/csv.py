@@ -36,8 +36,12 @@ class Writer:
     def write_record(self, user):
         if not self:
             return
-        self._write_row(Record.from_user(user).to_row())
+        self._write_row(self._record_to_row(Record.from_user(user)))
         self.flush()
 
     def _write_row(self, row):
         self._writer.writerow(row)
+
+    @staticmethod
+    def _record_to_row(record):
+        return [str(record.get_timestamp())] + [str(record[field]) for field in record]

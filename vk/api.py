@@ -64,13 +64,13 @@ class API:
         return str(xs)
 
     def users_get(self, user_ids, fields=()):
-        return map(User, self._call_method(
+        return map(User.from_api_response, self._call_method(
             Method.USERS_GET,
             user_ids=self._format_param_values(user_ids),
             fields=self._format_param_values(fields)))
 
     def friends_get(self, user_id, fields=()):
-        return map(User, self._call_method(
+        return map(User.from_api_response, self._call_method(
             Method.FRIENDS_GET,
             user_id=str(user_id),
             fields=self._format_param_values(fields)))
