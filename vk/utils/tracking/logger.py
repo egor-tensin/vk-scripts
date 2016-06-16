@@ -19,7 +19,7 @@ class Logger:
             logging.info(Logger._format_user_is_online(user))
         else:
             logging.info(Logger._format_user_is_offline(user))
-            logging.info(Logger._format_user_last_seen(user))
+        logging.info(Logger._format_user_last_seen(user))
 
     @staticmethod
     def on_status_update(user):
@@ -27,6 +27,7 @@ class Logger:
             logging.info(Logger._format_user_went_online(user))
         else:
             logging.info(Logger._format_user_went_offline(user))
+        logging.info(Logger._format_user_last_seen(user))
 
     @staticmethod
     def on_exception(e):
@@ -49,7 +50,7 @@ class Logger:
 
     @staticmethod
     def _format_user_last_seen(user):
-        return '{} was last seen at {}'.format(Logger._format_user(user), user.get_last_seen())
+        return '{} was last seen at {}'.format(Logger._format_user(user), user.get_last_seen_local())
 
     @staticmethod
     def _format_user_went_online(user):
