@@ -3,7 +3,6 @@
 # See LICENSE.txt for details.
 
 import csv
-from datetime import datetime
 
 from ..record import Record
 
@@ -15,25 +14,29 @@ class Writer:
             self._fd = open(path, mode)
             self._writer = csv.writer(self._fd, lineterminator='\n')
 
-    def _is_valid(self):
+    def __bool__(self):
         return self._fd is not None
 
     def __enter__(self):
-        if not self._is_valid():
-            return None
+        if not self:
+            return self
         self._fd.__enter__()
         return self
 
     def __exit__(self, *args):
-        if self._is_valid():
-            self._fd.__exit__(*args)
+        if not self:
+            return
+        self._fd.__exit__(*args)
 
     def flush(self):
-        if self._is_valid():
-            self._fd.flush()
+        if not self:
+            return
+        self._fd.flush()
 
     def write_record(self, user):
-        self._write_row(Record(user).to_list())
+        if not self:
+            return
+        self._write_row(Record.from_user(user).to_row())
         self.flush()
 
     def _write_row(self, row):

@@ -5,23 +5,61 @@
 from collections import OrderedDict
 from datetime import datetime
 
-from vk.user import Field
+from vk.user import Field as UserField
+
+def _gen_timestamp():
+    return datetime.utcnow().replace(microsecond=0)
 
 class Record:
-    _FIELDS = (
-        Field.UID,
-        Field.FIRST_NAME,
-        Field.LAST_NAME,
-        Field.SCREEN_NAME,
-        Field.ONLINE,
-        Field.LAST_SEEN,
+    _USER_FIELDS = (
+        UserField.UID,
+        UserField.FIRST_NAME,
+        UserField.LAST_NAME,
+        UserField.SCREEN_NAME,
+        UserField.ONLINE,
+        UserField.LAST_SEEN,
     )
 
-    def __init__(self, user):
-        self._fields = OrderedDict()
-        for field in self._FIELDS:
-            self._fields[field] = user[field]
-        self._timestamp = datetime.utcnow().replace(microsecond=0)
+    def __init__(self, fields, timestamp=None):
+        self._fields = fields
+        self._timestamp = timestamp if timestamp is not None else _gen_timestamp()
 
-    def to_list(self):
-        return [self._timestamp.isoformat()] + list(self._fields.values())
+    def __iter__(self):
+        return iter(self._fields)
+
+    def __contains__(self, field):
+        return field in self._fields
+
+    def __getitem__(self, field):
+        return self._fields[field]
+
+    def __setitem__(self, field, value):
+        self._fields[field] = value
+
+    def get_timestamp(self):
+        return self._timestamp
+
+    @staticmethod
+    def _timestamp_from_string(s):
+        return datetime.fromtimestamp(s)
+
+    def timestamp_to_string(self):
+        return self.get_timestamp().isoformat()
+
+    @staticmethod
+    def from_user(user):
+        fields = OrderedDict()
+        for field in Record._USER_FIELDS:
+            fields[field] = user[field]
+        return Record(fields)
+
+    @staticmethod
+    def from_row(row):
+        timestamp = Record._timestamp_from_string(row[0])
+        fields = OrderedDict()
+        for i in range(len(Record._USER_FIELDS)):
+            fields[Record._USER_FIELDS[i]] = row[i + 1]
+        return Record(fields, timestamp)
+
+    def to_row(self):
+        return [self.timestamp_to_string()] + [self[field] for field in self]

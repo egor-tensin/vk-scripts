@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     with csv.Writer(args.output) as csv_writer:
 
-        if csv_writer is not None:
+        if csv_writer:
             tracker.add_initial_status_handler(lambda user: csv_writer.write_record(user))
             tracker.add_status_update_handler(lambda user: csv_writer.write_record(user))
 
