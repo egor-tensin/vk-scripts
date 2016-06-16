@@ -3,12 +3,12 @@
 # See LICENSE.txt for details.
 
 from collections import OrderedDict
-from datetime import datetime
+from datetime import datetime, timezone
 
 from vk.user import Field as UserField
 
 def _gen_timestamp():
-    return datetime.utcnow().replace(microsecond=0)
+    return datetime.now(timezone.utc).replace(microsecond=0)
 
 class Record:
     _USER_FIELDS = (
@@ -51,6 +51,8 @@ class Record:
         fields = OrderedDict()
         for field in Record._USER_FIELDS:
             fields[field] = user[field]
+        if UserField.LAST_SEEN in Record._USER_FIELDS:
+            fields[UserField.LAST_SEEN] = fields[UserField.LAST_SEEN].isoformat()
         return Record(fields)
 
     @staticmethod

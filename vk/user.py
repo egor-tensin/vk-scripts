@@ -2,7 +2,7 @@
 # This file is licensed under the terms of the MIT License.
 # See LICENSE.txt for details.
 
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from numbers import Real, Integral
 
@@ -96,7 +96,7 @@ class User:
 
     @staticmethod
     def _last_seen_from_timestamp(t):
-        return datetime.fromtimestamp(t)
+        return datetime.fromtimestamp(t, timezone.utc)
 
     @staticmethod
     def _last_seen_to_timestamp(t):
@@ -116,8 +116,11 @@ class User:
     def _get_last_seen(self):
         return self._last_seen_from_timestamp(self._impl[Field.LAST_SEEN.value]['time'])
 
-    def get_last_seen(self):
+    def get_last_seen_utc(self):
         return self._get_last_seen()
+
+    def get_last_seen_local(self):
+        return self._get_last_seen().astimezone()
 
     def _set_last_seen(self, t):
         if Field.LAST_SEEN.value not in self._impl:
