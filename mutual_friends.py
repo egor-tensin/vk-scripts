@@ -8,7 +8,7 @@ from enum import Enum
 import json
 import sys
 
-import vk.api
+from vk.api import API, Language
 from vk.user import UserField
 
 OUTPUT_FIELDS = UserField.UID, UserField.FIRST_NAME, UserField.LAST_NAME, UserField.SCREEN_NAME
@@ -31,13 +31,13 @@ def print_mutual_friends_csv(mutual_friends):
 def print_mutual_friends_json(mutual_friends):
     print(json.dumps([extract_output_fields(user) for user in mutual_friends], indent=3))
 
-def print_mutual_friends(mutual_friends, output_format):
-    if output_format is OutputFormat.CSV:
+def print_mutual_friends(mutual_friends, fmt):
+    if fmt is OutputFormat.CSV:
         print_mutual_friends_csv(mutual_friends)
-    elif output_format is OutputFormat.JSON:
+    elif fmt is OutputFormat.JSON:
         print_mutual_friends_json(mutual_friends)
     else:
-        raise NotImplementedError('unsupported output format: ' + str(output_format))
+        raise NotImplementedError('unsupported output format: ' + str(fmt))
 
 class OutputFormat(Enum):
     CSV = 'csv'
@@ -60,15 +60,16 @@ if __name__ == '__main__':
 
     parser.add_argument(metavar='UID', dest='uids', nargs='+',
                         help='user IDs or "screen names"')
-    parser.add_argument('-f', '--format', type=output_format,
-                        choices=tuple(x for x in OutputFormat),
+    parser.add_argument('--output-format', type=output_format,
+                        choices=tuple(fmt for fmt in OutputFormat),
                         default=OutputFormat.CSV,
                         help='specify output format')
+
     args = parser.parse_args()
 
-    api = vk.api.API(vk.api.Language.EN)
+    api = API(Language.EN)
     users = api.users_get(args.uids)
 
     friend_lists = map(lambda user: frozenset(query_friend_list(api, user)), users)
     mutual_friends = frozenset.intersection(*friend_lists)
-    print_mutual_friends(mutual_friends, args.format)
+    print_mutual_friends(mutual_friends, args.output_format)

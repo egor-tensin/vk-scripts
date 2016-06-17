@@ -12,6 +12,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
+from ..db import Format as DatabaseFormat
 from vk.user import UserField
 
 def process_database(db_reader, writer):
@@ -24,22 +25,6 @@ def process_database(db_reader, writer):
         wasted_time_by_user[user] = time_to - time_from
     for user, wasted_time in wasted_time_by_user.items():
         writer.write_wasted_time(user, wasted_time)
-
-class DatabaseFormat(Enum):
-    CSV = 'csv'
-
-    def __str__(self):
-        return self.value
-
-def open_database_csv(path):
-    from vk.utils.tracking.db.reader.csv import Reader
-    return Reader(path)
-
-def open_database(path, fmt):
-    if fmt is DatabaseFormat.CSV:
-        return open_database_csv(path)
-    else:
-        raise NotImplementedError('unsupported database format: ' + str(fmt))
 
 class OutputFormat(Enum):
     CSV = 'csv'
@@ -277,12 +262,13 @@ if __name__ == '__main__':
         except ValueError:
             raise argparse.ArgumentTypeError()
 
-    parser.add_argument('input', help='database path')
+    parser.add_argument('input', type=argparse.FileType('r'),
+                        help='database path')
     parser.add_argument('output', type=argparse.FileType('w'),
                         nargs='?', default=sys.stdout,
                         help='output path (standard output by default)')
     parser.add_argument('--input-format', type=database_format,
-                        choices=tuple(str(fmt) for fmt in DatabaseFormat),
+                        choices=tuple(fmt for fmt in DatabaseFormat),
                         default=DatabaseFormat.CSV,
                         help='specify database format')
     parser.add_argument('--output-format', type=output_format,
@@ -292,6 +278,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    with open_database(args.input, args.input_format) as db_reader:
+    with args.input_format.create_reader(args.input) as db_reader:
         with open_output_writer(args.output, args.output_format) as output_writer:
             process_database(db_reader, output_writer)

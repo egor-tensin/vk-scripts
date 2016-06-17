@@ -21,6 +21,11 @@ class StatusTracker:
     def _wait_after_connection_error(self):
         time.sleep(self._timeout)
 
+    def add_database_writer(self, writer):
+        self.add_initial_status_handler(lambda user: writer.on_initial_status(user))
+        self.add_status_update_handler(lambda user: writer.on_status_update(user))
+        self.add_connection_error_handler(lambda e: writer.on_connection_error(e))
+
     def add_initial_status_handler(self, fn):
         self._assert_is_callback(fn)
         self._on_initial_status.append(fn)

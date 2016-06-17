@@ -2,18 +2,24 @@
 # This file is licensed under the terms of the MIT License.
 # See LICENSE.txt for details.
 
-import vk.api
+from vk.api import API, Language
 from vk.utils.tracking import StatusTracker
-from vk.utils.tracking.db.writer import *
+from vk.utils.tracking.db import Format
 
 if __name__ == '__main__':
-    import argparse, logging, sys
+    import argparse, sys
 
     def natural_number(s):
         x = int(s)
         if x < 1:
             raise argparse.ArgumentTypeError()
         return x
+
+    def output_format(s):
+        try:
+            return Format(s)
+        except ValueError:
+            raise argparse.ArgumentTypeError()
 
     parser = argparse.ArgumentParser(
         description='Track when people go online/offline.')
@@ -23,34 +29,31 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--timeout', type=natural_number,
                         default=StatusTracker.DEFAULT_TIMEOUT,
                         help='set refresh interval (seconds)')
-    parser.add_argument('-l', '--log', type=argparse.FileType('w'),
-                        default=sys.stdout,
-                        help='set log file path (stdout by default)')
+    parser.add_argument('-l', '--log', default=sys.stdout,
+                        type=argparse.FileType('w'),
+                        help='set log file path (standard output by default)')
+    parser.add_argument('--output-format',
+                        type=output_format, default=Format.CSV,
+                        choices=tuple(fmt for fmt in Format),
+                        help='set database format')
     parser.add_argument('-o', '--output', default=None,
-                        help='set status database path')
+                        type=argparse.FileType('w'),
+                        help='set database file path')
 
     args = parser.parse_args()
 
-    logging.basicConfig(format='[%(asctime)s] %(message)s',
-                        stream=args.log,
-                        level=logging.INFO,
-                        datefmt='%Y-%m-%d %H:%M:%S')
-
-    api = vk.api.API(vk.api.Language.EN)
+    api = API(Language.EN)
     tracker = StatusTracker(api, args.timeout)
 
-    tracker.add_initial_status_handler(log.Logger.on_initial_status)
-    tracker.add_status_update_handler(log.Logger.on_status_update)
-    tracker.add_connection_error_handler(log.Logger.on_connection_error)
+    if args.output_format is Format.LOG or args.output is None:
+        args.output_format = Format.NULL
 
-    with csv.Writer(args.output) as csv_writer:
-
-        if csv_writer:
-            tracker.add_initial_status_handler(lambda user: csv_writer.write_record(user))
-            tracker.add_status_update_handler(lambda user: csv_writer.write_record(user))
-
-        try:
-            tracker.loop(args.uids)
-        except Exception as e:
-            logging.exception(e)
-            sys.exit(1)
+    with Format.LOG.create_writer(args.log) as log_writer:
+        tracker.add_database_writer(log_writer)
+        with args.output_format.create_writer(args.output) as db_writer:
+            tracker.add_database_writer(db_writer)
+            try:
+                tracker.loop(args.uids)
+            except Exception as e:
+                log_writer.exception(e)
+                sys.exit(1)
