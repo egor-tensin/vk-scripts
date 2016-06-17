@@ -5,7 +5,8 @@
 from collections.abc import Iterable
 import csv
 
-from ..record import Record, Timestamp
+from ..record import Record
+from ..timestamp import Timestamp
 
 class Reader(Iterable):
     def __init__(self, path):

@@ -4,38 +4,10 @@
 
 from collections import OrderedDict
 from collections.abc import MutableMapping
-from datetime import datetime, timezone
+from datetime import datetime
 
+from .timestamp import Timestamp
 from vk.user import LastSeen, LastSeenField, User, UserField
-
-class Timestamp:
-    @staticmethod
-    def _new():
-        return datetime.utcnow()
-
-    @staticmethod
-    def _is_timezone_aware(dt):
-        return dt.tzinfo is not None and dt.tzinfo.utcoffset(dt) is not None
-
-    @staticmethod
-    def _lose_timezone(dt):
-        if Timestamp._is_timezone_aware(dt):
-            return dt.astimezone(timezone.utc).replace(tzinfo=None)
-        return dt
-
-    def __init__(self, dt=None):
-        if dt is None:
-            dt = self._new()
-        dt = dt.replace(microsecond=0)
-        dt = self._lose_timezone(dt)
-        self.dt = dt
-
-    @staticmethod
-    def from_string(s):
-        return Timestamp(datetime.strptime(s, '%Y-%m-%dT%H:%M:%SZ'))
-
-    def __str__(self):
-        return self.dt.isoformat() + 'Z'
 
 class Record(MutableMapping):
     FIELDS = (
