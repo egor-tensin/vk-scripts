@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     tracker.add_initial_status_handler(log.Logger.on_initial_status)
     tracker.add_status_update_handler(log.Logger.on_status_update)
-    tracker.add_connection_error_handler(log.Logger.on_exception)
+    tracker.add_connection_error_handler(log.Logger.on_connection_error)
 
     with csv.Writer(args.output) as csv_writer:
 

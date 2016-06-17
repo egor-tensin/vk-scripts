@@ -22,8 +22,9 @@ class Logger:
         logging.info(Logger._format_user_last_seen(user))
 
     @staticmethod
-    def on_exception(e):
-        logging.exception(e)
+    def on_connection_error(e):
+        #logging.exception(e)
+        pass
 
     @staticmethod
     def _format_user(user):
