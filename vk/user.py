@@ -164,7 +164,8 @@ class User(Hashable, MutableMapping):
         self._fields = fields
 
     def __eq__(self, other):
-        return self._fields == other._fields
+        return self.get_uid() == other.get_uid()
+        #return self._fields == other._fields
 
     def __hash__(self, fields=None):
         return hash(self.get_uid())
