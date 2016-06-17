@@ -3,16 +3,8 @@
 # See LICENSE.txt for details.
 
 import logging
-import sys
 
 class Logger:
-    @staticmethod
-    def set_up(fd=sys.stdout):
-        logging.basicConfig(format='[%(asctime)s] %(message)s',
-                            stream=fd,
-                            level=logging.INFO,
-                            datefmt='%Y-%m-%d %H:%M:%S')
-
     @staticmethod
     def on_initial_status(user):
         if user.is_online():

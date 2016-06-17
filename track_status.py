@@ -3,11 +3,11 @@
 # See LICENSE.txt for details.
 
 import vk.api
-from vk.utils.tracking import Logger, StatusTracker
+from vk.utils.tracking import StatusTracker
 from vk.utils.tracking.db.writer import *
 
 if __name__ == '__main__':
-    import argparse, sys
+    import argparse, logging, sys
 
     def natural_number(s):
         x = int(s)
@@ -31,14 +31,17 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    Logger.set_up(args.log)
+    logging.basicConfig(format='[%(asctime)s] %(message)s',
+                        stream=args.log,
+                        level=logging.INFO,
+                        datefmt='%Y-%m-%d %H:%M:%S')
 
     api = vk.api.API(vk.api.Language.EN)
     tracker = StatusTracker(api, args.timeout)
 
-    tracker.add_initial_status_handler(Logger.on_initial_status)
-    tracker.add_status_update_handler(Logger.on_status_update)
-    tracker.add_connection_error_handler(Logger.on_exception)
+    tracker.add_initial_status_handler(log.Logger.on_initial_status)
+    tracker.add_status_update_handler(log.Logger.on_status_update)
+    tracker.add_connection_error_handler(log.Logger.on_exception)
 
     with csv.Writer(args.output) as csv_writer:
 
@@ -49,5 +52,5 @@ if __name__ == '__main__':
         try:
             tracker.loop(args.uids)
         except Exception as e:
-            Logger.on_exception(e)
+            logging.exception(e)
             sys.exit(1)
