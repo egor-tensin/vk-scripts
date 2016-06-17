@@ -93,10 +93,10 @@ class LastSeen(MutableMapping):
     def __delitem__(self, field):
         del self._fields[field]
 
-    def __iter__(self, field):
+    def __iter__(self):
         return iter(self._fields)
 
-    def __len__(self, field):
+    def __len__(self):
         return len(self._fields)
 
     @staticmethod
@@ -199,9 +199,20 @@ class User(Hashable, MutableMapping):
         else:
             raise TypeError()
 
+    def _parse_bool(x):
+        if isinstance(x, str):
+            if str(True) == x:
+                return True
+            elif str(False) == x:
+                return False
+            else:
+                raise ValueError()
+        else:
+            return bool(x)
+
     _FIELD_PARSERS = {
         UserField.UID: int,
-        UserField.ONLINE: bool,
+        UserField.ONLINE: _parse_bool,
         UserField.LAST_SEEN: _parse_last_seen,
     }
 

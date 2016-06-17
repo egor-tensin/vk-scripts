@@ -2,6 +2,7 @@
 # This file is licensed under the terms of the MIT License.
 # See LICENSE.txt for details.
 
+from vk.utils.tracking import OnlinePeriodEnumerator
 from vk.utils.tracking.db.reader import *
 
 if __name__ == '__main__':
@@ -14,5 +15,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     with csv.Reader(args.input) as csv_reader:
-        for record in csv_reader:
-            print(record.get_timestamp())
+        for online_period in OnlinePeriodEnumerator().enum(csv_reader):
+            user, dt_from, dt_to = online_period
+            print(user.get_screen_name(), dt_from.isoformat(), dt_to.isoformat())

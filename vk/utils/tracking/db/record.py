@@ -102,14 +102,23 @@ class Record(MutableMapping):
                 assert False
         return record
 
+    def _update_last_seen_field(self, last_seen, field):
+        if field is LastSeenField.TIME:
+            last_seen[field] = self[field].dt
+        else:
+            last_seen[field] = self[field]
+
+    def _update_user_field(self, user, field):
+        user[field] = self[field]
+
     def to_user(self):
         user = User()
         last_seen = LastSeen()
         for field in self:
             if isinstance(field, LastSeenField):
-                last_seen[field] = self[field]
+                self._update_last_seen_field(last_seen, field)
             elif isinstance(field, UserField):
-                user[field] = self[field]
+                self._update_user_field(user, field)
             else:
                 assert False
         if len(last_seen):
