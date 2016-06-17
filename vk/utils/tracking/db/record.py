@@ -6,7 +6,7 @@ from collections import OrderedDict
 from collections.abc import MutableMapping
 from datetime import datetime, timezone
 
-from vk.user import LastSeen, User, UserField
+from vk.user import LastSeen, LastSeenField, User, UserField
 
 class Timestamp:
     @staticmethod
@@ -28,23 +28,14 @@ class Timestamp:
             dt = self._new()
         dt = dt.replace(microsecond=0)
         dt = self._lose_timezone(dt)
-        self._dt = dt
+        self.dt = dt
 
     @staticmethod
     def from_string(s):
         return Timestamp(datetime.strptime(s, '%Y-%m-%dT%H:%M:%SZ'))
 
     def __str__(self):
-        return self._dt.isoformat() + 'Z'
-
-    @staticmethod
-    def from_last_seen(ls):
-        return Timestamp(ls.get_time())
-
-    def to_last_seen(self):
-        ls = LastSeen()
-        ls.set_time(self._dt)
-        return ls
+        return self.dt.isoformat() + 'Z'
 
 class Record(MutableMapping):
     FIELDS = (
@@ -53,7 +44,8 @@ class Record(MutableMapping):
         UserField.LAST_NAME,
         UserField.SCREEN_NAME,
         UserField.ONLINE,
-        UserField.LAST_SEEN,
+        LastSeenField.TIME,
+        LastSeenField.PLATFORM,
     )
 
     def __init__(self, timestamp=None, fields=None):
@@ -65,21 +57,26 @@ class Record(MutableMapping):
         self._fields = fields
 
     def __getitem__(self, field):
-        if field is UserField.LAST_SEEN:
-            return Timestamp.from_last_seen(self._fields[field])
+        if field is LastSeenField.TIME:
+            return Timestamp(self._fields[field])
         return self._fields[field]
 
     def __setitem__(self, field, value):
-        if field is UserField.LAST_SEEN:
+        if field is LastSeenField.TIME:
             if isinstance(value, str):
-                value = Timestamp.from_string(value).to_last_seen()
+                value = Timestamp.from_string(value).dt
             elif isinstance(value, Timestamp):
-                value = value.to_last_seen()
-            elif isinstance(value, LastSeen):
+                value = value.dt
+            elif isinstance(value, datetime):
                 pass
             else:
                 raise TypeError()
-        self._fields[field] = User.parse(field, value)
+        if isinstance(field, LastSeenField):
+            self._fields[field] = LastSeen.parse(field, value)
+        elif isinstance(field, UserField):
+            self._fields[field] = User.parse(field, value)
+        else:
+            raise TypeError()
 
     def __delitem__(self, field):
         del self._fields[field]
@@ -95,13 +92,26 @@ class Record(MutableMapping):
 
     @staticmethod
     def from_user(user):
-        instance = Record()
+        record = Record()
         for field in Record.FIELDS:
-            instance[field] = user[field]
-        return instance
+            if isinstance(field, UserField):
+                record[field] = user[field]
+            elif isinstance(field, LastSeenField):
+                record[field] = user.get_last_seen()[field]
+            else:
+                assert False
+        return record
 
     def to_user(self):
         user = User()
+        last_seen = LastSeen()
         for field in self:
-            user[field] = self[field]
+            if isinstance(field, LastSeenField):
+                last_seen[field] = self[field]
+            elif isinstance(field, UserField):
+                user[field] = self[field]
+            else:
+                assert False
+        if len(last_seen):
+            user.set_last_seen(last_seen)
         return user

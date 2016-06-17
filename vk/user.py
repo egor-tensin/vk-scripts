@@ -7,6 +7,7 @@ from collections.abc import Hashable, Mapping, MutableMapping
 from datetime import datetime, timezone
 from enum import Enum
 from numbers import Real, Integral
+import re
 
 class UserField(Enum):
     UID = 'uid'
@@ -21,9 +22,53 @@ class UserField(Enum):
 
 class LastSeenField(Enum):
     TIME = 'time'
+    PLATFORM = 'platform'
 
     def __str__(self):
         return self.value
+
+class Platform(Enum):
+    MOBILE = 1
+    IPHONE = 2
+    IPAD = 3
+    ANDROID = 4
+    WINDOWS_PHONE = 5
+    WINDOWS8 = 6
+    WEB = 7
+
+    def from_string(s):
+        return Platform(int(s))
+
+    def __str__(self):
+        return str(self.value)
+
+    @staticmethod
+    def _uppercase_first_letter(s):
+        m = re.search(r'\w', s)
+        if m is None:
+            return s
+        return s[:m.start()] + m.group().upper() + s[m.end():]
+
+    def get_description_for_header(self):
+        return self._uppercase_first_letter(_PLATFORM_DESCRIPTIONS[self])
+
+    def get_description_for_sentence(self):
+        s = _PLATFORM_DESCRIPTIONS[self]
+        s = s.replace('unrecognized', 'an unrecognized')
+        return 'the ' + s
+
+    def get_description_for_sentence_beginning(self):
+        return self._uppercase_first_letter(self.get_description_for_sentence())
+
+_PLATFORM_DESCRIPTIONS = {
+    Platform.MOBILE: '"mobile" web version (or unrecognized mobile app)',
+    Platform.IPHONE: 'official iPhone app',
+    Platform.IPAD: 'official iPad app',
+    Platform.ANDROID: 'official Android app',
+    Platform.WINDOWS_PHONE: 'official Windows Phone app',
+    Platform.WINDOWS8: 'official Windows 8 app',
+    Platform.WEB: 'web version (or unrecognized app)'
+}
 
 class LastSeen(MutableMapping):
     @staticmethod
@@ -71,8 +116,17 @@ class LastSeen(MutableMapping):
         else:
             raise TypeError()
 
+    def _parse_platform(x):
+        if x in Platform:
+            return x
+        if isinstance(x, str):
+            return Platform.from_string(x)
+        else:
+            return Platform(x)
+
     _FIELD_PARSERS = {
         LastSeenField.TIME: _parse_time,
+        LastSeenField.PLATFORM: _parse_platform,
     }
 
     _DEFAULT_FIELD_PARSER = str
@@ -85,6 +139,15 @@ class LastSeen(MutableMapping):
 
     def set_time(self, t):
         self[LastSeenField.TIME] = t
+
+    def has_platform(self):
+        return LastSeenField.PLATFORM in self
+
+    def get_platform(self):
+        return self[LastSeenField.PLATFORM]
+
+    def set_platform(self, platform):
+        self[LastSeenField.PLATFORM] = platform
 
 class User(Hashable, MutableMapping):
     @staticmethod
@@ -196,10 +259,10 @@ class User(Hashable, MutableMapping):
         self[UserField.LAST_SEEN] = last_seen
 
     def get_last_seen_time(self):
-        return self.has_last_seen() and self.get_last_seen().has_time()
-
-    def get_last_seen_time(self):
         return self[UserField.LAST_SEEN].get_time()
 
     def get_last_seen_time_local(self):
         return self[UserField.LAST_SEEN].get_time().astimezone()
+
+    def get_last_seen_platform(self):
+        return self[UserField.LAST_SEEN].get_platform()

@@ -42,20 +42,23 @@ class Logger:
 
     @staticmethod
     def _format_user_is_online(user):
-        return '{} is ONLINE'.format(Logger._format_user(user))
+        return '{} is ONLINE.'.format(Logger._format_user(user))
 
     @staticmethod
     def _format_user_is_offline(user):
-        return '{} is OFFLINE'.format(Logger._format_user(user))
+        return '{} is OFFLINE.'.format(Logger._format_user(user))
 
     @staticmethod
     def _format_user_last_seen(user):
-        return '{} was last seen at {}'.format(Logger._format_user(user), user.get_last_seen_time_local())
+        return '{} was last seen at {} using {}.'.format(
+            Logger._format_user(user),
+            user.get_last_seen_time_local(),
+            user.get_last_seen_platform().get_description_for_sentence())
 
     @staticmethod
     def _format_user_went_online(user):
-        return '{} went ONLINE'.format(Logger._format_user(user))
+        return '{} went ONLINE.'.format(Logger._format_user(user))
 
     @staticmethod
     def _format_user_went_offline(user):
-        return '{} went OFFLINE'.format(Logger._format_user(user))
+        return '{} went OFFLINE.'.format(Logger._format_user(user))
