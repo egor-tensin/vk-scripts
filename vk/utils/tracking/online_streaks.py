@@ -8,7 +8,7 @@ from datetime import timedelta
 
 from vk.user import User
 
-class OnlinePeriodEnumerator(MutableMapping):
+class OnlineStreakEnumerator(MutableMapping):
     def __init__(self):
         self._records = {}
 
@@ -33,7 +33,7 @@ class OnlinePeriodEnumerator(MutableMapping):
             if period is not None:
                 yield period
 
-    def duration_by_user(self, db_reader):
+    def group_by_user(self, db_reader):
         by_user = {}
         for user, time_from, time_to in self.enum(db_reader):
             if user not in by_user:
@@ -41,7 +41,7 @@ class OnlinePeriodEnumerator(MutableMapping):
             by_user[user] += time_to - time_from
         return by_user
 
-    def duration_by_date(self, db_reader):
+    def group_by_date(self, db_reader):
         by_date = OrderedDict()
         for _, time_from, time_to in self.enum(db_reader):
             for date, duration in self._enum_dates_and_durations(time_from, time_to):
@@ -50,7 +50,7 @@ class OnlinePeriodEnumerator(MutableMapping):
                 by_date[date] += duration
         return by_date
 
-    def duration_by_weekday(self, db_reader):
+    def group_by_weekday(self, db_reader):
         by_weekday = OrderedDict()
         for weekday in range(7):
             by_weekday[weekday] = timedelta()

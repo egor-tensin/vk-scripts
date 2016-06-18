@@ -12,12 +12,12 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
-from .. import OnlinePeriodEnumerator
+from .. import OnlineStreakEnumerator
 from ..db import Format as DatabaseFormat
 from vk.user import UserField
 
 def process_database(db_reader, writer):
-    by_user = OnlinePeriodEnumerator().duration_by_user(db_reader)
+    by_user = OnlineStreakEnumerator().group_by_user(db_reader)
     for user, duration in by_user.items():
         writer.add_user_duration(user, duration)
 
@@ -192,7 +192,7 @@ class PlotBuilder:
     def __exit__(self, *args):
         bar_chart = BarChartBuilder()
 
-        bar_chart.set_title('How much time do people spend online?')
+        bar_chart.set_title('How much time people spend online?')
         bar_chart.set_value_grid()
 
         bar_chart.set_integer_values_only()
