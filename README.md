@@ -168,6 +168,13 @@ Values must be in the `%Y-%m-%dT%H:%M:%SZ` format (a subset of ISO 8601).
 
 All dates and times are in UTC.
 
+#### Known issues
+
+* When people go online using the web version and don't visit other pages over
+time (for example, just listening to music), they appear offline.
+Hence the 0:00:00 durations you might sometimes encounter.
+This might also happen using other clients.
+
 [matplotlib]: http://matplotlib.org/
 [track_status.py]: #track_statuspy
 
