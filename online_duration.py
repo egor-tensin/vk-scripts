@@ -287,7 +287,8 @@ class OutputFormat(Enum):
 if __name__ == '__main__':
     import argparse
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description='View the amount of time people spent online.')
 
     def grouping(s):
         try:
