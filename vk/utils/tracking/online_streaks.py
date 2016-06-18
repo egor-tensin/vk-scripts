@@ -5,8 +5,21 @@
 from collections import OrderedDict
 from collections.abc import MutableMapping
 from datetime import timedelta
+from enum import Enum
 
 from vk.user import User
+
+class Weekday(Enum):
+    MONDAY = 0
+    TUESDAY = 1
+    WEDNESDAY = 2
+    THURSDAY = 3
+    FRIDAY = 4
+    SATURDAY = 5
+    SUNDAY = 6
+
+    def __str__(self):
+        return self.name[0] + self.name[1:].lower()
 
 class OnlineStreakEnumerator(MutableMapping):
     def __init__(self):
@@ -52,11 +65,11 @@ class OnlineStreakEnumerator(MutableMapping):
 
     def group_by_weekday(self, db_reader):
         by_weekday = OrderedDict()
-        for weekday in range(7):
+        for weekday in Weekday:
             by_weekday[weekday] = timedelta()
         for _, time_from, time_to in self.enum(db_reader):
             for date, duration in self._enum_dates_and_durations(time_from, time_to):
-                by_weekday[date.weekday()] += duration
+                by_weekday[Weekday(date.weekday())] += duration
         return by_weekday
 
     @staticmethod
@@ -81,7 +94,6 @@ class OnlineStreakEnumerator(MutableMapping):
             self[user] = user
             return None
         if user.is_online():
-            print(user._fields)
             return None
         period = user, self[user].get_last_seen_time(), user.get_last_seen_time()
         self[user] = user
