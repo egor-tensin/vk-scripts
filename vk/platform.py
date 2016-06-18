@@ -28,16 +28,16 @@ class Platform(Enum):
             return s
         return s[:m.start()] + m.group().upper() + s[m.end():]
 
-    def get_description_for_header(self):
+    def get_descr_header(self):
         return self._uppercase_first_letter(_PLATFORM_DESCRIPTIONS[self])
 
-    def get_description_for_sentence(self):
+    def get_descr_text(self):
         s = _PLATFORM_DESCRIPTIONS[self]
         s = s.replace('unrecognized', 'an unrecognized')
         return 'the ' + s
 
-    def get_description_for_sentence_beginning(self):
-        return self._uppercase_first_letter(self.get_description_for_sentence())
+    def get_descr_text_capitalized(self):
+        return self._uppercase_first_letter(self.get_descr_text())
 
 _PLATFORM_DESCRIPTIONS = {
     Platform.MOBILE: '"mobile" web version (or unrecognized mobile app)',

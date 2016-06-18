@@ -56,7 +56,7 @@ class User(Hashable, MutableMapping):
         return self.get_uid() == other.get_uid()
         #return self._fields == other._fields
 
-    def __hash__(self, fields=None):
+    def __hash__(self):
         return hash(self.get_uid())
 
     def __getitem__(self, field):

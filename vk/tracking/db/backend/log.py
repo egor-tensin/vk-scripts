@@ -64,7 +64,7 @@ class Writer:
         return '{} was last seen at {} using {}.'.format(
             Writer._format_user(user),
             user.get_last_seen_time_local(),
-            user.get_last_seen_platform().get_description_for_sentence())
+            user.get_last_seen_platform().get_descr_text())
 
     @staticmethod
     def _format_user_went_online(user):

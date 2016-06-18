@@ -7,8 +7,6 @@ from collections.abc import MutableMapping
 from datetime import timedelta
 from enum import Enum
 
-from vk.user import User
-
 class Weekday(Enum):
     MONDAY = 0
     TUESDAY = 1

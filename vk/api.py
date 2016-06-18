@@ -50,10 +50,10 @@ class API:
             with urllib.request.urlopen(url) as request:
                 response = json.loads(request.read().decode())
                 if 'response' not in response:
-                    raise vk.error.InvalidResponseError(response)
+                    raise vk.error.InvalidAPIResponseError(response)
                 return response['response']
         except URLError:
-            raise vk.error.ConnectionError()
+            raise vk.error.APIConnectionError()
 
     @staticmethod
     def _format_param_values(xs):

@@ -12,8 +12,8 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
+from vk.tracking import OnlineStreakEnumerator, Weekday
 from vk.tracking.db import Format as DatabaseFormat
-from vk.tracking.online_streaks import OnlineStreakEnumerator, Weekday
 from vk.user import UserField
 
 class Grouping(Enum):

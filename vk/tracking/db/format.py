@@ -4,7 +4,7 @@
 
 from enum import Enum
 
-from .backend import *
+from . import backend
 
 class Format(Enum):
     CSV = 'csv'
@@ -13,21 +13,21 @@ class Format(Enum):
 
     def create_writer(self, fd):
         if self is Format.CSV:
-            return csv.Writer(fd)
+            return backend.csv.Writer(fd)
         elif self is Format.LOG:
-            return log.Writer(fd)
+            return backend.log.Writer(fd)
         elif self is Format.NULL:
-            return null.Writer(fd)
+            return backend.null.Writer(fd)
         else:
             raise NotImplementedError('unsupported database format: ' + str(self))
 
     def create_reader(self, fd):
         if self is Format.CSV:
-            return csv.Reader(fd)
+            return backend.csv.Reader(fd)
         elif self is Format.LOG:
             raise NotImplementedError()
         elif self is Format.NULL:
-            return null.Reader(fd)
+            return backend.null.Reader(fd)
         else:
             raise NotImplementedError('unsupported database format: ' + str(self))
 

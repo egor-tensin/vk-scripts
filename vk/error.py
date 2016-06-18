@@ -5,12 +5,13 @@
 class APIError(RuntimeError):
     pass
 
-class InvalidResponseError(APIError):
+class InvalidAPIResponseError(APIError):
     def __init__(self, response):
+        super().__init__()
         self.response = response
 
     def __str__(self):
         return str(self.response)
 
-class ConnectionError(APIError):
+class APIConnectionError(APIError):
     pass

@@ -22,9 +22,9 @@ class StatusTracker:
         time.sleep(self._timeout)
 
     def add_database_writer(self, writer):
-        self.add_initial_status_handler(lambda user: writer.on_initial_status(user))
-        self.add_status_update_handler(lambda user: writer.on_status_update(user))
-        self.add_connection_error_handler(lambda e: writer.on_connection_error(e))
+        self.add_initial_status_handler(writer.on_initial_status)
+        self.add_status_update_handler(writer.on_status_update)
+        self.add_connection_error_handler(writer.on_connection_error)
 
     def add_initial_status_handler(self, fn):
         self._assert_is_callback(fn)
@@ -64,7 +64,7 @@ class StatusTracker:
         while True:
             try:
                 return self._query_status(uids)
-            except vk.error.ConnectionError as e:
+            except vk.error.APIConnectionError as e:
                 self._notify_connection_error(e)
                 self._wait_after_connection_error()
 
@@ -73,7 +73,7 @@ class StatusTracker:
             self._wait_after_connection_error()
             try:
                 return self._query_status(uids)
-            except vk.error.ConnectionError as e:
+            except vk.error.APIConnectionError as e:
                 self._notify_connection_error(e)
 
     @staticmethod
