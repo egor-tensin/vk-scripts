@@ -294,17 +294,17 @@ if __name__ == '__main__':
         try:
             return Grouping(s)
         except ValueError:
-            raise argparse.ArgumentTypeError()
+            raise argparse.ArgumentError()
     def database_format(s):
         try:
             return DatabaseFormat(s)
         except ValueError:
-            raise argparse.ArgumentTypeError()
+            raise argparse.ArgumentError()
     def output_format(s):
         try:
             return OutputFormat(s)
         except ValueError:
-            raise argparse.ArgumentTypeError()
+            raise argparse.ArgumentError()
 
     parser.add_argument('input', type=argparse.FileType('r'),
                         help='database path')

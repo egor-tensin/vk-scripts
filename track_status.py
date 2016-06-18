@@ -12,14 +12,13 @@ if __name__ == '__main__':
     def natural_number(s):
         x = int(s)
         if x < 1:
-            raise argparse.ArgumentTypeError()
+            raise argparse.ArgumentError()
         return x
-
     def output_format(s):
         try:
             return Format(s)
         except ValueError:
-            raise argparse.ArgumentTypeError()
+            raise argparse.ArgumentError()
 
     parser = argparse.ArgumentParser(
         description='Track when people go online/offline.')
