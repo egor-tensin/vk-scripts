@@ -89,22 +89,26 @@ You can change that by supplying either `date` (to group by dates) or `weekday`
 For example (assuming that both Jane and Joe spent their time online on Friday,
 June 17, 2016).
 
-    > online_duration.py --output-format json --grouping date db.csv
-    [
-       {
-          "date": "2016-06-17",
-          "duration": "1:47:17"
-       }
-    ]
+```
+> online_duration.py --output-format json --grouping date db.csv
+[
+   {
+      "date": "2016-06-17",
+      "duration": "1:47:17"
+   }
+]
+```
 
-    > online_duration.py --output-format csv --grouping weekday db.csv
-    Monday,0:00:00
-    Tuesday,0:00:00
-    Wednesday,0:00:00
-    Thursday,0:00:00
-    Friday,1:47:17
-    Saturday,0:00:00
-    Sunday,0:00:00
+```
+> online_duration.py --output-format csv --grouping weekday db.csv
+Monday,0:00:00
+Tuesday,0:00:00
+Wednesday,0:00:00
+Thursday,0:00:00
+Friday,1:47:17
+Saturday,0:00:00
+Sunday,0:00:00
+```
 
 In my opinion, the script's most useful feature is the ability to easily create
 plots that represent the text data (like in the examples above).
