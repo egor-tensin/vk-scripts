@@ -3,8 +3,8 @@
 # See LICENSE.txt for details.
 
 from vk.api import API, Language
-from vk.utils.tracking import StatusTracker
-from vk.utils.tracking.db import Format
+from vk.tracking import StatusTracker
+from vk.tracking.db import Format
 
 if __name__ == '__main__':
     import argparse, sys
