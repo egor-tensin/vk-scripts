@@ -84,8 +84,9 @@ You can also get a JSON document:
     ]
 
 The durations are calculated on a per-user basis by default.
-You can change that by supplying either `date` (to group by dates) or `weekday`
-(to group by weekdays) as the `--grouping` parameter value.
+You can change that by supplying either `date` (to group by dates), `weekday`
+(to group by weekdays) or `hour` (to group by day hours) as the `--grouping`
+parameter value.
 For example (assuming that both Jane and Joe spent their time online on Friday,
 June 17, 2016).
 
@@ -110,6 +111,34 @@ Saturday,0:00:00
 Sunday,0:00:00
 ```
 
+```
+> online_duration.py --grouping hour db.csv
+0:00:00,0:00:00
+1:00:00,0:00:00
+2:00:00,0:00:00
+3:00:00,0:00:00
+4:00:00,0:03:56
+5:00:00,0:14:14
+6:00:00,0:29:30
+7:00:00,0:31:20
+8:00:00,0:12:04
+9:00:00,0:00:00
+10:00:00,0:00:00
+11:00:00,0:23:14
+12:00:00,0:06:00
+13:00:00,0:46:19
+14:00:00,0:00:00
+15:00:00,0:00:00
+16:00:00,0:00:00
+17:00:00,0:00:00
+18:00:00,0:00:00
+19:00:00,0:00:00
+20:00:00,0:00:00
+21:00:00,0:00:00
+22:00:00,0:00:00
+23:00:00,0:00:00
+```
+
 In my opinion, the script's most useful feature is the ability to easily create
 plots that represent the text data (like in the examples above).
 To produce a plot, pass `img` as the `--output-format` parameter value and add
@@ -127,12 +156,25 @@ a file path to write the image to.
 
 ![weekday.png]
 
+    > online_duration.py --output-format img --grouping hour db.csv hour.png
+
+![hour.png]
+
+You can limit the scope of the database by supplying a time range.
+Only online durations that are within the supplied range shall then be
+processed.
+Set the range by specifying both or one of the `--from` and `--to` parameters.
+Values must be in the `%Y-%m-%dT%H:%M:%SZ` format (a subset of ISO 8601).
+
+All dates and times are in UTC.
+
 [matplotlib]: http://matplotlib.org/
 [track_status.py]: #track_statuspy
 
 [user.png]: img/online_duration/user.png
 [date.png]: img/online_duration/date.png
 [weekday.png]: img/online_duration/weekday.png
+[hour.png]: img/online_duration/hour.png
 
 ### mutual_friends.py
 

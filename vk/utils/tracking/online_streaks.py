@@ -22,8 +22,10 @@ class Weekday(Enum):
         return self.name[0] + self.name[1:].lower()
 
 class OnlineStreakEnumerator(MutableMapping):
-    def __init__(self):
+    def __init__(self, date_from=None, date_to=None):
         self._records = {}
+        self._date_from = date_from
+        self._date_to = date_to
 
     def __getitem__(self, user):
         return self._records[user]
@@ -40,11 +42,32 @@ class OnlineStreakEnumerator(MutableMapping):
     def __len__(self):
         return len(self._records)
 
+    def _cut_period(self, streak):
+        user, time_from, time_to = streak
+        #print(user.get_first_name(), time_from, self._date_from)
+        if self._date_from is not None:
+            if time_to < self._date_from:
+                #print(1)
+                return None
+            if time_from < self._date_from:
+                #print(2)
+                time_from = self._date_from
+        if self._date_to is not None:
+            if time_from > self._date_to:
+                #print(3)
+                return None
+            if time_to > self._date_to:
+                #print(4)
+                time_to = self._date_to
+        return user, time_from, time_to
+
     def enum(self, db_reader):
         for record in db_reader:
-            period = self._insert_record(record)
-            if period is not None:
-                yield period
+            streak = self._insert_record(record)
+            if streak is not None:
+                streak = self._cut_period(streak)
+            if streak is not None:
+                yield streak
 
     def group_by_user(self, db_reader):
         by_user = {}
@@ -72,6 +95,15 @@ class OnlineStreakEnumerator(MutableMapping):
                 by_weekday[Weekday(date.weekday())] += duration
         return by_weekday
 
+    def group_by_hour(self, db_reader):
+        by_hour = OrderedDict()
+        for i in range(24):
+            by_hour[i] = timedelta()
+        for _, time_from, time_to in self.enum(db_reader):
+            for hour, duration in self._enum_hours_and_durations(time_from, time_to):
+                by_hour[hour] += duration
+        return by_hour
+
     @staticmethod
     def _enum_dates_and_durations(time_from, time_to):
         while time_from.date() != time_to.date():
@@ -79,6 +111,14 @@ class OnlineStreakEnumerator(MutableMapping):
             yield time_from.date(), next_day - time_from
             time_from = next_day
         yield time_to.date(), time_to - time_from
+
+    @staticmethod
+    def _enum_hours_and_durations(time_from, time_to):
+        while time_from.date() != time_to.date() or time_from.hour != time_to.hour:
+            next_hour = time_from.replace(minute=0, second=0) + timedelta(hours=1)
+            yield time_from.hour, next_hour - time_from
+            time_from = next_hour
+        yield time_to.hour, time_to - time_from
 
     def _insert_record(self, record):
         return self._insert_user(record.to_user())
@@ -95,6 +135,6 @@ class OnlineStreakEnumerator(MutableMapping):
             return None
         if user.is_online():
             return None
-        period = user, self[user].get_last_seen_time(), user.get_last_seen_time()
+        streak = user, self[user].get_last_seen_time(), user.get_last_seen_time()
         self[user] = user
-        return period
+        return streak

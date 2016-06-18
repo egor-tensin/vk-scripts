@@ -4,7 +4,7 @@
 
 import csv
 from collections import OrderedDict
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from enum import Enum
 import json
 import sys
@@ -20,14 +20,17 @@ class Grouping(Enum):
     USER = 'user'
     DATE = 'date'
     WEEKDAY = 'weekday'
+    HOUR = 'hour'
 
-    def enum_durations(self, db_reader):
+    def enum_durations(self, db_reader, date_from=None, date_to=None):
         if self is Grouping.USER:
-            return OnlineStreakEnumerator().group_by_user(db_reader)
+            return OnlineStreakEnumerator(date_from, date_to).group_by_user(db_reader)
         elif self is Grouping.DATE:
-            return OnlineStreakEnumerator().group_by_date(db_reader)
+            return OnlineStreakEnumerator(date_from, date_to).group_by_date(db_reader)
         elif self is Grouping.WEEKDAY:
-            return OnlineStreakEnumerator().group_by_weekday(db_reader)
+            return OnlineStreakEnumerator(date_from, date_to).group_by_weekday(db_reader)
+        elif self is Grouping.HOUR:
+            return OnlineStreakEnumerator(date_from, date_to).group_by_hour(db_reader)
         else:
             raise NotImplementedError('unsupported grouping: ' + str(self))
 
@@ -54,10 +57,14 @@ class OutputWriterCSV:
     def _weekday_to_row(weekday):
         return [str(weekday)]
 
+    def _hour_to_row(hour):
+        return [str(timedelta(hours=hour))]
+
     _CONVERT_KEY_TO_ROW = {
         Grouping.USER: _user_to_row,
         Grouping.DATE: _date_to_row,
         Grouping.WEEKDAY: _weekday_to_row,
+        Grouping.HOUR: _hour_to_row,
     }
 
     @staticmethod
@@ -66,8 +73,8 @@ class OutputWriterCSV:
             raise NotImplementedError('unsupported grouping: ' + str(grouping))
         return OutputWriterCSV._CONVERT_KEY_TO_ROW[grouping](key)
 
-    def process_database(self, grouping, db_reader):
-        for key, duration in grouping.enum_durations(db_reader).items():
+    def process_database(self, grouping, db_reader, date_from=None, date_to=None):
+        for key, duration in grouping.enum_durations(db_reader, date_from, date_to).items():
             row = self._key_to_row(grouping, key)
             row.append(str(duration))
             self._write_row(row)
@@ -77,6 +84,7 @@ class OutputWriterCSV:
 
 _DATE_FIELD = 'date'
 _WEEKDAY_FIELD = 'weekday'
+_HOUR_FIELD = 'hour'
 
 class OutputWriterJSON:
     def __init__(self, fd=sys.stdout):
@@ -98,12 +106,18 @@ class OutputWriterJSON:
         obj[_WEEKDAY_FIELD] = str(weekday)
         return obj
 
+    def _hour_to_object(hour):
+        obj = OrderedDict()
+        obj[_HOUR_FIELD] = str(timedelta(hours=hour))
+        return obj
+
     _DURATION_FIELD = 'duration'
 
     _CONVERT_KEY_TO_OBJECT = {
         Grouping.USER: _user_to_object,
         Grouping.DATE: _date_to_object,
         Grouping.WEEKDAY: _weekday_to_object,
+        Grouping.HOUR: _hour_to_object,
     }
 
     @staticmethod
@@ -112,9 +126,9 @@ class OutputWriterJSON:
             raise NotImplementedError('unsupported grouping: ' + str(grouping))
         return OutputWriterJSON._CONVERT_KEY_TO_OBJECT[grouping](key)
 
-    def process_database(self, grouping, db_reader):
+    def process_database(self, grouping, db_reader, date_from=None, date_to=None):
         arr = []
-        for key, duration in grouping.enum_durations(db_reader).items():
+        for key, duration in grouping.enum_durations(db_reader, date_from, date_to).items():
             obj = self._key_to_object(grouping, key)
             obj[self._DURATION_FIELD] = str(duration)
             arr.append(obj)
@@ -173,7 +187,7 @@ class BarChartBuilder:
     def set_height(self, inches):
         self._set_size(inches, dim=1)
 
-    def plot_bars(self, bar_labels, values):
+    def plot_bars(self, bar_labels, values, datetime_ticks=False):
         numof_bars = len(bar_labels)
 
         if not numof_bars:
@@ -181,12 +195,16 @@ class BarChartBuilder:
             self._get_bar_axis().set_tick_params(labelleft=False)
             return []
 
-        self.set_height(numof_bars)
+        self.set_height(numof_bars / 2 if datetime_ticks else numof_bars)
 
         bar_offsets = np.arange(numof_bars) * 2 * self._BAR_HEIGHT + self._BAR_HEIGHT
         bar_axis_min, bar_axis_max = 0, 2 * self._BAR_HEIGHT * numof_bars
 
-        self._get_bar_axis().set_ticks(bar_offsets)
+        if datetime_ticks:
+            self._get_bar_axis().set_ticks(bar_offsets - self._BAR_HEIGHT)
+        else:
+            self._get_bar_axis().set_ticks(bar_offsets)
+
         self._get_bar_axis().set_ticklabels(bar_labels)
         self.set_bar_axis_limits(bar_axis_min, bar_axis_max)
 
@@ -211,10 +229,14 @@ class PlotBuilder:
     def _format_weekday(weekday):
         return str(weekday)
 
+    def _format_hour(hour):
+        return '{}:00'.format(hour)
+
     _FORMAT_KEY = {
         Grouping.USER: _format_user,
         Grouping.DATE: _format_date,
         Grouping.WEEKDAY: _format_weekday,
+        Grouping.HOUR: _format_hour,
     }
 
     @staticmethod
@@ -239,8 +261,8 @@ class PlotBuilder:
     def _extract_values(durations):
         return tuple(map(PlotBuilder._duration_to_seconds, durations.values()))
 
-    def process_database(self, grouping, db_reader):
-        durations = grouping.enum_durations(db_reader)
+    def process_database(self, grouping, db_reader, date_from=None, date_to=None):
+        durations = grouping.enum_durations(db_reader, date_from, date_to)
 
         bar_chart = BarChartBuilder()
 
@@ -258,7 +280,7 @@ class PlotBuilder:
         if not labels or not max(durations):
             bar_chart.set_value_axis_limits(0)
 
-        bars = bar_chart.plot_bars(labels, durations)
+        bars = bar_chart.plot_bars(labels, durations, grouping is Grouping.HOUR)
         bar_chart.set_property(bars, alpha=.33)
 
         if self._fd is sys.stdout:
@@ -305,6 +327,11 @@ if __name__ == '__main__':
             return OutputFormat(s)
         except ValueError:
             raise argparse.ArgumentError()
+    def date_range_limit(s):
+        try:
+            return datetime.strptime(s, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
+        except ValueError:
+            raise argparse.ArgumentError()
 
     parser.add_argument('input', type=argparse.FileType('r'),
                         help='database path')
@@ -323,9 +350,21 @@ if __name__ == '__main__':
                         choices=tuple(fmt for fmt in OutputFormat),
                         default=OutputFormat.CSV,
                         help='specify output format')
+    parser.add_argument('--from', type=date_range_limit, default=None,
+                        dest='date_from',
+                        help='set the date to process database records from')
+    parser.add_argument('--to', type=date_range_limit, default=None,
+                        dest='date_to',
+                        help='set the date to process database record to')
 
     args = parser.parse_args()
 
+    if args.date_from is not None and args.date_to is not None:
+        if args.date_from > args.date_to:
+            args.date_from, args.date_to = args.date_to, args.date_from
+
     with args.input_format.create_reader(args.input) as db_reader:
         output_writer = args.output_format.create_writer(args.output)
-        output_writer.process_database(args.grouping, db_reader)
+        output_writer.process_database(
+            args.grouping, db_reader, date_from=args.date_from,
+            date_to=args.date_to)
