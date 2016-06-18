@@ -52,7 +52,7 @@ class API:
                 if 'response' not in response:
                     raise vk.error.InvalidAPIResponseError(response)
                 return response['response']
-        except URLError:
+        except (ConnectionError, URLError):
             raise vk.error.APIConnectionError()
 
     @staticmethod
