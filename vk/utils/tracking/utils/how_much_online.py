@@ -12,19 +12,14 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
+from .. import OnlinePeriodEnumerator
 from ..db import Format as DatabaseFormat
 from vk.user import UserField
 
 def process_database(db_reader, writer):
-    from vk.utils.tracking import OnlinePeriodEnumerator
-    wasted_time_by_user = {}
-    for online_period in OnlinePeriodEnumerator().enum(db_reader):
-        user, time_from, time_to = online_period
-        if user not in wasted_time_by_user:
-            wasted_time_by_user[user] = timedelta()
-        wasted_time_by_user[user] = time_to - time_from
-    for user, wasted_time in wasted_time_by_user.items():
-        writer.write_wasted_time(user, wasted_time)
+    by_user = OnlinePeriodEnumerator().duration_by_user(db_reader)
+    for user, duration in by_user.items():
+        writer.add_user_duration(user, duration)
 
 class OutputFormat(Enum):
     CSV = 'csv'
@@ -34,7 +29,7 @@ class OutputFormat(Enum):
     def __str__(self):
         return self.value
 
-OUTPUT_USER_FIELDS = (
+_USER_FIELDS = (
     UserField.UID,
     UserField.FIRST_NAME,
     UserField.LAST_NAME,
@@ -51,42 +46,42 @@ class OutputWriterCSV:
     def __exit__(self, *args):
         pass
 
-    def write_wasted_time(self, user, wasted_time):
-        self._write_row(self._wasted_time_to_row(user, wasted_time))
+    def add_user_duration(self, user, duration):
+        self._write_row(self._user_duration_to_row(user, duration))
 
     def _write_row(self, row):
         self._writer.writerow(row)
 
     @staticmethod
-    def _wasted_time_to_row(user, wasted_time):
+    def _user_duration_to_row(user, duration):
         row = []
-        for field in OUTPUT_USER_FIELDS:
+        for field in _USER_FIELDS:
             row.append(user[field])
-        row.append(str(wasted_time))
+        row.append(str(duration))
         return row
 
 class OutputWriterJSON:
     def __init__(self, fd=sys.stdout):
         self._fd = fd
-        self._records = []
+        self._array = []
 
     def __enter__(self):
         return self
 
     def __exit__(self, *args):
-        self._fd.write(json.dumps(self._records, indent=3))
+        self._fd.write(json.dumps(self._array, indent=3))
 
-    def write_wasted_time(self, user, wasted_time):
-        self._records.append(self._wasted_time_to_record(user, wasted_time))
+    def add_user_duration(self, user, duration):
+        self._array.append(self._user_duration_to_object(user, duration))
 
-    _WASTED_TIME_FIELD = 'wasted_time'
+    _DURATION_FIELD = 'duration'
 
     @staticmethod
-    def _wasted_time_to_record(user, wasted_time):
+    def _user_duration_to_object(user, duration):
         record = OrderedDict()
-        for field in OUTPUT_USER_FIELDS:
+        for field in _USER_FIELDS:
             record[str(field)] = user[field]
-        record[OutputWriterJSON._WASTED_TIME_FIELD] = str(wasted_time)
+        record[OutputWriterJSON._DURATION_FIELD] = str(duration)
         return record
 
 class BarChartBuilder:
@@ -169,7 +164,7 @@ class BarChartBuilder:
 
 class PlotBuilder:
     def __init__(self, fd=sys.stdout):
-        self._wasted_time_by_user = {}
+        self._duration_by_user = {}
         self._fd = fd
         pass
 
@@ -177,22 +172,22 @@ class PlotBuilder:
         return self
 
     @staticmethod
-    def _format_user_name(user):
+    def _format_user(user):
         return '{}\n{}'.format(user.get_first_name(), user.get_last_name())
 
     @staticmethod
-    def _format_wasted_time(seconds, _):
+    def _format_duration(seconds, _):
         return str(timedelta(seconds=seconds))
 
     @staticmethod
-    def _wasted_time_to_seconds(td):
+    def _duration_to_seconds(td):
         return td.total_seconds()
 
-    def _get_user_names(self):
-        return tuple(map(self._format_user_name, self._wasted_time_by_user.keys()))
+    def _get_users(self):
+        return tuple(map(self._format_user, self._duration_by_user.keys()))
 
-    def _get_wasted_seconds(self):
-        return tuple(map(self._wasted_time_to_seconds, self._wasted_time_by_user.values()))
+    def _get_durations(self):
+        return tuple(map(self._duration_to_seconds, self._duration_by_user.values()))
 
     def __exit__(self, *args):
         bar_chart = BarChartBuilder()
@@ -203,15 +198,15 @@ class PlotBuilder:
         bar_chart.set_integer_values_only()
         bar_chart.set_property(bar_chart.get_value_labels(),
                                fontsize='small', rotation=30)
-        bar_chart.set_value_label_formatter(self._format_wasted_time)
+        bar_chart.set_value_label_formatter(self._format_duration)
 
-        users = self._get_user_names()
-        wasted_time = self._get_wasted_seconds()
+        users = self._get_users()
+        durations = self._get_durations()
 
-        if not self._wasted_time_by_user or not max(wasted_time):
+        if not self._duration_by_user or not max(durations):
             bar_chart.set_value_axis_limits(0)
 
-        bars = bar_chart.plot_bars(users, wasted_time)
+        bars = bar_chart.plot_bars(users, durations)
         bar_chart.set_property(bars, alpha=.33)
 
         if self._fd is sys.stdout:
@@ -219,12 +214,12 @@ class PlotBuilder:
         else:
             bar_chart.save(self._fd)
 
-    def write_wasted_time(self, user, wasted_time):
-        #if len(self._wasted_time_by_user) >= 1:
+    def add_user_duration(self, user, duration):
+        #if len(self._duration_by_user) >= 1:
         #    return
-        #if wasted_time.total_seconds():
+        #if duration.total_seconds():
         #    return
-        self._wasted_time_by_user[user] = wasted_time # + timedelta(seconds=3)
+        self._duration_by_user[user] = duration # + timedelta(seconds=3)
 
 def open_output_writer_csv(fd):
     return OutputWriterCSV(fd)
