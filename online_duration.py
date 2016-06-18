@@ -12,8 +12,8 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
-from ..online_streaks import OnlineStreakEnumerator, Weekday
-from ..db import Format as DatabaseFormat
+from vk.utils.tracking.db import Format as DatabaseFormat
+from vk.utils.tracking.online_streaks import OnlineStreakEnumerator, Weekday
 from vk.user import UserField
 
 class Grouping(Enum):
@@ -244,7 +244,7 @@ class PlotBuilder:
 
         bar_chart = BarChartBuilder()
 
-        bar_chart.set_title('How much time people spend online?')
+        bar_chart.set_title('How much time people spend online')
         bar_chart.set_value_grid()
 
         bar_chart.set_integer_values_only()
