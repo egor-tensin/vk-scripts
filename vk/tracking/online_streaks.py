@@ -44,20 +44,15 @@ class OnlineStreakEnumerator(MutableMapping):
 
     def _cut_period(self, streak):
         user, time_from, time_to = streak
-        #print(user.get_first_name(), time_from, self._date_from)
         if self._date_from is not None:
             if time_to < self._date_from:
-                #print(1)
                 return None
             if time_from < self._date_from:
-                #print(2)
                 time_from = self._date_from
         if self._date_to is not None:
             if time_from > self._date_to:
-                #print(3)
                 return None
             if time_to > self._date_to:
-                #print(4)
                 time_to = self._date_to
         return user, time_from, time_to
 
