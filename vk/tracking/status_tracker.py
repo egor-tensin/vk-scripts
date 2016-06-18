@@ -2,7 +2,7 @@
 # This file is licensed under the terms of the MIT License.
 # See LICENSE.txt for details.
 
-from collections import Callable
+from collections.abc import Callable
 import time
 
 import vk.error

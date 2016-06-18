@@ -4,10 +4,28 @@
 
 from collections import OrderedDict
 from collections.abc import Hashable, Mapping, MutableMapping
-from datetime import datetime, timezone
 from enum import Enum
-from numbers import Real, Integral
-import re
+
+from .last_seen import LastSeen
+
+def _parse_last_seen(x):
+    if isinstance(x, LastSeen):
+        return x
+    elif isinstance(x, Mapping):
+        return LastSeen.from_api_response(x)
+    else:
+        raise TypeError()
+
+def _parse_online_flag(x):
+    if isinstance(x, str):
+        if str(True) == x:
+            return True
+        elif str(False) == x:
+            return False
+        else:
+            raise ValueError()
+    else:
+        return bool(x)
 
 class UserField(Enum):
     UID = 'uid'
@@ -19,135 +37,6 @@ class UserField(Enum):
 
     def __str__(self):
         return self.value
-
-class LastSeenField(Enum):
-    TIME = 'time'
-    PLATFORM = 'platform'
-
-    def __str__(self):
-        return self.value
-
-class Platform(Enum):
-    MOBILE = 1
-    IPHONE = 2
-    IPAD = 3
-    ANDROID = 4
-    WINDOWS_PHONE = 5
-    WINDOWS8 = 6
-    WEB = 7
-
-    def from_string(s):
-        return Platform(int(s))
-
-    def __str__(self):
-        return str(self.value)
-
-    @staticmethod
-    def _uppercase_first_letter(s):
-        m = re.search(r'\w', s)
-        if m is None:
-            return s
-        return s[:m.start()] + m.group().upper() + s[m.end():]
-
-    def get_description_for_header(self):
-        return self._uppercase_first_letter(_PLATFORM_DESCRIPTIONS[self])
-
-    def get_description_for_sentence(self):
-        s = _PLATFORM_DESCRIPTIONS[self]
-        s = s.replace('unrecognized', 'an unrecognized')
-        return 'the ' + s
-
-    def get_description_for_sentence_beginning(self):
-        return self._uppercase_first_letter(self.get_description_for_sentence())
-
-_PLATFORM_DESCRIPTIONS = {
-    Platform.MOBILE: '"mobile" web version (or unrecognized mobile app)',
-    Platform.IPHONE: 'official iPhone app',
-    Platform.IPAD: 'official iPad app',
-    Platform.ANDROID: 'official Android app',
-    Platform.WINDOWS_PHONE: 'official Windows Phone app',
-    Platform.WINDOWS8: 'official Windows 8 app',
-    Platform.WEB: 'web version (or unrecognized app)'
-}
-
-class LastSeen(MutableMapping):
-    @staticmethod
-    def from_api_response(source):
-        instance = LastSeen()
-        for field in LastSeenField:
-            if str(field) in source:
-                instance[field] = source[str(field)]
-        return instance
-
-    def __init__(self, fields=None):
-        if fields is None:
-            fields = OrderedDict()
-        self._fields = fields
-
-    def __getitem__(self, field):
-        return self._fields[field]
-
-    def __setitem__(self, field, value):
-        self._fields[field] = self.parse(field, value)
-
-    def __delitem__(self, field):
-        del self._fields[field]
-
-    def __iter__(self):
-        return iter(self._fields)
-
-    def __len__(self):
-        return len(self._fields)
-
-    @staticmethod
-    def parse(field, value):
-        if field in LastSeen._FIELD_PARSERS:
-            return LastSeen._FIELD_PARSERS[field](value)
-        else:
-            return LastSeen._DEFAULT_FIELD_PARSER(value)
-
-    def _parse_time(x):
-        if isinstance(x, datetime):
-            if x.tzinfo is None or x.tzinfo.utcoffset(x) is None:
-                x = x.replace(tzinfo=timezone.utc)
-            return x
-        elif isinstance(x, Real) or isinstance(x, Integral):
-            return datetime.fromtimestamp(x, tz=timezone.utc)
-        else:
-            raise TypeError()
-
-    def _parse_platform(x):
-        if x in Platform:
-            return x
-        if isinstance(x, str):
-            return Platform.from_string(x)
-        else:
-            return Platform(x)
-
-    _FIELD_PARSERS = {
-        LastSeenField.TIME: _parse_time,
-        LastSeenField.PLATFORM: _parse_platform,
-    }
-
-    _DEFAULT_FIELD_PARSER = str
-
-    def has_time(self):
-        return LastSeenField.TIME in self
-
-    def get_time(self):
-        return self[LastSeenField.TIME]
-
-    def set_time(self, t):
-        self[LastSeenField.TIME] = t
-
-    def has_platform(self):
-        return LastSeenField.PLATFORM in self
-
-    def get_platform(self):
-        return self[LastSeenField.PLATFORM]
-
-    def set_platform(self, platform):
-        self[LastSeenField.PLATFORM] = platform
 
 class User(Hashable, MutableMapping):
     @staticmethod
@@ -192,28 +81,9 @@ class User(Hashable, MutableMapping):
         else:
             return User._DEFAULT_FIELD_PARSER(value)
 
-    def _parse_last_seen(x):
-        if isinstance(x, LastSeen):
-            return x
-        elif isinstance(x, Mapping):
-            return LastSeen.from_api_response(x)
-        else:
-            raise TypeError()
-
-    def _parse_bool(x):
-        if isinstance(x, str):
-            if str(True) == x:
-                return True
-            elif str(False) == x:
-                return False
-            else:
-                raise ValueError()
-        else:
-            return bool(x)
-
     _FIELD_PARSERS = {
         UserField.UID: int,
-        UserField.ONLINE: _parse_bool,
+        UserField.ONLINE: _parse_online_flag,
         UserField.LAST_SEEN: _parse_last_seen,
     }
 

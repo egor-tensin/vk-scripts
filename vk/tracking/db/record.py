@@ -7,7 +7,8 @@ from collections.abc import MutableMapping
 from datetime import datetime
 
 from .timestamp import Timestamp
-from vk.user import LastSeen, LastSeenField, User, UserField
+from vk.last_seen import LastSeen, LastSeenField
+from vk.user import User, UserField
 
 class Record(MutableMapping):
     FIELDS = (
