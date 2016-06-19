@@ -30,9 +30,12 @@ For example (using made up user IDs/"screen names"),
 
 By default, the script produces a human-readable log.
 Use the `--log` parameter to write the log to a file.
-If you want to record when people go online/offline for [further analysis],
-specify the path to a database using the `--output` parameter.
+If you want to record when people go online/offline for further analysis using
+[online_duration.py], specify the path to a database using the `--output`
+parameter.
 Be careful: if the file already exists, it will be overwritten!
+
+[online_duration.py]: online_duration.md
 
 See also
 --------

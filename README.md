@@ -11,6 +11,7 @@ The main package is located in the "vk/" directory.
 
 Additionally, a few scripts are supplied in the "bin/" directory to show-case
 the package's capabilities.
+Run the scripts from the top-level directory using `python -m`.
 Pass the `--help` flag to a script to see its detailed usage information.
 The supplied scripts are listed below.
 
