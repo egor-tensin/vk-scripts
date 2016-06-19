@@ -17,7 +17,7 @@ For example:
 
 For example (using made up user IDs/"screen names"),
 
-    > track_status.py john.doe jane.smith
+    > python -m bin.track_status john.doe jane.smith
     [2016-06-18 01:43:34] John Doe is ONLINE.
     [2016-06-18 01:43:34] John Doe was last seen at 2016-06-18 01:33:58+03:00 using the official iPhone app.
     [2016-06-18 01:43:34] Jane Smith is OFFLINE.
