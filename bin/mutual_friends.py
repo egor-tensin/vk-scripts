@@ -11,7 +11,7 @@ import sys
 from vk.api import API, Language
 from vk.user import UserField
 
-OUTPUT_FIELDS = UserField.UID, UserField.FIRST_NAME, UserField.LAST_NAME, UserField.SCREEN_NAME
+OUTPUT_FIELDS = UserField.UID, UserField.FIRST_NAME, UserField.LAST_NAME
 
 def query_friend_list(api, user):
     return api.friends_get(user.get_uid(), fields=OUTPUT_FIELDS)
@@ -22,22 +22,35 @@ def extract_output_fields(user):
         new_user[str(field)] = user[field] if field in user else None
     return new_user
 
-def print_mutual_friends_csv(mutual_friends):
-    writer = csv.writer(sys.stdout, lineterminator='\n')
-    for user in mutual_friends:
-        user = extract_output_fields(user)
-        writer.writerow(user.values())
+class OutputWriterCSV:
+    def __init__(self, fd=sys.stdout):
+        self._writer = csv.writer(fd, lineterminator='\n')
 
-def print_mutual_friends_json(mutual_friends):
-    print(json.dumps([extract_output_fields(user) for user in mutual_friends], indent=3))
+    def __enter__(self):
+        return self
 
-def print_mutual_friends(mutual_friends, fmt):
-    if fmt is OutputFormat.CSV:
-        print_mutual_friends_csv(mutual_friends)
-    elif fmt is OutputFormat.JSON:
-        print_mutual_friends_json(mutual_friends)
-    else:
-        raise NotImplementedError('unsupported output format: ' + str(fmt))
+    def __exit__(self, *args):
+        pass
+
+    def write_mutual_friends(self, friend_list):
+        for user in mutual_friends:
+            user = extract_output_fields(user)
+            self._writer.writerow(user.values())
+
+class OutputWriterJSON:
+    def __init__(self, fd=sys.stdout):
+        self._fd = fd
+        self._array = []
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        self._fd.write(json.dumps(self._array, indent=3, ensure_ascii=False))
+
+    def write_mutual_friends(self, friend_list):
+        for user in friend_list:
+            self._array.append(extract_output_fields(user))
 
 class OutputFormat(Enum):
     CSV = 'csv'
@@ -45,6 +58,14 @@ class OutputFormat(Enum):
 
     def __str__(self):
         return self.value
+
+    def create_writer(self, fd=sys.stdout):
+        if self is OutputFormat.CSV:
+            return OutputWriterCSV(fd)
+        elif self is OutputFormat.JSON:
+            return OutputWriterJSON(fd)
+        else:
+            raise NotImplementedError('unsupported output format: ' + str(self))
 
 if __name__ == '__main__':
     import argparse
@@ -64,6 +85,9 @@ if __name__ == '__main__':
                         choices=tuple(fmt for fmt in OutputFormat),
                         default=OutputFormat.CSV,
                         help='specify output format')
+    parser.add_argument('--output', type=argparse.FileType('w', encoding='utf-8'),
+                        default=sys.stdout,
+                        help='set output file path (standard output by default)')
 
     args = parser.parse_args()
 
@@ -72,4 +96,6 @@ if __name__ == '__main__':
 
     friend_lists = map(lambda user: frozenset(query_friend_list(api, user)), users)
     mutual_friends = frozenset.intersection(*friend_lists)
-    print_mutual_friends(mutual_friends, args.output_format)
+
+    with args.output_format.create_writer(args.output) as writer:
+        writer.write_mutual_friends(mutual_friends)
