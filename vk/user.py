@@ -16,7 +16,7 @@ def _parse_last_seen(x):
     else:
         raise TypeError()
 
-def _parse_online_flag(x):
+def _parse_bool(x):
     if isinstance(x, str):
         if str(True) == x:
             return True
@@ -27,16 +27,36 @@ def _parse_online_flag(x):
     else:
         return bool(x)
 
+def _parse_hidden(x):
+    return _parse_bool(x)
+
+def _parse_online_flag(x):
+    return _parse_bool(x)
+
 class UserField(Enum):
     UID = 'uid'
     FIRST_NAME = 'first_name'
     LAST_NAME = 'last_name'
-    SCREEN_NAME = 'screen_name'
+    DEACTIVATED = 'deactivated'
+    HIDDEN = 'hidden'
+
+    DOMAIN = 'domain'
     ONLINE = 'online'
     LAST_SEEN = 'last_seen'
+    SCREEN_NAME = 'screen_name'
 
     def __str__(self):
         return self.value
+
+class DeactivationReason(Enum):
+    DELETED = 'deleted'
+    BANNED = 'banned'
+
+    def __str__(self):
+        return self.value
+
+def _parse_deactivated(s):
+    return DeactivationReason(s)
 
 class User(Hashable, MutableMapping):
     @staticmethod
@@ -83,6 +103,8 @@ class User(Hashable, MutableMapping):
 
     _FIELD_PARSERS = {
         UserField.UID: int,
+        UserField.DEACTIVATED: _parse_deactivated,
+        UserField.HIDDEN: _parse_hidden,
         UserField.ONLINE: _parse_online_flag,
         UserField.LAST_SEEN: _parse_last_seen,
     }
@@ -107,17 +129,29 @@ class User(Hashable, MutableMapping):
     def set_last_name(self, name):
         self[UserField.LAST_NAME] = name
 
-    def has_screen_name(self):
-        return UserField.SCREEN_NAME in self
+    def is_deactivated(self):
+        return UserField.DEACTIVATED in self
 
-    def get_screen_name(self):
-        if self.has_screen_name():
-            return self[UserField.SCREEN_NAME]
-        else:
-            return 'id' + str(self.get_uid())
+    def get_deactivation_reason(self):
+        return self[UserField.DEACTIVATED]
 
-    def set_screen_name(self, name):
-        self[UserField.SCREEN_NAME] = name
+    def set_deactivated(self, reason):
+        self[UserField.DEACTIVATED] = reason
+
+    def is_hidden(self):
+        return UserField.HIDDEN in self and self[UserField.HIDDEN]
+
+    def set_hidden(self, value=True):
+        self[UserField.HIDDEN] = value
+
+    def has_domain(self):
+        return UserField.DOMAIN in self
+
+    def get_domain(self):
+        return self[UserField.DOMAIN]
+
+    def set_domain(self, domain):
+        self[UserField.DOMAIN] = domain
 
     def has_online_flag(self):
         return UserField.ONLINE in self
@@ -148,3 +182,15 @@ class User(Hashable, MutableMapping):
 
     def get_last_seen_platform(self):
         return self[UserField.LAST_SEEN].get_platform()
+
+    def has_screen_name(self):
+        return UserField.SCREEN_NAME in self
+
+    def get_screen_name(self):
+        if self.has_screen_name():
+            return self[UserField.SCREEN_NAME]
+        else:
+            return 'id' + str(self.get_uid())
+
+    def set_screen_name(self, name):
+        self[UserField.SCREEN_NAME] = name
