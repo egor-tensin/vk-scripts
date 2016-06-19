@@ -310,7 +310,7 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser(
-        description='View the amount of time people spent online.')
+        description='View/visualize the amount of time people spend online.')
 
     def grouping(s):
         try:
