@@ -19,6 +19,10 @@ with.
 * [track_status.py]: Track when people go online/offline.
 * [online_duration.py]: View/visualize the amount of time people spend online.
 
+[mutual_friends.py]: docs/mutual_friends.md
+[track_status.py]: docs/track_status.md
+[online_duration.py]: docs/online_duration.md
+
 License
 -------
 
