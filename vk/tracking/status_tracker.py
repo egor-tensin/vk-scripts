@@ -43,7 +43,7 @@ class StatusTracker:
         if not isinstance(fn, Callable):
             raise TypeError()
 
-    _USER_FIELDS = UserField.SCREEN_NAME, UserField.ONLINE, UserField.LAST_SEEN
+    _USER_FIELDS = UserField.DOMAIN, UserField.ONLINE, UserField.LAST_SEEN,
 
     def _query_status(self, uids):
         return {user.get_uid(): user for user in self._api.users_get(uids, self._USER_FIELDS)}

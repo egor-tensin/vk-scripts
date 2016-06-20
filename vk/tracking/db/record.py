@@ -15,7 +15,7 @@ class Record(MutableMapping):
         UserField.UID,
         UserField.FIRST_NAME,
         UserField.LAST_NAME,
-        UserField.SCREEN_NAME,
+        UserField.DOMAIN,
         UserField.ONLINE,
         LastSeenField.TIME,
         LastSeenField.PLATFORM,
