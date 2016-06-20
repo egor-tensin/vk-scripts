@@ -41,18 +41,18 @@ class OutputWriterCSV:
 class OutputWriterJSON:
     def __init__(self, fd=sys.stdout):
         self._fd = fd
-        self._array = []
+        self._arr = []
 
     def __enter__(self):
         return self
 
     def __exit__(self, *args):
-        self._fd.write(json.dumps(self._array, indent=3, ensure_ascii=False))
+        self._fd.write(json.dumps(self._arr, indent=3, ensure_ascii=False))
         self._fd.write('\n')
 
     def write_mutual_friends(self, friend_list):
         for user in friend_list:
-            self._array.append(_filter_user_fields(user))
+            self._arr.append(_filter_user_fields(user))
 
 class OutputFormat(Enum):
     CSV = 'csv'
