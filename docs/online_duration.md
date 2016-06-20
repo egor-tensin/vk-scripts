@@ -38,14 +38,14 @@ You can also get a JSON document:
           "uid": 89497105,
           "first_name": "John",
           "last_name": "Smith",
-          "screen_name": "john.smith",
+          "domain": "john.smith",
           "duration": "0:12:31"
        },
        {
           "uid": 3698577,
           "first_name": "Jane",
           "last_name": "Smith",
-          "screen_name": "jane.smith",
+          "domain": "jane.smith",
           "duration": "1:34:46"
        }
     ]
