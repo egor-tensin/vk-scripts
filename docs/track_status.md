@@ -6,12 +6,11 @@ Track when people go online/offline.
 Usage
 -----
 
-Run from the top-level directory using `python -m`.
-For example:
+Run from the top-level directory using `python -m`:
 
     > python -m bin.track_status -h
-    usage: track_status.py [-h] [-t TIMEOUT] [-l LOG]
-                           [--output-format {csv,log,null}] [-o OUTPUT]
+    usage: track_status.py [-h] [-t SECONDS] [-l PATH]
+                           [--output-format {csv,log,null}] [-o PATH]
                            UID [UID ...]
     ...
 

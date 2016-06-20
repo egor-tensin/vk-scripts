@@ -9,7 +9,7 @@ Usage
 Run from the top-level directory using `python -m`:
 
     > python -m bin.mutual_friends -h
-    usage: mutual_friends.py [-h] [--output-format {csv,json}] [--output OUTPUT]
+    usage: mutual_friends.py [-h] [--output-format {csv,json}] [-o PATH]
                              UID [UID ...]
     ...
 
