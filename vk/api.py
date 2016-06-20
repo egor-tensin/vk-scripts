@@ -93,7 +93,7 @@ class API:
 
     def _call_method(self, method, **params):
         url = self._build_method_url(method, **params)
-        print(url)
+        #print(url)
         try:
             with urlopen(url) as response:
                 response = json.loads(response.read().decode())
