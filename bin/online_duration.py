@@ -93,6 +93,10 @@ class OutputConverterJSON:
     _WEEKDAY_FIELD = 'weekday'
     _HOUR_FIELD = 'hour'
 
+    assert _DATE_FIELD not in map(str, _OUTPUT_USER_FIELDS)
+    assert _WEEKDAY_FIELD not in map(str, _OUTPUT_USER_FIELDS)
+    assert _HOUR_FIELD not in map(str, _OUTPUT_USER_FIELDS)
+
     @staticmethod
     def convert_user(user):
         obj = OrderedDict()
@@ -123,6 +127,8 @@ class OutputWriterJSON:
         self._fd = fd
 
     _DURATION_FIELD = 'duration'
+
+    assert _DURATION_FIELD not in map(str, _OUTPUT_USER_FIELDS)
 
     _CONVERT_KEY = {
         Grouping.USER: OutputConverterJSON.convert_user,
