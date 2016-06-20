@@ -81,11 +81,11 @@ def _parse_args(args=sys.argv):
 
     parser.add_argument('uids', metavar='UID', nargs='+',
                         help='user IDs or "screen names"')
-    parser.add_argument('--output-format', dest='fmt', metavar='FORMAT',
+    parser.add_argument('--output-format', dest='fmt',
                         type=_parse_output_format, default=OutputFormat.CSV,
                         choices=tuple(fmt for fmt in OutputFormat),
                         help='specify output format')
-    parser.add_argument('--output', dest='fd', metavar='PATH',
+    parser.add_argument('-o', '--output', dest='fd', metavar='PATH',
                         type=argparse.FileType('w', encoding='utf-8'),
                         default=sys.stdout,
                         help='set output file path (standard output by default)')
