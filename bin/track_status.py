@@ -2,57 +2,67 @@
 # This file is licensed under the terms of the MIT License.
 # See LICENSE.txt for details.
 
+import argparse, sys
+
 from vk.api import API, Language
 from vk.tracking import StatusTracker
-from vk.tracking.db import Format
+from vk.tracking.db import Format as DatabaseFormat
 
-if __name__ == '__main__':
-    import argparse, sys
+def _parse_natural_number(s):
+    x = int(s)
+    if x < 1:
+        raise argparse.ArgumentTypeError('must be positive: ' + x)
+    return x
 
-    def natural_number(s):
-        x = int(s)
-        if x < 1:
-            raise argparse.ArgumentError()
-        return x
-    def output_format(s):
-        try:
-            return Format(s)
-        except ValueError:
-            raise argparse.ArgumentError()
+def _parse_output_format(s):
+    try:
+        return DatabaseFormat(s)
+    except ValueError:
+        raise argparse.ArgumentTypeError('invalid database format: ' + str(s))
 
+def _parse_args(args=sys.argv):
     parser = argparse.ArgumentParser(
         description='Track when people go online/offline.')
 
-    parser.add_argument(metavar='UID', dest='uids', nargs='+',
+    parser.add_argument('uids', metavar='UID', nargs='+',
                         help='user IDs or "screen names"')
-    parser.add_argument('-t', '--timeout', type=natural_number,
+    parser.add_argument('-t', '--timeout', metavar='SECONDS',
+                        type=_parse_natural_number,
                         default=StatusTracker.DEFAULT_TIMEOUT,
-                        help='set refresh interval (seconds)')
-    parser.add_argument('-l', '--log', default=sys.stdout,
-                        type=argparse.FileType('w'),
+                        help='set refresh interval')
+    parser.add_argument('-l', '--log', metavar='PATH', dest='log_fd',
+                        type=argparse.FileType('w', encoding='utf-8'),
+                        default=sys.stdout,
                         help='set log file path (standard output by default)')
-    parser.add_argument('--output-format',
-                        type=output_format, default=Format.CSV,
-                        choices=tuple(fmt for fmt in Format),
+    parser.add_argument('--output-format', dest='fmt',
+                        type=_parse_output_format, default=DatabaseFormat.CSV,
+                        choices=tuple(fmt for fmt in DatabaseFormat),
                         help='set database format')
-    parser.add_argument('-o', '--output', default=None,
-                        type=argparse.FileType('w'),
+    parser.add_argument('-o', '--output', metavar='PATH', dest='fd',
+                        type=argparse.FileType('w', encoding='utf-8'),
+                        default=None,
                         help='set database file path')
 
-    args = parser.parse_args()
+    return parser.parse_args(args[1:])
+
+def track_status(uids, timeout=StatusTracker.DEFAULT_TIMEOUT,
+                 log_fd=sys.stdout, fmt=DatabaseFormat.CSV, fd=None):
 
     api = API(Language.EN)
-    tracker = StatusTracker(api, args.timeout)
+    tracker = StatusTracker(api, timeout)
 
-    if args.output_format is Format.LOG or args.output is None:
-        args.output_format = Format.NULL
+    if fmt is DatabaseFormat.LOG or fd is None:
+        fmt = DatabaseFormat.NULL
 
-    with Format.LOG.create_writer(args.log) as log_writer:
+    with DatabaseFormat.LOG.create_writer(log_fd) as log_writer:
         tracker.add_database_writer(log_writer)
-        with args.output_format.create_writer(args.output) as db_writer:
+        with fmt.create_writer(fd) as db_writer:
             tracker.add_database_writer(db_writer)
-            try:
-                tracker.loop(args.uids)
-            except Exception as e:
-                log_writer.exception(e)
-                sys.exit(1)
+            tracker.loop(uids)
+
+def main(args=sys.argv):
+    args = _parse_args(args)
+    track_status(**vars(args))
+
+if __name__ == '__main__':
+    main()
