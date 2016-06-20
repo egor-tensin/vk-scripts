@@ -12,14 +12,14 @@ import sys
 from vk.api import API, Language
 from vk.user import UserField
 
-OUTPUT_FIELDS = UserField.UID, UserField.FIRST_NAME, UserField.LAST_NAME
+_OUTPUT_FIELDS = UserField.UID, UserField.FIRST_NAME, UserField.LAST_NAME
 
-def query_friend_list(api, user):
-    return api.friends_get(user.get_uid(), fields=OUTPUT_FIELDS)
+def _query_friend_list(api, user):
+    return api.friends_get(user.get_uid(), fields=_OUTPUT_FIELDS)
 
-def extract_output_fields(user):
+def _filter_user_fields(user):
     new_user = OrderedDict()
-    for field in OUTPUT_FIELDS:
+    for field in _OUTPUT_FIELDS:
         new_user[str(field)] = user[field] if field in user else None
     return new_user
 
@@ -35,7 +35,7 @@ class OutputWriterCSV:
 
     def write_mutual_friends(self, friend_list):
         for user in friend_list:
-            user = extract_output_fields(user)
+            user = _filter_user_fields(user)
             self._writer.writerow(user.values())
 
 class OutputWriterJSON:
@@ -52,7 +52,7 @@ class OutputWriterJSON:
 
     def write_mutual_friends(self, friend_list):
         for user in friend_list:
-            self._array.append(extract_output_fields(user))
+            self._array.append(_filter_user_fields(user))
 
 class OutputFormat(Enum):
     CSV = 'csv'
@@ -69,39 +69,42 @@ class OutputFormat(Enum):
         else:
             raise NotImplementedError('unsupported output format: ' + str(self))
 
-def parse_output_format(s):
+def _parse_output_format(s):
     try:
         return OutputFormat(s)
     except ValueError:
         raise argparse.ArgumentTypeError('invalid output format: ' + str(s))
 
-def parse_args(args=sys.argv):
+def _parse_args(args=sys.argv):
     parser = argparse.ArgumentParser(
         description='Learn who your ex and her new boyfriend are both friends with.')
 
-    parser.add_argument(metavar='UID', dest='uids', nargs='+',
+    parser.add_argument('uids', metavar='UID', nargs='+',
                         help='user IDs or "screen names"')
-    parser.add_argument('--output-format', type=parse_output_format,
+    parser.add_argument('--output-format', dest='fmt', metavar='FORMAT',
+                        type=_parse_output_format, default=OutputFormat.CSV,
                         choices=tuple(fmt for fmt in OutputFormat),
-                        default=OutputFormat.CSV,
                         help='specify output format')
-    parser.add_argument('--output', type=argparse.FileType('w', encoding='utf-8'),
+    parser.add_argument('--output', dest='fd', metavar='PATH',
+                        type=argparse.FileType('w', encoding='utf-8'),
                         default=sys.stdout,
                         help='set output file path (standard output by default)')
 
-    return parser.parse_args(args)
+    return parser.parse_args(args[1:])
 
-def main(args=sys.argv):
-    args = parse_args(args)
-
+def write_mutual_friends(uids, fmt=OutputFormat.CSV, fd=sys.stdout):
     api = API(Language.EN)
-    users = api.users_get(args.uids)
+    users = api.users_get(uids)
 
-    friend_lists = map(lambda user: frozenset(query_friend_list(api, user)), users)
+    friend_lists = (frozenset(_query_friend_list(api, user)) for user in users)
     mutual_friends = frozenset.intersection(*friend_lists)
 
-    with args.output_format.create_writer(args.output) as writer:
+    with fmt.create_writer(fd) as writer:
         writer.write_mutual_friends(mutual_friends)
+
+def main(args=sys.argv):
+    args = _parse_args(args)
+    write_mutual_friends(**vars(args))
 
 if __name__ == '__main__':
     main()
