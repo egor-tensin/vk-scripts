@@ -48,7 +48,7 @@ def _parse_args(args=sys.argv):
 def track_status(uids, timeout=StatusTracker.DEFAULT_TIMEOUT,
                  log_fd=sys.stdout, fmt=DatabaseFormat.CSV, fd=None):
 
-    api = API(Language.EN)
+    api = API(Language.EN, deactivated_users=False)
     tracker = StatusTracker(api, timeout)
 
     if fmt is DatabaseFormat.LOG or fd is None:
