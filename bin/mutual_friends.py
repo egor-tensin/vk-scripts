@@ -12,14 +12,14 @@ import sys
 from vk.api import API, Language
 from vk.user import UserField
 
-_OUTPUT_FIELDS = UserField.UID, UserField.FIRST_NAME, UserField.LAST_NAME
+_OUTPUT_USER_FIELDS = UserField.UID, UserField.FIRST_NAME, UserField.LAST_NAME
 
 def _query_friend_list(api, user):
-    return api.friends_get(user.get_uid(), fields=_OUTPUT_FIELDS)
+    return api.friends_get(user.get_uid(), fields=_OUTPUT_USER_FIELDS)
 
 def _filter_user_fields(user):
     new_user = OrderedDict()
-    for field in _OUTPUT_FIELDS:
+    for field in _OUTPUT_USER_FIELDS:
         new_user[str(field)] = user[field] if field in user else None
     return new_user
 
