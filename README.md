@@ -2,15 +2,29 @@ VK scripts
 ==========
 
 A collection of scripts abusing VK.com API.
+
+Prerequisites
+-------------
+
 Requires Python 3.4 or higher.
+Additionally, [online_duration.py] requires the excellent [matplotlib] plotting
+library to be installed.
+The versions I used are listed below.
+
+Software     | Version
+------------ | -------
+Python       | 3.5.1
+[matplotlib] | 1.5.1
+
+[matplotlib]: http://matplotlib.org/
 
 Usage
 -----
 
 The main package is located in the "vk/" directory.
 
-Additionally, a few scripts are supplied in the "bin/" directory to show-case
-the package's capabilities.
+Also, a few scripts are supplied in the "bin/" directory to showcase the
+package's capabilities.
 Run the scripts from the top-level directory using `python -m`.
 Pass the `--help` flag to a script to see its detailed usage information.
 The supplied scripts are listed below.
