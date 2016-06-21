@@ -6,9 +6,9 @@ A collection of scripts abusing VK.com API.
 Prerequisites
 -------------
 
-Requires Python 3.4 or higher.
-Additionally, [online_duration.py] requires the excellent [matplotlib] plotting
-library to be installed.
+Python 3.4 or higher is required.
+Additionally, [online_duration.py] uses the excellent [matplotlib] plotting
+library.
 The versions I used are listed below.
 
 Software     | Version
