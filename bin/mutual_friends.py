@@ -83,7 +83,7 @@ def _parse_args(args=sys.argv):
                         help='user IDs or "screen names"')
     parser.add_argument('--output-format', dest='fmt',
                         type=_parse_output_format, default=OutputFormat.CSV,
-                        choices=tuple(fmt for fmt in OutputFormat),
+                        choices=OutputFormat,
                         help='specify output format')
     parser.add_argument('-o', '--output', dest='fd', metavar='PATH',
                         type=argparse.FileType('w', encoding='utf-8'),

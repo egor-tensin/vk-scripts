@@ -36,7 +36,7 @@ def _parse_args(args=sys.argv):
                         help='set log file path (standard output by default)')
     parser.add_argument('--output-format', dest='fmt',
                         type=_parse_output_format, default=DatabaseFormat.CSV,
-                        choices=tuple(fmt for fmt in DatabaseFormat),
+                        choices=DatabaseFormat,
                         help='set database format')
     parser.add_argument('-o', '--output', metavar='PATH', dest='fd',
                         type=argparse.FileType('w', encoding='utf-8'),

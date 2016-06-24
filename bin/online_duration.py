@@ -378,16 +378,16 @@ def _parse_args(args=sys.argv):
                         help='output path (standard output by default)')
     parser.add_argument('--grouping',
                         type=_parse_grouping, default=Grouping.USER,
-                        choices=tuple(grouping for grouping in Grouping),
+                        choices=Grouping,
                         help='set grouping')
     parser.add_argument('--input-format', dest='db_fmt',
                         type=_parse_database_format,
                         default=DatabaseFormat.CSV,
-                        choices=tuple(fmt for fmt in DatabaseFormat),
+                        choices=DatabaseFormat,
                         help='specify database format')
     parser.add_argument('--output-format', dest='fmt',
                         type=_parse_output_format, default=OutputFormat.CSV,
-                        choices=tuple(fmt for fmt in OutputFormat),
+                        choices=OutputFormat,
                         help='specify output format')
     parser.add_argument('--from', dest='date_from',
                         type=_parse_date_range_limit, default=None,
