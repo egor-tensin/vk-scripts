@@ -9,7 +9,7 @@ Prerequisites
 Python 3.4 or higher is required.
 Additionally, [online_duration.py] uses the excellent [matplotlib] plotting
 library.
-The versions I used are listed below.
+The versions the author is using are listed below.
 
 Software     | Version
 ------------ | -------
