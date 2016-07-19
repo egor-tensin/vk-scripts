@@ -9,8 +9,7 @@ Usage
 Run from the top-level directory using `python -m`:
 
     > python -m bin.mutual_friends -h
-    usage: mutual_friends.py [-h] [--output-format {csv,json}] [-o PATH]
-                             UID [UID ...]
+    usage: mutual_friends.py [-h] [-f {csv,json}] [-o PATH] UID [UID ...]
     ...
 
 For example (using made up user IDs/"screen names"),
@@ -25,7 +24,7 @@ Smith" and "Jane Smith", whose user IDs are 89497105 and 3698577 respectively.
 The output format is CSV (comma-separated values) by default.
 You can also get a JSON document:
 
-    > python -m bin.mutual_friends --output-format json john.doe jane.doe
+    > python -m bin.mutual_friends --format json john.doe jane.doe
     [
        {
           "uid": 89497105,

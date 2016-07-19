@@ -73,7 +73,7 @@ def _parse_output_format(s):
     try:
         return OutputFormat(s)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid output format: ' + str(s))
+        raise argparse.ArgumentTypeError('invalid output format: ' + s)
 
 def _parse_args(args=sys.argv):
     parser = argparse.ArgumentParser(
@@ -81,11 +81,12 @@ def _parse_args(args=sys.argv):
 
     parser.add_argument('uids', metavar='UID', nargs='+',
                         help='user IDs or "screen names"')
-    parser.add_argument('--output-format', dest='fmt',
-                        type=_parse_output_format, default=OutputFormat.CSV,
+    parser.add_argument('-f', '--format', dest='fmt',
+                        type=_parse_output_format,
+                        default=OutputFormat.CSV,
                         choices=OutputFormat,
                         help='specify output format')
-    parser.add_argument('-o', '--output', dest='fd', metavar='PATH',
+    parser.add_argument('-o', '--output', metavar='PATH', dest='fd',
                         type=argparse.FileType('w', encoding='utf-8'),
                         default=sys.stdout,
                         help='set output file path (standard output by default)')
