@@ -9,8 +9,8 @@ Usage
 Run from the top-level directory using `python -m`:
 
     > python -m bin.track_status -h
-    usage: track_status.py [-h] [-t SECONDS] [-l PATH]
-                           [--output-format {csv,log,null}] [-o PATH]
+    usage: track_status.py [-h] [-t SECONDS] [-l PATH] [-f {csv,log,null}]
+                           [-o PATH]
                            UID [UID ...]
     ...
 
