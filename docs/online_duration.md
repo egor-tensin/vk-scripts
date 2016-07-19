@@ -10,10 +10,9 @@ Run from the top-level directory using `python -m`:
 
 ```
 > python -m bin.online_duration -h
-usage: online_duration.py [-h] [--grouping {user,date,weekday,hour}]
-                          [--input-format {csv,log,null}]
-                          [--output-format {csv,json,plot}] [--from DATE_FROM]
-                          [--to DATE_TO]
+usage: online_duration.py [-h] [-g {user,date,weekday,hour}]
+                          [-i {csv,log,null}] [-o {csv,json,plot}]
+                          [-a DATE_FROM] [-b DATE_TO]
                           input [output]
 ```
 

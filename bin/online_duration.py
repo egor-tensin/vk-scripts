@@ -340,19 +340,19 @@ def _parse_grouping(s):
     try:
         return Grouping(s)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid grouping: ' + str(s))
+        raise argparse.ArgumentTypeError('invalid grouping: ' + s)
 
 def _parse_database_format(s):
     try:
         return DatabaseFormat(s)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid database format: ' + str(s))
+        raise argparse.ArgumentTypeError('invalid database format: ' + s)
 
 def _parse_output_format(s):
     try:
         return OutputFormat(s)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid output format: ' + str(s))
+        raise argparse.ArgumentTypeError('invalid output format: ' + s)
 
 _DATE_RANGE_LIMIT_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
 
@@ -376,23 +376,25 @@ def _parse_args(args=sys.argv):
                         type=argparse.FileType('w', encoding='utf-8'),
                         default=sys.stdout,
                         help='output path (standard output by default)')
-    parser.add_argument('--grouping',
-                        type=_parse_grouping, default=Grouping.USER,
+    parser.add_argument('-g', '--grouping',
+                        type=_parse_grouping,
                         choices=Grouping,
-                        help='set grouping')
-    parser.add_argument('--input-format', dest='db_fmt',
+                        default=Grouping.USER,
+                        help='group database records by date, weekday, etc.')
+    parser.add_argument('-i', '--input-format', dest='db_fmt',
                         type=_parse_database_format,
                         default=DatabaseFormat.CSV,
                         choices=DatabaseFormat,
                         help='specify database format')
-    parser.add_argument('--output-format', dest='fmt',
-                        type=_parse_output_format, default=OutputFormat.CSV,
+    parser.add_argument('-o', '--output-format', dest='fmt',
+                        type=_parse_output_format,
                         choices=OutputFormat,
+                        default=OutputFormat.CSV,
                         help='specify output format')
-    parser.add_argument('--from', dest='date_from',
+    parser.add_argument('-a', '--from', dest='date_from',
                         type=_parse_date_range_limit, default=None,
                         help='set the date to process database records from')
-    parser.add_argument('--to', dest='date_to',
+    parser.add_argument('-b', '--to', dest='date_to',
                         type=_parse_date_range_limit, default=None,
                         help='set the date to process database record to')
 
