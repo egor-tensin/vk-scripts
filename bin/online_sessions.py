@@ -413,7 +413,7 @@ def _parse_args(args=sys.argv):
 
     return parser.parse_args(args[1:])
 
-def write_online_duration(
+def process_online_sessions(
         db_fd, db_fmt=DatabaseFormat.CSV,
         fd=sys.stdout, fmt=OutputFormat.CSV,
         group_by=GroupBy.USER,
@@ -430,7 +430,7 @@ def write_online_duration(
 
 def main(args=sys.argv):
     args = _parse_args(args)
-    write_online_duration(**vars(args))
+    process_online_sessions(**vars(args))
 
 if __name__ == '__main__':
     main()

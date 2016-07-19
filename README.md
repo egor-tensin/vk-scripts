@@ -7,7 +7,7 @@ Prerequisites
 -------------
 
 Python 3.4 or higher is required.
-Additionally, [online_duration.py] uses the excellent [matplotlib] plotting
+Additionally, [online_sessions.py] uses the excellent [matplotlib] plotting
 library.
 The versions below have been verified to work properly.
 
@@ -32,12 +32,12 @@ The supplied scripts are listed below.
 * [mutual_friends.py] &mdash; Learn who your ex and her new boyfriend are both
 friends with.
 * [track_status.py] &mdash; Track when people go online/offline.
-* [online_duration.py] &mdash; View/visualize the amount of time people spend
+* [online_sessions.py] &mdash; View/visualize the amount of time people spend
 online.
 
 [mutual_friends.py]: docs/mutual_friends.md
 [track_status.py]: docs/track_status.md
-[online_duration.py]: docs/online_duration.md
+[online_sessions.py]: docs/online_sessions.md
 
 License
 -------
