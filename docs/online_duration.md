@@ -12,7 +12,7 @@ Run from the top-level directory using `python -m`:
 > python -m bin.online_duration -h
 usage: online_duration.py [-h] [-g {user,date,weekday,hour}]
                           [-i {csv,log,null}] [-o {csv,json,plot}]
-                          [-a DATE_FROM] [-b DATE_TO]
+                          [-a TIME_FROM] [-b TIME_TO]
                           input [output]
 ```
 
@@ -141,10 +141,9 @@ a file path to write the image to.
 ![hour.png]
 
 You can limit the scope of the database by supplying a time range.
-Only online durations that are within the supplied range shall then be
-processed.
+Only online sessions that overlap with this range shall then be processed.
 Set the range by specifying both or one of the `--from` and `--to` parameters.
-Values must be in the `%Y-%m-%dT%H:%M:%SZ` format (a subset of ISO 8601).
+The values must be in the `%Y-%m-%dT%H:%M:%SZ` format (a subset of ISO 8601).
 
 All dates and times are in UTC.
 

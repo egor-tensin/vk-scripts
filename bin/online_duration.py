@@ -13,7 +13,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
-from vk.tracking import OnlineStreakEnumerator
+from vk.tracking import OnlineSessionEnumerator
 from vk.tracking.db import Format as DatabaseFormat
 from vk.user import UserField
 
@@ -23,8 +23,8 @@ class GroupBy(Enum):
     WEEKDAY = 'weekday'
     HOUR = 'hour'
 
-    def enum_durations(self, db_reader, date_from=None, date_to=None):
-        online_streaks = OnlineStreakEnumerator(date_from, date_to)
+    def group(self, db_reader, time_from=None, time_to=None):
+        online_streaks = OnlineSessionEnumerator(time_from, time_to)
         if self is GroupBy.USER:
             return online_streaks.group_by_user(db_reader)
         elif self is GroupBy.DATE:
@@ -80,8 +80,8 @@ class OutputWriterCSV:
             raise NotImplementedError('unsupported grouping: ' + str(group_by))
         return OutputWriterCSV._CONVERT_KEY[group_by](key)
 
-    def process_database(self, group_by, db_reader, date_from=None, date_to=None):
-        for key, duration in group_by.enum_durations(db_reader, date_from, date_to).items():
+    def process_database(self, group_by, db_reader, time_from=None, time_to=None):
+        for key, duration in group_by.group(db_reader, time_from, time_to).items():
             row = self._key_to_row(group_by, key)
             row.append(str(duration))
             self._write_row(row)
@@ -148,9 +148,9 @@ class OutputWriterJSON:
         self._fd.write(json.dumps(x, indent=3, ensure_ascii=False))
         self._fd.write('\n')
 
-    def process_database(self, group_by, db_reader, date_from=None, date_to=None):
+    def process_database(self, group_by, db_reader, time_from=None, time_to=None):
         arr = []
-        for key, duration in group_by.enum_durations(db_reader, date_from, date_to).items():
+        for key, duration in group_by.group(db_reader, time_from, time_to).items():
             obj = self._key_to_object(group_by, key)
             obj[self._DURATION_FIELD] = str(duration)
             arr.append(obj)
@@ -300,10 +300,9 @@ class OutputWriterPlot:
         return tuple(map(OutputWriterPlot._duration_to_seconds, durations.values()))
 
     def process_database(
-            self, group_by, db_reader, date_from=None, date_to=None):
+            self, group_by, db_reader, time_from=None, time_to=None):
 
-        durations = group_by.enum_durations(
-            db_reader, date_from, date_to)
+        durations = group_by.group(db_reader, time_from, time_to)
 
         bar_chart = BarChartBuilder()
 
@@ -394,7 +393,7 @@ def _parse_args(args=sys.argv):
                         type=_parse_group_by,
                         choices=GroupBy,
                         default=GroupBy.USER,
-                        help='group online streaks by user/date/etc.')
+                        help='group online sessions by user/date/etc.')
     parser.add_argument('-i', '--input-format', dest='db_fmt',
                         type=_parse_database_format,
                         default=DatabaseFormat.CSV,
@@ -405,12 +404,12 @@ def _parse_args(args=sys.argv):
                         choices=OutputFormat,
                         default=OutputFormat.CSV,
                         help='specify output format')
-    parser.add_argument('-a', '--from', dest='date_from',
+    parser.add_argument('-a', '--from', dest='time_from',
                         type=_parse_date_range_limit, default=None,
-                        help='set the date to process database records from')
-    parser.add_argument('-b', '--to', dest='date_to',
+                        help='discard online activity prior to this moment')
+    parser.add_argument('-b', '--to', dest='time_to',
                         type=_parse_date_range_limit, default=None,
-                        help='set the date to process database record to')
+                        help='discard online activity after this moment')
 
     return parser.parse_args(args[1:])
 
@@ -418,16 +417,16 @@ def write_online_duration(
         db_fd, db_fmt=DatabaseFormat.CSV,
         fd=sys.stdout, fmt=OutputFormat.CSV,
         group_by=GroupBy.USER,
-        date_from=None, date_to=None):
+        time_from=None, time_to=None):
 
-    if date_from is not None and date_to is not None:
-        if date_from > date_to:
-            date_from, date_to = date_to, date_from
+    if time_from is not None and time_to is not None:
+        if time_from > time_to:
+            time_from, time_to = time_to, time_from
 
     with db_fmt.create_reader(db_fd) as db_reader:
         output_writer = fmt.create_writer(fd)
         output_writer.process_database(
-            group_by, db_reader, date_from=date_from, date_to=date_to)
+            group_by, db_reader, time_from=time_from, time_to=time_to)
 
 def main(args=sys.argv):
     args = _parse_args(args)
