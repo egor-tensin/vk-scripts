@@ -52,9 +52,10 @@ def _parse_args(args=sys.argv):
 
     return parser.parse_args(args[1:])
 
-def track_status(uids, timeout=DEFAULT_TIMEOUT,
-                 log_fd=sys.stdout,
-                 db_fd=None, db_fmt=DEFAULT_DB_FORMAT):
+def track_status(
+        uids, timeout=DEFAULT_TIMEOUT,
+        log_fd=sys.stdout,
+        db_fd=None, db_fmt=DEFAULT_DB_FORMAT):
 
     api = API(Language.EN, deactivated_users=False)
     tracker = StatusTracker(api, timeout)
