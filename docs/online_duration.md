@@ -57,13 +57,13 @@ You can also get a JSON document:
 
 The durations are calculated on a per-user basis by default.
 You can change that by supplying either `date` (to group by dates), `weekday`
-(to group by weekdays) or `hour` (to group by day hours) as the `--grouping`
+(to group by weekdays) or `hour` (to group by day hours) as the `--group-by`
 parameter value.
 For example (assuming that both Jane and Joe spent their time online on Friday,
 June 17, 2016).
 
 ```
-> python -m bin.online_duration --output-format json --grouping date db.csv
+> python -m bin.online_duration --output-format json --group-by date db.csv
 [
    {
       "date": "2016-06-17",
@@ -73,7 +73,7 @@ June 17, 2016).
 ```
 
 ```
-> python -m bin.online_duration --output-format csv --grouping weekday db.csv
+> python -m bin.online_duration --output-format csv --group-by weekday db.csv
 Monday,0:00:00
 Tuesday,0:00:00
 Wednesday,0:00:00
@@ -84,7 +84,7 @@ Sunday,0:00:00
 ```
 
 ```
-> python -m bin.online_duration --grouping hour db.csv
+> python -m bin.online_duration --group-by hour db.csv
 0:00:00,0:00:00
 1:00:00,0:00:00
 2:00:00,0:00:00
@@ -123,19 +123,19 @@ a file path to write the image to.
 ![user.png]
 
 ```
-> python -m bin.online_duration --output-format plot --grouping date db.csv date.png
+> python -m bin.online_duration --output-format plot --group-by date db.csv date.png
 ```
 
 ![date.png]
 
 ```
-> python -m bin.online_duration --output-format plot --grouping weekday db.csv weekday.png
+> python -m bin.online_duration --output-format plot --group-by weekday db.csv weekday.png
 ```
 
 ![weekday.png]
 
 ```
-> python -m bin.online_duration --output-format plot --grouping hour db.csv hour.png
+> python -m bin.online_duration --output-format plot --group-by hour db.csv hour.png
 ```
 
 ![hour.png]
