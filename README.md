@@ -9,7 +9,7 @@ Prerequisites
 Python 3.4 or higher is required.
 Additionally, [online_duration.py] uses the excellent [matplotlib] plotting
 library.
-The versions the author is using are listed below.
+The versions below have been verified to work properly.
 
 Software     | Version
 ------------ | -------
@@ -21,7 +21,7 @@ Python       | 3.5.1
 Usage
 -----
 
-The main package is located in the "vk/" directory.
+The main package resides in the "vk/" directory.
 
 Also, a few scripts are supplied in the "bin/" directory to showcase the
 package's capabilities.
@@ -29,10 +29,11 @@ Run the scripts from the top-level directory using `python -m`.
 Pass the `--help` flag to a script to see its detailed usage information.
 The supplied scripts are listed below.
 
-* [mutual_friends.py]: Learn who your ex and her new boyfriend are both friends
-with.
-* [track_status.py]: Track when people go online/offline.
-* [online_duration.py]: View/visualize the amount of time people spend online.
+* [mutual_friends.py] &mdash; Learn who your ex and her new boyfriend are both
+friends with.
+* [track_status.py] &mdash; Track when people go online/offline.
+* [online_duration.py] &mdash; View/visualize the amount of time people spend
+online.
 
 [mutual_friends.py]: docs/mutual_friends.md
 [track_status.py]: docs/track_status.md
