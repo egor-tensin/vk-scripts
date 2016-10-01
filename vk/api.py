@@ -1,6 +1,7 @@
-# Copyright 2015 Egor Tensin <Egor.Tensin@gmail.com>
-# This file is licensed under the terms of the MIT License.
-# See LICENSE.txt for details.
+# Copyright (c) 2015 Egor Tensin <Egor.Tensin@gmail.com>
+# This file is part of the "VK scripts" project.
+# For details, see https://github.com/egor-tensin/vk-scripts.
+# Distributed under the MIT License.
 
 from collections import Iterable
 from collections.abc import Mapping
@@ -99,6 +100,7 @@ class API:
                 response = json.loads(response.read().decode())
                 if 'response' not in response:
                     raise vk.error.InvalidAPIResponseError(response)
+                #print(response)
                 return response['response']
         except (ConnectionError, URLError):
             raise vk.error.APIConnectionError()
