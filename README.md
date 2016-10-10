@@ -6,17 +6,23 @@ A collection of scripts abusing VK.com API.
 Prerequisites
 -------------
 
-Python 3.4 or higher is required.
-Additionally, [online_sessions.py] uses the excellent [matplotlib] plotting
-library.
+* Python 3.4 or higher
+* [matplotlib] (required by [online_sessions.py])
+* [numpy] (required by [matplotlib])
+
 The versions below have been verified to work properly.
 
-Software     | Version
------------- | -------
-Python       | 3.5.1
-[matplotlib] | 1.5.1
+Software   | Version
+---------- | -------
+CPython    | 3.5.1
+numpy      | 1.11.0
+matplotlib | 1.5.1
+
+Windows binaries for CPython can be acquired at
+http://www.lfd.uci.edu/~gohlke/pythonlibs/.
 
 [matplotlib]: http://matplotlib.org/
+[numpy]: http://www.numpy.org/
 
 Usage
 -----
