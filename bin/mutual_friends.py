@@ -70,11 +70,11 @@ class OutputFormat(Enum):
         else:
             raise NotImplementedError('unsupported output format: ' + str(self))
 
-def _parse_output_format(s):
+def _parse_output_format(src):
     try:
-        return OutputFormat(s)
+        return OutputFormat(src)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid output format: ' + s)
+        raise argparse.ArgumentTypeError('invalid output format: ' + src)
 
 def _parse_args(args=sys.argv):
     parser = argparse.ArgumentParser(

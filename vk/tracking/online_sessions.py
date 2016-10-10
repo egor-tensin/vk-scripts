@@ -99,20 +99,20 @@ class OnlineSessionEnumerator(MutableMapping):
         return by_hour
 
     @staticmethod
-    def _split_into_days(a, b):
-        while a.date() != b.date():
-            next_day = a.date() + timedelta(days=1)
-            yield a.date(), next_day - a
-            a = next_day
-        yield b.date(), b - a
+    def _split_into_days(time_from, time_to):
+        while time_from.date() != time_to.date():
+            next_day = time_from.date() + timedelta(days=1)
+            yield time_from.date(), next_day - time_from
+            time_from = next_day
+        yield time_to.date(), time_to - time_from
 
     @staticmethod
-    def _split_into_hours(a, b):
-        while a.date() != b.date() or a.hour != b.hour:
-            next_hour = a.replace(minute=0, second=0) + timedelta(hours=1)
-            yield a.hour, next_hour - a
-            a = next_hour
-        yield b.hour, b - a
+    def _split_into_hours(time_from, time_to):
+        while time_from.date() != time_to.date() or time_from.hour != time_to.hour:
+            next_hour = time_from.replace(minute=0, second=0) + timedelta(hours=1)
+            yield time_from.hour, next_hour - time_from
+            time_from = next_hour
+        yield time_to.hour, time_to - time_from
 
     def _process_database_record(self, record):
         return self._close_user_session(record.to_user())

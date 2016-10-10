@@ -11,23 +11,23 @@ from numbers import Integral, Real
 
 from .platform import Platform
 
-def _parse_time(x):
-    if isinstance(x, datetime):
-        if x.tzinfo is None or x.tzinfo.utcoffset(x) is None:
-            x = x.replace(tzinfo=timezone.utc)
-        return x
-    elif isinstance(x, Real) or isinstance(x, Integral):
-        return datetime.fromtimestamp(x, tz=timezone.utc)
+def _parse_time(src):
+    if isinstance(src, datetime):
+        if src.tzinfo is None or src.tzinfo.utcoffset(src) is None:
+            src = src.replace(tzinfo=timezone.utc)
+        return src
+    elif isinstance(src, Real) or isinstance(src, Integral):
+        return datetime.fromtimestamp(src, tz=timezone.utc)
     else:
         raise TypeError()
 
-def _parse_platform(x):
-    if x in Platform:
-        return x
-    if isinstance(x, str):
-        return Platform.from_string(x)
+def _parse_platform(src):
+    if src in Platform:
+        return src
+    if isinstance(src, str):
+        return Platform.from_string(src)
     else:
-        return Platform(x)
+        return Platform(src)
 
 class LastSeenField(Enum):
     TIME = 'time'
@@ -85,8 +85,8 @@ class LastSeen(MutableMapping):
     def get_time(self):
         return self[LastSeenField.TIME]
 
-    def set_time(self, t):
-        self[LastSeenField.TIME] = t
+    def set_time(self, timestamp):
+        self[LastSeenField.TIME] = timestamp
 
     def has_platform(self):
         return LastSeenField.PLATFORM in self

@@ -145,17 +145,17 @@ class OutputWriterJSON:
             raise NotImplementedError('unsupported grouping: ' + str(group_by))
         return OutputWriterJSON._CONVERT_KEY[group_by](key)
 
-    def _write(self, x):
-        self._fd.write(json.dumps(x, indent=3, ensure_ascii=False))
+    def _write(self, entries):
+        self._fd.write(json.dumps(entries, indent=3, ensure_ascii=False))
         self._fd.write('\n')
 
     def process_database(self, group_by, db_reader, time_from=None, time_to=None):
-        arr = []
+        entries = []
         for key, duration in group_by.group(db_reader, time_from, time_to).items():
-            obj = self._key_to_object(group_by, key)
-            obj[self._DURATION_FIELD] = str(duration)
-            arr.append(obj)
-        self._write(arr)
+            entry = self._key_to_object(group_by, key)
+            entry[self._DURATION_FIELD] = str(duration)
+            entries.append(entry)
+        self._write(entries)
 
 class BarChartBuilder:
     _BAR_HEIGHT = 1.
@@ -187,9 +187,9 @@ class BarChartBuilder:
     def get_value_labels(self):
         return self._get_value_axis().get_ticklabels()
 
-    def set_value_label_formatter(self, fn):
+    def set_value_label_formatter(self, handler):
         from matplotlib.ticker import FuncFormatter
-        self._get_value_axis().set_major_formatter(FuncFormatter(fn))
+        self._get_value_axis().set_major_formatter(FuncFormatter(handler))
 
     def set_integer_values_only(self):
         from matplotlib.ticker import MaxNLocator
@@ -289,8 +289,8 @@ class OutputWriterPlot:
         return str(timedelta(seconds=seconds))
 
     @staticmethod
-    def _duration_to_seconds(td):
-        return td.total_seconds()
+    def _duration_to_seconds(duration):
+        return duration.total_seconds()
 
     @staticmethod
     def _extract_labels(group_by, durations):
@@ -350,34 +350,34 @@ class OutputFormat(Enum):
     def __str__(self):
         return self.value
 
-def _parse_group_by(s):
+def _parse_group_by(src):
     try:
-        return GroupBy(s)
+        return GroupBy(src)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid "group by" value: ' + s)
+        raise argparse.ArgumentTypeError('invalid "group by" value: ' + src)
 
-def _parse_database_format(s):
+def _parse_database_format(src):
     try:
-        return DatabaseFormat(s)
+        return DatabaseFormat(src)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid database format: ' + s)
+        raise argparse.ArgumentTypeError('invalid database format: ' + src)
 
-def _parse_output_format(s):
+def _parse_output_format(src):
     try:
-        return OutputFormat(s)
+        return OutputFormat(src)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid output format: ' + s)
+        raise argparse.ArgumentTypeError('invalid output format: ' + src)
 
 _DATE_RANGE_LIMIT_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
 
-def _parse_date_range_limit(s):
+def _parse_date_range_limit(src):
     try:
-        dt = datetime.strptime(s, _DATE_RANGE_LIMIT_FORMAT)
-        return dt.replace(tzinfo=timezone.utc)
+        timestamp = datetime.strptime(src, _DATE_RANGE_LIMIT_FORMAT)
+        return timestamp.replace(tzinfo=timezone.utc)
     except ValueError:
         msg = 'invalid date range limit (must be in the \'{}\' format): {}'
         raise argparse.ArgumentTypeError(
-            msg.format(_DATE_RANGE_LIMIT_FORMAT, s))
+            msg.format(_DATE_RANGE_LIMIT_FORMAT, src))
 
 def _parse_args(args=sys.argv):
     parser = argparse.ArgumentParser(

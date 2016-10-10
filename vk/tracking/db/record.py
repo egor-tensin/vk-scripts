@@ -38,9 +38,9 @@ class Record(MutableMapping):
     def __setitem__(self, field, value):
         if field is LastSeenField.TIME:
             if isinstance(value, str):
-                value = Timestamp.from_string(value).dt
+                value = Timestamp.from_string(value).impl
             elif isinstance(value, Timestamp):
-                value = value.dt
+                value = value.impl
             elif isinstance(value, datetime):
                 pass
             else:
@@ -78,7 +78,7 @@ class Record(MutableMapping):
 
     def _update_last_seen_field(self, last_seen, field):
         if field is LastSeenField.TIME:
-            last_seen[field] = self[field].dt
+            last_seen[field] = self[field].impl
         else:
             last_seen[field] = self[field]
 

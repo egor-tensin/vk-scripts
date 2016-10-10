@@ -39,6 +39,30 @@ online.
 [track_status.py]: docs/track_status.md
 [online_sessions.py]: docs/online_sessions.md
 
+Linting
+-------
+
+Requires [PyLint].
+
+    > cd
+    D:\workspace\personal\vk-scripts
+
+    > pylint vk
+    ...
+
+    > set PYTHONPATH=%CD%
+
+    > pylint bin\mutual_friends.py
+    ...
+
+    > pylint bin\online_sessions.py
+    ...
+
+    > pylint bin\track_status.py
+    ...
+
+[PyLint]: https://www.pylint.org/
+
 License
 -------
 

@@ -27,21 +27,21 @@ class StatusTracker:
         self.add_status_update_handler(writer.on_status_update)
         self.add_connection_error_handler(writer.on_connection_error)
 
-    def add_initial_status_handler(self, fn):
-        self._assert_is_callback(fn)
-        self._on_initial_status.append(fn)
+    def add_initial_status_handler(self, handler):
+        self._assert_is_callback(handler)
+        self._on_initial_status.append(handler)
 
-    def add_status_update_handler(self, fn):
-        self._assert_is_callback(fn)
-        self._on_status_update.append(fn)
+    def add_status_update_handler(self, handler):
+        self._assert_is_callback(handler)
+        self._on_status_update.append(handler)
 
-    def add_connection_error_handler(self, fn):
-        self._assert_is_callback(fn)
-        self._on_connection_error.append(fn)
+    def add_connection_error_handler(self, handler):
+        self._assert_is_callback(handler)
+        self._on_connection_error.append(handler)
 
     @staticmethod
-    def _assert_is_callback(fn):
-        if not isinstance(fn, Callable):
+    def _assert_is_callback(handler):
+        if not isinstance(handler, Callable):
             raise TypeError()
 
     _USER_FIELDS = UserField.DOMAIN, UserField.ONLINE, UserField.LAST_SEEN,
@@ -50,16 +50,16 @@ class StatusTracker:
         return {user.get_uid(): user for user in self._api.users_get(uids, self._USER_FIELDS)}
 
     def _notify_status(self, user):
-        for fn in self._on_initial_status:
-            fn(user)
+        for handler in self._on_initial_status:
+            handler(user)
 
     def _notify_status_update(self, user):
-        for fn in self._on_status_update:
-            fn(user)
+        for handler in self._on_status_update:
+            handler(user)
 
     def _notify_connection_error(self, e):
-        for fn in self._on_connection_error:
-            fn(e)
+        for handler in self._on_connection_error:
+            handler(e)
 
     def _query_initial_status(self, uids):
         while True:
