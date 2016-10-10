@@ -39,8 +39,10 @@ online.
 [track_status.py]: docs/track_status.md
 [online_sessions.py]: docs/online_sessions.md
 
-Linting
--------
+Development
+-----------
+
+### Linting
 
 Requires [PyLint].
 
