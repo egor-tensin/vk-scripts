@@ -7,8 +7,8 @@ Prerequisites
 -------------
 
 * Python 3.4 or higher
-* [matplotlib] (required by [online_sessions.py])
-* [numpy] (required by [matplotlib])
+* [matplotlib][matplotlib] (required by [online_sessions.py])
+* [numpy][numpy] (required by [matplotlib])
 
 The versions below have been verified to work properly.
 
@@ -51,9 +51,9 @@ Development
 ### Linting
 
 Requires [PyLint].
-
-    > cd
-    D:\workspace\personal\vk-scripts
+To lint everything, run from the top-level directory (notice that you need to
+set the `PYTHONPATH` environment variable to lint the scripts; Windows syntax
+is used below):
 
     > pylint vk
     ...
