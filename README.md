@@ -26,7 +26,7 @@ The main package resides in the "vk/" directory.
 Also, a few scripts are supplied in the "bin/" directory to showcase the
 package's capabilities.
 Run the scripts from the top-level directory using `python -m`.
-Pass the `--help` flag to a script to see its detailed usage information.
+Pass the `--help` flag to a script to examine its detailed usage information.
 The supplied scripts are listed below.
 
 * [mutual_friends.py] &mdash; Learn who your ex and her new boyfriend are both
