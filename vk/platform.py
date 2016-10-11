@@ -16,26 +16,26 @@ class Platform(Enum):
     WEB = 7
 
     @staticmethod
-    def from_string(src):
-        return Platform(int(src))
+    def from_string(s):
+        return Platform(int(s))
 
     def __str__(self):
         return str(self.value)
 
     @staticmethod
-    def _uppercase_first_letter(text):
-        match = re.search(r'\w', text)
-        if match is None:
-            return text
-        return text[:match.start()] + match.group().upper() + text[match.end():]
+    def _uppercase_first_letter(s):
+        m = re.search(r'\w', s)
+        if m is None:
+            return s
+        return s[:m.start()] + m.group().upper() + s[m.end():]
 
     def get_descr_header(self):
         return self._uppercase_first_letter(_PLATFORM_DESCRIPTIONS[self])
 
     def get_descr_text(self):
-        descr = _PLATFORM_DESCRIPTIONS[self]
-        descr = descr.replace('unrecognized', 'an unrecognized')
-        return 'the ' + descr
+        s = _PLATFORM_DESCRIPTIONS[self]
+        s = s.replace('unrecognized', 'an unrecognized')
+        return 'the ' + s
 
     def get_descr_text_capitalized(self):
         return self._uppercase_first_letter(self.get_descr_text())

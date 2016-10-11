@@ -1,14 +1,13 @@
 [MESSAGES CONTROL]
 
 #disable=old-ne-operator,filter-builtin-not-iterating,nonzero-method,long-builtin,unpacking-in-except,backtick,suppressed-message,setslice-method,round-builtin,coerce-builtin,input-builtin,raising-string,raw_input-builtin,apply-builtin,delslice-method,useless-suppression,hex-method,zip-builtin-not-iterating,range-builtin-not-iterating,intern-builtin,old-octal-literal,xrange-builtin,no-absolute-import,cmp-builtin,reduce-builtin,next-method-called,getslice-method,oct-method,reload-builtin,dict-view-method,file-builtin,long-suffix,parameter-unpacking,dict-iter-method,cmp-method,old-division,using-cmp-argument,buffer-builtin,old-raise-syntax,indexing-exception,unicode-builtin,unichr-builtin,coerce-method,basestring-builtin,map-builtin-not-iterating,metaclass-assignment,print-statement,import-star-module-level,standarderror-builtin,execfile-builtin
-disable=duplicate-code,missing-docstring,multiple-imports,too-many-public-methods,too-few-public-methods
+disable=duplicate-code,invalid-name,missing-docstring,multiple-imports,too-many-public-methods,too-few-public-methods
 
 [BASIC]
 
 #bad-functions=map,filter
 bad-functions=
 #good-names=i,j,k,ex,Run,_
-good-names=_,e,fd,i,n
 #bad-names=foo,bar,baz,toto,tutu,tata
 #name-group=
 #include-naming-hint=no

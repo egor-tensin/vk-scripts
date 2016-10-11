@@ -9,30 +9,30 @@ from enum import Enum
 
 from .last_seen import LastSeen
 
-def _parse_last_seen(src):
-    if isinstance(src, LastSeen):
-        return src
-    elif isinstance(src, Mapping):
-        return LastSeen.from_api_response(src)
+def _parse_last_seen(x):
+    if isinstance(x, LastSeen):
+        return x
+    elif isinstance(x, Mapping):
+        return LastSeen.from_api_response(x)
     else:
         raise TypeError()
 
-def _parse_bool(src):
-    if isinstance(src, str):
-        if str(True) == src:
+def _parse_bool(x):
+    if isinstance(x, str):
+        if str(True) == x:
             return True
-        elif str(False) == src:
+        elif str(False) == x:
             return False
         else:
             raise ValueError()
     else:
-        return bool(src)
+        return bool(x)
 
-def _parse_hidden(src):
-    return _parse_bool(src)
+def _parse_hidden(x):
+    return _parse_bool(x)
 
-def _parse_online_flag(src):
-    return _parse_bool(src)
+def _parse_online_flag(x):
+    return _parse_bool(x)
 
 class UserField(Enum):
     UID = 'uid'
@@ -56,8 +56,8 @@ class DeactivationReason(Enum):
     def __str__(self):
         return self.value
 
-def _parse_deactivated(src):
-    return DeactivationReason(src)
+def _parse_deactivated(s):
+    return DeactivationReason(s)
 
 class User(Hashable, MutableMapping):
     @staticmethod

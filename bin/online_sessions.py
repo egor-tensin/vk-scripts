@@ -187,9 +187,9 @@ class BarChartBuilder:
     def get_value_labels(self):
         return self._get_value_axis().get_ticklabels()
 
-    def set_value_label_formatter(self, handler):
+    def set_value_label_formatter(self, fn):
         from matplotlib.ticker import FuncFormatter
-        self._get_value_axis().set_major_formatter(FuncFormatter(handler))
+        self._get_value_axis().set_major_formatter(FuncFormatter(fn))
 
     def set_integer_values_only(self):
         from matplotlib.ticker import MaxNLocator
@@ -289,8 +289,8 @@ class OutputWriterPlot:
         return str(timedelta(seconds=seconds))
 
     @staticmethod
-    def _duration_to_seconds(duration):
-        return duration.total_seconds()
+    def _duration_to_seconds(td):
+        return td.total_seconds()
 
     @staticmethod
     def _extract_labels(group_by, durations):
@@ -350,34 +350,34 @@ class OutputFormat(Enum):
     def __str__(self):
         return self.value
 
-def _parse_group_by(src):
+def _parse_group_by(s):
     try:
-        return GroupBy(src)
+        return GroupBy(s)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid "group by" value: ' + src)
+        raise argparse.ArgumentTypeError('invalid "group by" value: ' + s)
 
-def _parse_database_format(src):
+def _parse_database_format(s):
     try:
-        return DatabaseFormat(src)
+        return DatabaseFormat(s)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid database format: ' + src)
+        raise argparse.ArgumentTypeError('invalid database format: ' + s)
 
-def _parse_output_format(src):
+def _parse_output_format(s):
     try:
-        return OutputFormat(src)
+        return OutputFormat(s)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid output format: ' + src)
+        raise argparse.ArgumentTypeError('invalid output format: ' + s)
 
 _DATE_RANGE_LIMIT_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
 
-def _parse_date_range_limit(src):
+def _parse_date_range_limit(s):
     try:
-        timestamp = datetime.strptime(src, _DATE_RANGE_LIMIT_FORMAT)
-        return timestamp.replace(tzinfo=timezone.utc)
+        dt = datetime.strptime(s, _DATE_RANGE_LIMIT_FORMAT)
+        return dt.replace(tzinfo=timezone.utc)
     except ValueError:
         msg = 'invalid date range limit (must be in the \'{}\' format): {}'
         raise argparse.ArgumentTypeError(
-            msg.format(_DATE_RANGE_LIMIT_FORMAT, src))
+            msg.format(_DATE_RANGE_LIMIT_FORMAT, s))
 
 def _parse_args(args=sys.argv):
     parser = argparse.ArgumentParser(

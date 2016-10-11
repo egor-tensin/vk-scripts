@@ -12,20 +12,20 @@ from vk.tracking.db import Format as DatabaseFormat
 DEFAULT_TIMEOUT = StatusTracker.DEFAULT_TIMEOUT
 DEFAULT_DB_FORMAT = DatabaseFormat.CSV
 
-def _parse_positive_integer(src):
+def _parse_positive_integer(s):
     try:
-        n = int(src)
+        n = int(s)
     except ValueError:
-        raise argparse.ArgumentTypeError('must be a positive integer: ' + src)
+        raise argparse.ArgumentTypeError('must be a positive integer: ' + s)
     if n < 1:
-        raise argparse.ArgumentTypeError('must be a positive integer: ' + src)
+        raise argparse.ArgumentTypeError('must be a positive integer: ' + s)
     return n
 
-def _parse_database_format(src):
+def _parse_database_format(s):
     try:
-        return DatabaseFormat(src)
+        return DatabaseFormat(s)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid database format: ' + src)
+        raise argparse.ArgumentTypeError('invalid database format: ' + s)
 
 def _parse_args(args=sys.argv):
     parser = argparse.ArgumentParser(
