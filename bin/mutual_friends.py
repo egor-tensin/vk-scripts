@@ -76,7 +76,10 @@ def _parse_output_format(s):
     except ValueError:
         raise argparse.ArgumentTypeError('invalid output format: ' + s)
 
-def _parse_args(args=sys.argv):
+def _parse_args(args=None):
+    if args is None:
+        args = sys.argv[1:]
+
     parser = argparse.ArgumentParser(
         description='Learn who your ex and her new boyfriend are both friends with.')
 
@@ -92,7 +95,7 @@ def _parse_args(args=sys.argv):
                         default=sys.stdout,
                         help='set output file path (standard output by default)')
 
-    return parser.parse_args(args[1:])
+    return parser.parse_args(args)
 
 def write_mutual_friends(uids, fmt=OutputFormat.CSV, fd=sys.stdout):
     api = API(Language.EN)
@@ -104,9 +107,8 @@ def write_mutual_friends(uids, fmt=OutputFormat.CSV, fd=sys.stdout):
     with fmt.create_writer(fd) as writer:
         writer.write_mutual_friends(mutual_friends)
 
-def main(args=sys.argv):
-    args = _parse_args(args)
-    write_mutual_friends(**vars(args))
+def main(args=None):
+    write_mutual_friends(**vars(_parse_args(args)))
 
 if __name__ == '__main__':
     main()

@@ -379,7 +379,10 @@ def _parse_date_range_limit(s):
         raise argparse.ArgumentTypeError(
             msg.format(_DATE_RANGE_LIMIT_FORMAT, s))
 
-def _parse_args(args=sys.argv):
+def _parse_args(args=None):
+    if args is None:
+        args = sys.argv[1:]
+
     parser = argparse.ArgumentParser(
         description='View/visualize the amount of time people spend online.')
 
@@ -412,7 +415,7 @@ def _parse_args(args=sys.argv):
                         type=_parse_date_range_limit, default=None,
                         help='discard online activity after this moment')
 
-    return parser.parse_args(args[1:])
+    return parser.parse_args(args)
 
 def process_online_sessions(
         db_fd, db_fmt=DatabaseFormat.CSV,
@@ -429,9 +432,8 @@ def process_online_sessions(
         output_writer.process_database(
             group_by, db_reader, time_from=time_from, time_to=time_to)
 
-def main(args=sys.argv):
-    args = _parse_args(args)
-    process_online_sessions(**vars(args))
+def main(args=None):
+    process_online_sessions(**vars(_parse_args(args)))
 
 if __name__ == '__main__':
     main()

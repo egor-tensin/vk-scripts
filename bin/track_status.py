@@ -27,7 +27,10 @@ def _parse_database_format(s):
     except ValueError:
         raise argparse.ArgumentTypeError('invalid database format: ' + s)
 
-def _parse_args(args=sys.argv):
+def _parse_args(args=None):
+    if args is None:
+        args = sys.argv[1:]
+
     parser = argparse.ArgumentParser(
         description='Track when people go online/offline.')
 
@@ -51,7 +54,7 @@ def _parse_args(args=sys.argv):
                         default=None,
                         help='set database file path')
 
-    return parser.parse_args(args[1:])
+    return parser.parse_args(args)
 
 def track_status(
         uids, timeout=DEFAULT_TIMEOUT,
@@ -70,9 +73,8 @@ def track_status(
             tracker.add_database_writer(db_writer)
             tracker.loop(uids)
 
-def main(args=sys.argv):
-    args = _parse_args(args)
-    track_status(**vars(args))
+def main(args=None):
+    track_status(**vars(_parse_args(args)))
 
 if __name__ == '__main__':
     main()
