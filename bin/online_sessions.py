@@ -227,12 +227,12 @@ class OutputWriterPlot:
 
         if group_by is GroupBy.HOUR:
             bar_chart.labels_align_middle = False
-            inches_per_bar = bar_chart.THIN_BAR_HEIGHT
+            bar_height = bar_chart.THIN_BAR_HEIGHT
         else:
-            inches_per_bar = bar_chart.THICK_BAR_HEIGHT
+            bar_height = bar_chart.THICK_BAR_HEIGHT
 
         bars = bar_chart.plot_bars(
-            labels, durations, inches_per_bar=inches_per_bar)
+            labels, durations, bar_height=bar_height)
         bar_chart.set_property(bars, alpha=.33)
 
         if self._fd is sys.stdout:

@@ -4,7 +4,7 @@
 # Distributed under the MIT License.
 
 import matplotlib.pyplot as plt
-from matplotlib.ticker import AutoLocator, FuncFormatter, MaxNLocator
+from matplotlib import ticker
 import numpy as np
 
 class BarChartBuilder:
@@ -44,14 +44,17 @@ class BarChartBuilder:
     def get_values_labels(self):
         return self._get_values_axis().get_ticklabels()
 
+    def hide_categories(self):
+        self._get_categories_axis().set_major_locator(ticker.NullLocator())
+
     def set_value_label_formatter(self, fn):
-        self._get_values_axis().set_major_formatter(FuncFormatter(fn))
+        self._get_values_axis().set_major_formatter(ticker.FuncFormatter(fn))
 
     def any_values(self):
-        self._get_values_axis().set_major_locator(AutoLocator())
+        self._get_values_axis().set_major_locator(ticker.AutoLocator())
 
     def only_integer_values(self):
-        self._get_values_axis().set_major_locator(MaxNLocator(integer=True))
+        self._get_values_axis().set_major_locator(ticker.MaxNLocator(integer=True))
 
     @staticmethod
     def set_property(*args, **kwargs):
@@ -69,32 +72,41 @@ class BarChartBuilder:
     def set_height(self, inches):
         self._set_size(inches, dim=1)
 
-    def plot_bars(self, categories, values, inches_per_bar=THICK_BAR_HEIGHT):
-
+    def plot_bars(self, categories, values, bar_height=THICK_BAR_HEIGHT):
         numof_bars = len(categories)
+        inches_per_bar = 2 * bar_height
+        categories_axis_max = inches_per_bar * numof_bars
 
         if not numof_bars:
-            self.set_height(2 * inches_per_bar)
-            self._get_categories_axis().set_tick_params(labelleft=False)
-            return []
-
-        categories_axis_min = 0
-        categories_axis_max = 2 * inches_per_bar * numof_bars
+            categories_axis_max += inches_per_bar
 
         self.set_height(categories_axis_max)
-        self.set_categories_axis_limits(categories_axis_min, categories_axis_max)
+        self.set_categories_axis_limits(0, categories_axis_max)
 
-        bar_offsets = 2 * inches_per_bar * np.arange(numof_bars) + inches_per_bar
+        if not numof_bars:
+            self.set_values_axis_limits(0, 1)
+            self.hide_categories()
+            return []
+
+        bar_offset = inches_per_bar / 2
+        bar_offsets = inches_per_bar * np.arange(numof_bars) + bar_offset
 
         if self.labels_align_middle:
             self._get_categories_axis().set_ticks(bar_offsets)
         else:
-            self._get_categories_axis().set_ticks(bar_offsets - inches_per_bar)
+            self._get_categories_axis().set_ticks(bar_offsets - bar_offset)
 
         self._get_categories_axis().set_ticklabels(categories)
 
-        return self._ax.barh(bar_offsets, values, align='center',
-                             height=inches_per_bar)
+        bars = self._ax.barh(bar_offsets, values, align='center',
+                             height=bar_height)
+
+        if min(values) >= 0:
+            self.set_values_axis_limits(start=0)
+        elif max(values) < 0:
+            self.set_values_axis_limits(end=0)
+
+        return bars
 
     @staticmethod
     def show():
