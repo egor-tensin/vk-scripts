@@ -51,22 +51,12 @@ Development
 ### Linting
 
 Requires [PyLint].
-To lint everything, run from the top-level directory (notice that you need to
-set the `PYTHONPATH` environment variable to lint the scripts; Windows syntax
-is used below):
+To lint everything, run from the top-level directory:
 
     > pylint vk
     ...
 
-    > set PYTHONPATH=%CD%
-
-    > pylint bin\mutual_friends.py
-    ...
-
-    > pylint bin\online_sessions.py
-    ...
-
-    > pylint bin\track_status.py
+    > pylint bin
     ...
 
 [PyLint]: https://www.pylint.org/
