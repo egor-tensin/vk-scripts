@@ -13,7 +13,7 @@ Run from the top-level directory using `python -m`:
 usage: online_sessions.py [-h] [-g {user,date,weekday,hour}]
                           [-i {csv,log,null}] [-o {csv,json,plot}]
                           [-a TIME_FROM] [-b TIME_TO]
-                          input [output]
+                          [input] [output]
 ```
 
 This script additionally requires [matplotlib] to be installed.
