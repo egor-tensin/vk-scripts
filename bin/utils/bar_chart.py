@@ -82,6 +82,9 @@ class BarChartBuilder:
     def set_height(self, inches):
         self._set_size(inches, dim=1)
 
+    _DEFAULT_VALUES_AXIS_MAX = 1
+    assert _DEFAULT_VALUES_AXIS_MAX > 0
+
     def plot_bars(self, categories, values, bar_height=THICK_BAR_HEIGHT):
         numof_bars = len(categories)
         inches_per_bar = 2 * bar_height
@@ -94,7 +97,7 @@ class BarChartBuilder:
         self.set_categories_axis_limits(0, categories_axis_max)
 
         if not numof_bars:
-            self.set_values_axis_limits(0, 1)
+            self.set_values_axis_limits(0, self._DEFAULT_VALUES_AXIS_MAX)
             self.hide_categories()
             return []
 
@@ -114,7 +117,7 @@ class BarChartBuilder:
         if min(values) >= 0:
             self.set_values_axis_limits(start=0)
             if np.isclose(max(values), 0.):
-                self.set_values_axis_limits(end=1)
+                self.set_values_axis_limits(end=self._DEFAULT_VALUES_AXIS_MAX)
         elif max(values) < 0:
             self.set_values_axis_limits(end=0)
 
@@ -155,7 +158,7 @@ if __name__ == '__main__':
     if len(args.categories) < len(args.values):
         parser.error('too many bar values')
     if len(args.categories) > len(args.values):
-        args.values.extend([0.0] * (len(args.categories) - len(args.values)))
+        args.values.extend([0.] * (len(args.categories) - len(args.values)))
 
     builder = BarChartBuilder(labels_align_middle=args.labels_align_middle)
 
