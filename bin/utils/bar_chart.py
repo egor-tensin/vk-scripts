@@ -27,10 +27,20 @@ class BarChartBuilder:
         return self._ax.get_xaxis()
 
     def set_categories_axis_limits(self, start=None, end=None):
-        self._ax.set_ylim(bottom=start, top=end)
+        bottom, top = self._ax.get_ylim()
+        if start is not None:
+            bottom = start
+        if end is not None:
+            top = end
+        self._ax.set_ylim(bottom=bottom, top=top)
 
     def set_values_axis_limits(self, start=None, end=None):
-        self._ax.set_xlim(left=start, right=end)
+        left, right = self._ax.get_xlim()
+        if start is not None:
+            left = start
+        if end is not None:
+            right = end
+        self._ax.set_xlim(left=left, right=right)
 
     def enable_grid_for_categories(self):
         self._get_categories_axis().grid()
@@ -103,6 +113,8 @@ class BarChartBuilder:
 
         if min(values) >= 0:
             self.set_values_axis_limits(start=0)
+            if np.isclose(max(values), 0.):
+                self.set_values_axis_limits(end=1)
         elif max(values) < 0:
             self.set_values_axis_limits(end=0)
 
@@ -119,15 +131,14 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--categories', nargs='*', default=[],
-                        help='categories')
-    parser.add_argument('--values', nargs='*', type=float, default=[],
-                        help='values')
+    parser.add_argument('--categories', nargs='*', metavar='LABEL',
+                        default=[])
+    parser.add_argument('--values', nargs='*', metavar='N',
+                        default=[], type=float)
 
-    parser.add_argument('--output', '-o',
-                        help='set output file path')
+    parser.add_argument('--output', '-o', help='set output file path')
 
-    parser.add_argument('--middle', action='store_true',
+    parser.add_argument('--align-middle', action='store_true',
                         dest='labels_align_middle',
                         help='align labels to the middle of the bars')
 
