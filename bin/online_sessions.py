@@ -214,25 +214,24 @@ class OutputWriterPlot:
         durations = group_by.group(db_reader, time_from, time_to)
 
         bar_chart = BarChartBuilder()
-
         bar_chart.set_title(OutputWriterPlot.TITLE)
-        bar_chart.set_value_grid()
-
-        bar_chart.set_integer_values_only()
-        bar_chart.set_property(
-            bar_chart.get_value_labels(), fontsize='small', rotation=30)
+        bar_chart.enable_grid_for_values()
+        bar_chart.only_integer_values()
+        bar_chart.set_property(bar_chart.get_values_labels(),
+                               fontsize='small', rotation=30)
         bar_chart.set_value_label_formatter(self._format_duration)
 
         labels = self._extract_labels(group_by, durations)
         durations = self._extract_values(durations)
 
-        if not labels or not max(durations):
-            bar_chart.set_value_axis_limits(0)
+        if group_by is GroupBy.HOUR:
+            bar_chart.labels_align_middle = False
+            inches_per_bar = bar_chart.THIN_BAR_HEIGHT
+        else:
+            inches_per_bar = bar_chart.THICK_BAR_HEIGHT
 
         bars = bar_chart.plot_bars(
-            labels, durations,
-            bars_between_ticks=group_by is GroupBy.HOUR,
-            inches_per_bar=.5 if group_by is GroupBy.HOUR else 1)
+            labels, durations, inches_per_bar=inches_per_bar)
         bar_chart.set_property(bars, alpha=.33)
 
         if self._fd is sys.stdout:
