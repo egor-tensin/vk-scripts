@@ -15,12 +15,6 @@ class Writer:
             datefmt='%Y-%m-%d %H:%M:%S'))
         self._logger.addHandler(handler)
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args):
-        pass
-
     def info(self, msg):
         self._logger.info(msg)
 

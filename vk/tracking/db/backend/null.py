@@ -6,13 +6,7 @@
 from collections.abc import Iterable
 
 class Writer:
-    def __init__(self, fd):
-        pass
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args):
+    def __init__(self):
         pass
 
     def on_initial_status(self, user):
@@ -25,13 +19,7 @@ class Writer:
         pass
 
 class Reader(Iterable):
-    def __init__(self, fd):
-        pass
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args):
+    def __init__(self):
         pass
 
     def __iter__(self):

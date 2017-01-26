@@ -14,12 +14,6 @@ class Writer:
         self._fd = fd
         self._writer = csv.writer(fd, lineterminator='\n')
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args):
-        pass
-
     def on_initial_status(self, user):
         self._write_record(user)
         self._fd.flush()
@@ -46,12 +40,6 @@ class Writer:
 class Reader(Iterable):
     def __init__(self, fd):
         self._reader = csv.reader(fd)
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args):
-        pass
 
     def __iter__(self):
         return map(Reader._record_from_row, self._reader)

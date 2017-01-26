@@ -40,36 +40,32 @@ def _parse_args(args=None):
                         type=_parse_positive_integer,
                         default=DEFAULT_TIMEOUT,
                         help='set refresh interval')
-    parser.add_argument('-l', '--log', metavar='PATH', dest='log_fd',
-                        type=argparse.FileType('w', encoding='utf-8'),
-                        default=sys.stdout,
+    parser.add_argument('-l', '--log', metavar='PATH', dest='log_path',
                         help='set log file path (standard output by default)')
     parser.add_argument('-f', '--format', dest='db_fmt',
                         type=_parse_database_format,
                         choices=DatabaseFormat,
                         default=DEFAULT_DB_FORMAT,
                         help='specify database format')
-    parser.add_argument('-o', '--output', metavar='PATH', dest='db_fd',
-                        type=argparse.FileType('w', encoding='utf-8'),
-                        default=None,
+    parser.add_argument('-o', '--output', metavar='PATH', dest='db_path',
                         help='set database file path')
 
     return parser.parse_args(args)
 
 def track_status(
         uids, timeout=DEFAULT_TIMEOUT,
-        log_fd=sys.stdout,
-        db_fd=None, db_fmt=DEFAULT_DB_FORMAT):
+        log_path=None,
+        db_path=None, db_fmt=DEFAULT_DB_FORMAT):
 
     api = API(Language.EN, deactivated_users=False)
     tracker = StatusTracker(api, timeout)
 
-    if db_fmt is DatabaseFormat.LOG or db_fd is None:
+    if db_fmt is DatabaseFormat.LOG or db_path is None:
         db_fmt = DatabaseFormat.NULL
 
-    with DatabaseFormat.LOG.create_writer(log_fd) as log_writer:
+    with DatabaseFormat.LOG.create_writer(log_path) as log_writer:
         tracker.add_database_writer(log_writer)
-        with db_fmt.create_writer(db_fd) as db_writer:
+        with db_fmt.create_writer(db_path) as db_writer:
             tracker.add_database_writer(db_writer)
             tracker.loop(uids)
 
