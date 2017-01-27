@@ -335,7 +335,8 @@ def process_online_sessions(
         if time_from > time_to:
             time_from, time_to = time_to, time_from
 
-    with db_fmt.create_reader(db_path) as db_reader:
+    with db_fmt.open_input_file(db_path) as db_fd:
+        db_reader = db_fmt.create_reader(db_fd)
         with out_fmt.open_file(out_path) as out_fd:
             out_sink = out_fmt.create_sink(out_fd)
             out_sink.process_database(

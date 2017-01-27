@@ -63,10 +63,13 @@ def track_status(
     if db_fmt is DatabaseFormat.LOG or db_path is None:
         db_fmt = DatabaseFormat.NULL
 
-    with DatabaseFormat.LOG.create_writer(log_path) as log_writer:
+    with DatabaseFormat.LOG.open_output_file(log_path) as log_fd:
+        log_writer = DatabaseFormat.LOG.create_writer(log_fd)
         tracker.add_database_writer(log_writer)
-        with db_fmt.create_writer(db_path) as db_writer:
+        with db_fmt.open_output_file(db_path) as db_fd:
+            db_writer = db_fmt.create_writer(db_fd)
             tracker.add_database_writer(db_writer)
+
             tracker.loop(uids)
 
 def main(args=None):
