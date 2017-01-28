@@ -8,7 +8,7 @@ import csv
 import json
 import sys
 
-class OutputWriterJSON:
+class FileWriterJSON:
     def __init__(self, fd=sys.stdout):
         self._fd = fd
 
@@ -16,7 +16,7 @@ class OutputWriterJSON:
         self._fd.write(json.dumps(something, indent=3, ensure_ascii=False))
         self._fd.write('\n')
 
-class OutputWriterCSV:
+class FileWriterCSV:
     def __init__(self, fd=sys.stdout):
         self._writer = csv.writer(fd, lineterminator='\n')
 
@@ -24,8 +24,8 @@ class OutputWriterCSV:
         self._writer.writerow(row)
 
 @contextmanager
-def _open_file(path=None, **kwargs):
-    fd = sys.stdout
+def _open_file(path=None, default=None, **kwargs):
+    fd = default
     if path is None:
         pass
     else:
@@ -36,8 +36,8 @@ def _open_file(path=None, **kwargs):
         if fd is not sys.stdout:
             fd.close()
 
-def open_text_file(path=None):
-    return _open_file(path, mode='w', encoding='utf-8')
+def open_output_text_file(path=None):
+    return _open_file(path, default=sys.stdout, mode='w', encoding='utf-8')
 
-def open_binary_file(path=None):
-    return _open_file(path, mode='wb')
+def open_output_binary_file(path=None):
+    return _open_file(path, default=sys.stdout, mode='wb')

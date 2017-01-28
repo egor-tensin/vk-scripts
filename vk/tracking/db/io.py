@@ -7,7 +7,7 @@ from contextlib import contextmanager
 import csv
 import sys
 
-class OutputWriterCSV:
+class FileWriterCSV:
     def __init__(self, fd=sys.stdout):
         self._fd = fd
         self._writer = csv.writer(fd, lineterminator='\n')
@@ -16,7 +16,7 @@ class OutputWriterCSV:
         self._writer.writerow(row)
         self._fd.flush()
 
-class InputReaderCSV:
+class FileReaderCSV:
     def __init__(self, fd=sys.stdin):
         self._reader = csv.reader(fd)
 

@@ -4,13 +4,13 @@
 # Distributed under the MIT License.
 
 from .. import meta
-from ..io import InputReaderCSV, OutputWriterCSV
+from ..io import FileReaderCSV, FileWriterCSV
 from ..record import Record
 from ..timestamp import Timestamp
 
 class Writer(meta.Writer):
     def __init__(self, fd):
-        self._writer = OutputWriterCSV(fd)
+        self._writer = FileWriterCSV(fd)
 
     def on_initial_status(self, user):
         self._write_record(user)
@@ -32,7 +32,7 @@ class Writer(meta.Writer):
 
 class Reader(meta.Reader):
     def __init__(self, fd):
-        self._reader = InputReaderCSV(fd)
+        self._reader = FileReaderCSV(fd)
 
     def __iter__(self):
         return map(Reader._record_from_row, self._reader)

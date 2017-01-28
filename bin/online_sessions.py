@@ -70,7 +70,7 @@ class OutputConverterCSV:
 
 class OutputSinkCSV(OutputSinkOnlineSessions):
     def __init__(self, fd=sys.stdout):
-        self._writer = output.OutputWriterCSV(fd)
+        self._writer = output.FileWriterCSV(fd)
 
     _CONVERT_KEY = {
         GroupBy.USER: OutputConverterCSV.convert_user,
@@ -127,7 +127,7 @@ class OutputConverterJSON:
 
 class OutputSinkJSON(OutputSinkOnlineSessions):
     def __init__(self, fd=sys.stdout):
-        self._writer = output.OutputWriterJSON(fd)
+        self._writer = output.FileWriterJSON(fd)
 
     _DURATION_FIELD = 'duration'
 
@@ -257,9 +257,9 @@ class OutputFormat(Enum):
 
     def open_file(self, path=None):
         if self is OutputFormat.PLOT:
-            return output.open_binary_file(path)
+            return output.open_output_binary_file(path)
         else:
-            return output.open_text_file(path)
+            return output.open_output_text_file(path)
 
 def _parse_group_by(s):
     try:

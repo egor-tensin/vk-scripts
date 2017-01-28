@@ -32,7 +32,7 @@ class OutputSinkMutualFriends(metaclass=abc.ABCMeta):
 
 class OutputSinkCSV(OutputSinkMutualFriends):
     def __init__(self, fd=sys.stdout):
-        self._writer = output.OutputWriterCSV(fd)
+        self._writer = output.FileWriterCSV(fd)
 
     def write_mutual_friends(self, friend_list):
         for user in friend_list:
@@ -40,7 +40,7 @@ class OutputSinkCSV(OutputSinkMutualFriends):
 
 class OutputSinkJSON(OutputSinkMutualFriends):
     def __init__(self, fd=sys.stdout):
-        self._writer = output.OutputWriterJSON(fd)
+        self._writer = output.FileWriterJSON(fd)
 
     def write_mutual_friends(self, friend_list):
         self._writer.write(friend_list)
@@ -54,7 +54,7 @@ class OutputFormat(Enum):
 
     @staticmethod
     def open_file(path=None):
-        return output.open_text_file(path)
+        return output.open_output_text_file(path)
 
     def create_sink(self, fd=sys.stdout):
         if self is OutputFormat.CSV:
