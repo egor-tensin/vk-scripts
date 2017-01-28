@@ -5,7 +5,9 @@
 
 import logging
 
-class Writer:
+from .. import meta
+
+class Writer(meta.Writer):
     def __init__(self, fd):
         self._logger = logging.getLogger(__file__)
         self._logger.setLevel(logging.INFO)

@@ -3,13 +3,12 @@
 # For details, see https://github.com/egor-tensin/vk-scripts.
 # Distributed under the MIT License.
 
-from collections.abc import Iterable
-
+from .. import meta
 from ..io import InputReaderCSV, OutputWriterCSV
 from ..record import Record
 from ..timestamp import Timestamp
 
-class Writer:
+class Writer(meta.Writer):
     def __init__(self, fd):
         self._writer = OutputWriterCSV(fd)
 
@@ -31,7 +30,7 @@ class Writer:
     def _record_to_row(record):
         return [str(record.get_timestamp())] + [str(record[field]) for field in record]
 
-class Reader(Iterable):
+class Reader(meta.Reader):
     def __init__(self, fd):
         self._reader = InputReaderCSV(fd)
 
