@@ -36,8 +36,12 @@ def _open_file(path=None, default=None, **kwargs):
         if fd is not default:
             fd.close()
 
-def open_output_text_file(path=None):
-    return _open_file(path, default=sys.stdout, mode='w', encoding='utf-8')
+_DEFAULT_ENCODING = 'utf-8'
+
+def open_output_text_file(path=None, mode='w'):
+    return _open_file(path, default=sys.stdout, mode=mode,
+                      encoding=_DEFAULT_ENCODING)
 
 def open_input_text_file(path=None):
-    return _open_file(path, default=sys.stdin, mode='r', encoding='utf-8')
+    return _open_file(path, default=sys.stdin, mode='r',
+                      encoding=_DEFAULT_ENCODING)

@@ -27,12 +27,22 @@ class Format(Enum):
             raise NotImplementedError('unsupported database format: ' + str(self))
 
     def open_output_file(self, path=None):
-        if self is Format.CSV or self is Format.LOG:
-            return io.open_output_text_file(path)
+        if self is Format.CSV:
+            return self._open_output_database_file(path)
+        elif self is Format.LOG:
+            return self._open_output_log_file(path)
         elif self is Format.NULL:
-            return io.open_output_text_file(None)
+            return self._open_output_database_file(None)
         else:
             raise NotImplementedError('unsupported database format: ' + str(self))
+
+    @staticmethod
+    def _open_output_log_file(path):
+        return io.open_output_text_file(path, mode='a')
+
+    @staticmethod
+    def _open_output_database_file(path):
+        return io.open_output_text_file(path, mode='x')
 
     def create_reader(self, fd=sys.stdin):
         if self is Format.CSV:
