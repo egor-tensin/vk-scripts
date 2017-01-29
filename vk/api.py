@@ -102,8 +102,8 @@ class API:
                     raise vk.error.InvalidAPIResponseError(response)
                 #print(response)
                 return response['response']
-        except (ConnectionError, URLError):
-            raise vk.error.APIConnectionError()
+        except (ConnectionError, URLError) as e:
+            raise vk.error.APIConnectionError(str(e)) from e
 
     def _should_skip_user(self, user):
         return self._skip_deactivated_users and user.is_deactivated()
