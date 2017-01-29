@@ -17,13 +17,33 @@ class Writer(meta.Writer):
             datefmt='%Y-%m-%d %H:%M:%S'))
         self._logger.addHandler(handler)
 
-    def info(self, msg):
-        self._logger.info(msg)
+        self._reset_last_notification()
 
-    def exception(self, e):
-        self._logger.exception(e)
+    def info(self, *args, **kwargs):
+        self._logger.info(*args, **kwargs)
+
+    def exception(self, *args, **kwargs):
+        self._logger.exception(*args, **kwargs)
+
+    def error(self, *args, **kwargs):
+        self._logger.error(*args, **kwargs)
+
+    def _reset_last_notification(self):
+        self._last_error = False, None
+
+    def _set_last_notification(self, e):
+        self._last_error = True, str(e)
+
+    @property
+    def _last_notification_was_connection_error(self):
+        return self._last_error[0]
+
+    @property
+    def _last_notification_error_message(self):
+        return self._last_error[1]
 
     def on_initial_status(self, user):
+        self._reset_last_notification()
         if user.is_online():
             self.info(self._format_user_is_online(user))
         else:
@@ -31,6 +51,7 @@ class Writer(meta.Writer):
         self.info(self._format_user_last_seen(user))
 
     def on_status_update(self, user):
+        self._reset_last_notification()
         if user.is_online():
             self.info(self._format_user_went_online(user))
         else:
@@ -38,8 +59,12 @@ class Writer(meta.Writer):
         self.info(self._format_user_last_seen(user))
 
     def on_connection_error(self, e):
-        #self.exception(e)
-        pass
+        if self._last_notification_was_connection_error:
+            if str(e) == self._last_notification_error_message:
+                self.error(self._format_another_connection_error(e))
+                return
+        self._set_last_notification(e)
+        self.exception(e)
 
     @staticmethod
     def _format_user(user):
@@ -70,3 +95,7 @@ class Writer(meta.Writer):
     @staticmethod
     def _format_user_went_offline(user):
         return '{} went OFFLINE.'.format(Writer._format_user(user))
+
+    @staticmethod
+    def _format_another_connection_error(e):
+        return 'Encountered a connection error which looks like the previous one: ' + str(e)
