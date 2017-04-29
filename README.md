@@ -12,11 +12,11 @@ Prerequisites
 
 The versions below have been verified to work properly.
 
-Software   | Version
----------- | -------
-CPython    | 3.5.1
-numpy      | 1.11.0
-matplotlib | 1.5.1
+| Software   | Version
+| ---------- | -------
+| CPython    | 3.5.1
+| numpy      | 1.11.0
+| matplotlib | 1.5.1
 
 Windows binaries for CPython can be acquired at
 http://www.lfd.uci.edu/~gohlke/pythonlibs/.
