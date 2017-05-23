@@ -25,16 +25,11 @@ class FileWriterCSV:
 
 @contextmanager
 def _open_file(path=None, default=None, **kwargs):
-    fd = default
     if path is None:
-        pass
+        yield default
     else:
-        fd = open(path, **kwargs)
-    try:
-        yield fd
-    finally:
-        if fd is not sys.stdout:
-            fd.close()
+        with open(path, **kwargs) as fd:
+            yield fd
 
 def open_output_text_file(path=None):
     return _open_file(path, default=sys.stdout, mode='w', encoding='utf-8')

@@ -25,16 +25,11 @@ class FileReaderCSV:
 
 @contextmanager
 def _open_file(path=None, default=None, **kwargs):
-    fd = default
     if path is None:
-        pass
+        yield default
     else:
-        fd = open(path, **kwargs)
-    try:
-        yield fd
-    finally:
-        if fd is not default:
-            fd.close()
+        with open(path, **kwargs) as fd:
+            yield fd
 
 _DEFAULT_ENCODING = 'utf-8'
 
