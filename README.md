@@ -7,8 +7,8 @@ Prerequisites
 -------------
 
 * Python 3.4 or higher
-* [matplotlib][matplotlib] (required by [online_sessions.py])
-* [numpy][numpy] (required by [matplotlib])
+* [matplotlib] (required by [online_sessions.py])
+* [numpy] (required by [matplotlib])
 
 The versions below have been verified to work properly.
 
