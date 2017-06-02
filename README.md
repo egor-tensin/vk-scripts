@@ -50,7 +50,7 @@ Development
 
 ### Linting
 
-Requires [PyLint].
+Requires [Pylint].
 To lint everything, run from the top-level directory:
 
     > pylint vk
@@ -59,7 +59,7 @@ To lint everything, run from the top-level directory:
     > pylint bin
     ...
 
-[PyLint]: https://www.pylint.org/
+[Pylint]: https://www.pylint.org/
 
 License
 -------
