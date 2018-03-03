@@ -14,6 +14,7 @@ class Platform(Enum):
     WINDOWS_PHONE = 5
     WINDOWS8 = 6
     WEB = 7
+    VK_MOBILE = 8
 
     @staticmethod
     def from_string(s):
@@ -47,5 +48,6 @@ _PLATFORM_DESCRIPTIONS = {
     Platform.ANDROID: 'official Android app',
     Platform.WINDOWS_PHONE: 'official Windows Phone app',
     Platform.WINDOWS8: 'official Windows 8 app',
-    Platform.WEB: 'web version (or unrecognized app)'
+    Platform.WEB: 'web version (or unrecognized app)',
+    Platform.VK_MOBILE: 'VK Mobile',
 }
