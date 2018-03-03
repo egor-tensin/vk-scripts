@@ -24,22 +24,24 @@ class Platform(Enum):
         return str(self.value)
 
     @staticmethod
-    def _uppercase_first_letter(s):
+    def _capitalize_first_letter(s):
         m = re.search(r'\w', s)
         if m is None:
             return s
         return s[:m.start()] + m.group().upper() + s[m.end():]
 
     def get_descr_header(self):
-        return self._uppercase_first_letter(_PLATFORM_DESCRIPTIONS[self])
+        return self._capitalize_first_letter(_PLATFORM_DESCRIPTIONS[self])
 
     def get_descr_text(self):
         s = _PLATFORM_DESCRIPTIONS[self]
+        if self == self.VK_MOBILE:
+            return s
         s = s.replace('unrecognized', 'an unrecognized')
         return 'the ' + s
 
     def get_descr_text_capitalized(self):
-        return self._uppercase_first_letter(self.get_descr_text())
+        return self._capitalize_first_letter(self.get_descr_text())
 
 _PLATFORM_DESCRIPTIONS = {
     Platform.MOBILE: '"mobile" web version (or unrecognized mobile app)',
