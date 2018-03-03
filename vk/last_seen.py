@@ -16,18 +16,16 @@ def _parse_time(x):
         if x.tzinfo is None or x.tzinfo.utcoffset(x) is None:
             x = x.replace(tzinfo=timezone.utc)
         return x
-    elif isinstance(x, Real) or isinstance(x, Integral):
+    if isinstance(x, (Integral, Real)):
         return datetime.fromtimestamp(x, tz=timezone.utc)
-    else:
-        raise TypeError()
+    raise TypeError()
 
 def _parse_platform(x):
     if x in Platform:
         return x
     if isinstance(x, str):
         return Platform.from_string(x)
-    else:
-        return Platform(x)
+    return Platform(x)
 
 class LastSeenField(Enum):
     TIME = 'time'
@@ -69,8 +67,7 @@ class LastSeen(MutableMapping):
     def parse(field, value):
         if field in LastSeen._FIELD_PARSERS:
             return LastSeen._FIELD_PARSERS[field](value)
-        else:
-            return LastSeen._DEFAULT_FIELD_PARSER(value)
+        return LastSeen._DEFAULT_FIELD_PARSER(value)
 
     _FIELD_PARSERS = {
         LastSeenField.TIME: _parse_time,

@@ -98,8 +98,7 @@ class User(Hashable, MutableMapping):
     def parse(field, value):
         if field in User._FIELD_PARSERS:
             return User._FIELD_PARSERS[field](value)
-        else:
-            return User._DEFAULT_FIELD_PARSER(value)
+        return User._DEFAULT_FIELD_PARSER(value)
 
     _FIELD_PARSERS = {
         UserField.UID: int,

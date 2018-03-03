@@ -33,7 +33,7 @@ def _filter_empty_params(params, empty_params=False):
 def _build_url(scheme, host, path, params=None, empty_params=False):
     if params is None:
         params = {}
-    if isinstance(params, Mapping) or isinstance(params, Iterable):
+    if isinstance(params, (Iterable, Mapping)):
         params = _filter_empty_params(params, empty_params)
         params = urllib.parse.urlencode(params)
     elif isinstance(params, str):
@@ -46,10 +46,9 @@ def _build_url(scheme, host, path, params=None, empty_params=False):
 def _join_param_values(values):
     if isinstance(values, str):
         return values
-    elif isinstance(values, Iterable):
+    if isinstance(values, Iterable):
         return ','.join(map(str, values))
-    else:
-        return values
+    return values
 
 def _join_path(base, url):
     if not base.endswith('/'):
@@ -113,7 +112,8 @@ class API:
         except (ConnectionError, URLError) as e:
             raise vk.error.APIConnectionError(str(e)) from e
 
-    def _filter_response_with_users(self, user_list, deactivated_users=True):
+    @staticmethod
+    def _filter_response_with_users(user_list, deactivated_users=True):
         user_list = map(User.from_api_response, user_list)
         if deactivated_users:
             return user_list

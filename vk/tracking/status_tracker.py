@@ -47,7 +47,8 @@ class StatusTracker:
     _USER_FIELDS = UserField.DOMAIN, UserField.ONLINE, UserField.LAST_SEEN,
 
     def _query_status(self, uids):
-        return {user.get_uid(): user for user in self._api.users_get(uids, self._USER_FIELDS, deactivated_users=False)}
+        user_list = self._api.users_get(uids, self._USER_FIELDS, deactivated_users=False)
+        return {user.get_uid(): user for user in user_list}
 
     def _notify_status(self, user):
         for fn in self._on_initial_status:

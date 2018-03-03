@@ -7,9 +7,10 @@ from collections import OrderedDict
 from collections.abc import MutableMapping
 from datetime import datetime
 
-from .timestamp import Timestamp
 from vk.last_seen import LastSeen, LastSeenField
 from vk.user import User, UserField
+
+from .timestamp import Timestamp
 
 class Record(MutableMapping):
     FIELDS = (
@@ -95,6 +96,6 @@ class Record(MutableMapping):
                 self._update_user_field(user, field)
             else:
                 assert False
-        if len(last_seen):
+        if last_seen:
             user.set_last_seen(last_seen)
         return user

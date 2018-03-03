@@ -70,8 +70,7 @@ class Writer(meta.Writer):
     def _format_user(user):
         if user.has_last_name():
             return '{} {}'.format(user.get_first_name(), user.get_last_name())
-        else:
-            return '{}'.format(user.get_first_name())
+        return '{}'.format(user.get_first_name())
 
     @staticmethod
     def _format_user_is_online(user):
