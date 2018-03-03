@@ -35,7 +35,7 @@ def _parse_online_flag(x):
     return _parse_bool(x)
 
 class UserField(Enum):
-    UID = 'uid'
+    UID = 'id'
     FIRST_NAME = 'first_name'
     LAST_NAME = 'last_name'
     DEACTIVATED = 'deactivated'

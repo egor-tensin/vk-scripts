@@ -90,7 +90,7 @@ def _parse_args(args=None):
     return parser.parse_args(args)
 
 def write_mutual_friends(uids, out_path=None, out_fmt=OutputFormat.CSV):
-    api = API(Language.EN)
+    api = API()
     users = api.users_get(uids)
 
     friend_lists = (frozenset(_query_friend_list(api, user)) for user in users)

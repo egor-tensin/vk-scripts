@@ -56,9 +56,16 @@ def _join_path(base, url):
         base += '/'
     return urllib.parse.urljoin(base, url)
 
+class Version(Enum):
+    V5_73 = '5.73'
+    DEFAULT = V5_73
+
+    def __str__(self):
+        return self.value
+
 class Language(Enum):
-    DEFAULT = None
     EN = 'en'
+    DEFAULT = EN
 
     def __str__(self):
         return self.value
@@ -71,6 +78,7 @@ class Method(Enum):
         return self.value
 
 class CommonParameters(Enum):
+    VERSION = 'v'
     LANGUAGE = 'lang'
 
     def __str__(self):
@@ -81,11 +89,11 @@ class API:
 
     _SCHEME, _HOST, _ROOT_PATH = _split_url(_ROOT_URL)
 
-    def __init__(self, lang=Language.DEFAULT, deactivated_users=True):
+    def __init__(self, version=Version.DEFAULT, lang=Language.DEFAULT):
         self._common_params = {
+            CommonParameters.VERSION: version,
             CommonParameters.LANGUAGE: lang,
         }
-        self._skip_deactivated_users = not deactivated_users
 
     def _build_method_url(self, method, **params):
         path = _join_path(self._ROOT_PATH, str(method))
@@ -98,28 +106,30 @@ class API:
         try:
             with urlopen(url) as response:
                 response = json.loads(response.read().decode())
+                #print(response)
                 if 'response' not in response:
                     raise vk.error.InvalidAPIResponseError(response)
-                #print(response)
                 return response['response']
         except (ConnectionError, URLError) as e:
             raise vk.error.APIConnectionError(str(e)) from e
 
-    def _should_skip_user(self, user):
-        return self._skip_deactivated_users and user.is_deactivated()
-
-    def _filter_response_with_users(self, user_list):
+    def _filter_response_with_users(self, user_list, deactivated_users=True):
         user_list = map(User.from_api_response, user_list)
-        return [user for user in user_list if not self._should_skip_user(user)]
+        if deactivated_users:
+            return user_list
+        return [user for user in user_list if not user.is_deactivated()]
 
-    def users_get(self, user_ids, fields=()):
+    def users_get(self, user_ids, fields=(), deactivated_users=True):
         return self._filter_response_with_users(self._call_method(
             Method.USERS_GET,
             user_ids=_join_param_values(user_ids),
-            fields=_join_param_values(fields)))
+            fields=_join_param_values(fields)), deactivated_users)
 
-    def friends_get(self, user_id, fields=()):
-        return self._filter_response_with_users(self._call_method(
+    def friends_get(self, user_id, fields=(), deactivated_users=True):
+        response = self._call_method(
             Method.FRIENDS_GET,
             user_id=user_id,
-            fields=_join_param_values(fields)))
+            fields=_join_param_values(fields))
+        if 'items' not in response:
+            raise vk.error.InvalidAPIResponseError(response)
+        return self._filter_response_with_users(response['items'], deactivated_users)

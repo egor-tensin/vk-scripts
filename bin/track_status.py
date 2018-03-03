@@ -57,7 +57,7 @@ def track_status(
         log_path=None,
         db_path=None, db_fmt=DEFAULT_DB_FORMAT):
 
-    api = API(Language.EN, deactivated_users=False)
+    api = API()
     tracker = StatusTracker(api, timeout)
 
     if db_fmt is DatabaseFormat.LOG or db_path is None:
