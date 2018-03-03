@@ -44,7 +44,6 @@ class UserField(Enum):
     DOMAIN = 'domain'
     ONLINE = 'online'
     LAST_SEEN = 'last_seen'
-    SCREEN_NAME = 'screen_name'
 
     def __str__(self):
         return self.value
@@ -183,15 +182,3 @@ class User(Hashable, MutableMapping):
 
     def get_last_seen_platform(self):
         return self[UserField.LAST_SEEN].get_platform()
-
-    def has_screen_name(self):
-        return UserField.SCREEN_NAME in self
-
-    def get_screen_name(self):
-        if self.has_screen_name():
-            return self[UserField.SCREEN_NAME]
-        else:
-            return 'id' + str(self.get_uid())
-
-    def set_screen_name(self, name):
-        self[UserField.SCREEN_NAME] = name
