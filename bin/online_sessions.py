@@ -258,8 +258,7 @@ class OutputFormat(Enum):
     def open_file(self, path=None):
         if self is OutputFormat.PLOT:
             return io.open_output_binary_file(path)
-        else:
-            return io.open_output_text_file(path)
+        return io.open_output_text_file(path)
 
 def _parse_group_by(s):
     try:

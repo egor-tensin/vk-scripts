@@ -5,7 +5,7 @@
 
 import argparse, sys
 
-from vk.api import API, Language
+from vk.api import API
 from vk.tracking import StatusTracker
 from vk.tracking.db import Format as DatabaseFormat
 

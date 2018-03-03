@@ -9,7 +9,7 @@ from collections import OrderedDict
 from enum import Enum
 import sys
 
-from vk.api import API, Language
+from vk.api import API
 from vk.user import UserField
 
 from .utils import io
