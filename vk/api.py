@@ -55,6 +55,8 @@ def _join_path(base, url):
         base += '/'
     return urllib.parse.urljoin(base, url)
 
+ACCESS_TOKEN = '9722cef09722cef09722cef071974b8cbe997229722cef0cbabfd816916af6c7bd37006'
+
 class Version(Enum):
     V5_73 = '5.73'
     DEFAULT = V5_73
@@ -77,6 +79,7 @@ class Method(Enum):
         return self.value
 
 class CommonParameters(Enum):
+    ACCESS_TOKEN = 'access_token'
     VERSION = 'v'
     LANGUAGE = 'lang'
 
@@ -90,6 +93,7 @@ class API:
 
     def __init__(self, version=Version.DEFAULT, lang=Language.DEFAULT):
         self._common_params = {
+            CommonParameters.ACCESS_TOKEN: ACCESS_TOKEN,
             CommonParameters.VERSION: version,
             CommonParameters.LANGUAGE: lang,
         }
