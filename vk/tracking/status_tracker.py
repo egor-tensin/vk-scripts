@@ -85,10 +85,14 @@ class StatusTracker:
                 old_users[uid] = user
                 yield user
 
-    def _do_loop(self, uids):
+    def query_status(self, uids):
         users = self._query_initial_status(uids)
         for user in users.values():
             self._notify_status(user)
+        return users
+
+    def _do_loop(self, uids):
+        users = self.query_status(uids)
         while True:
             updated_users = self._query_status_updates(uids)
             for user in self._filter_status_updates(users, updated_users):
