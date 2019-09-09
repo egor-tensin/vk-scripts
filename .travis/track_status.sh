@@ -7,13 +7,17 @@ track_status() {
     log_path="$( mktemp )"
     echo "Log file path: $log_path"
 
-    local rm_log_path
-    rm_log_path="$( printf -- 'rm -f -- %q' "$log_path" )"
+    local db_path
+    db_path="$( mktemp --dry-run )"
+    echo "DB file path: $db_path"
 
-    trap "$rm_log_path" RETURN
+    local rm_aux_files
+    rm_aux_files="$( printf -- 'rm -f -- %q' "$log_path" "$db_path" )"
+
+    trap "$rm_aux_files" RETURN
 
     echo 'Running track_status.py...'
-    python3 -m bin.track_status egor.tensin --log "$log_path" &
+    python3 -m bin.track_status egor.tensin --log "$log_path" --format csv --output "$db_path" &
     local pid="$!"
     echo "Its PID is $pid"
 
