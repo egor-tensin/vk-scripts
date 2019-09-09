@@ -30,7 +30,10 @@ track_status() {
     echo 'Waiting for track_status.py to terminate...'
     wait "$pid"
 
+    echo "Log file:"
     cat "$log_path"
+    echo "DB:"
+    cat "$db_path"
 }
 
 main() {
