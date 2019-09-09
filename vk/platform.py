@@ -35,7 +35,7 @@ class Platform(Enum):
 
     def get_descr_text(self):
         s = _PLATFORM_DESCRIPTIONS[self]
-        if self == self.VK_MOBILE:
+        if self == Platform.VK_MOBILE:
             return s
         s = s.replace('unrecognized', 'an unrecognized')
         return 'the ' + s
