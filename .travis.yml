@@ -1,0 +1,4 @@
+language: python
+install:
+script:
+  - python3 -m bin.show_status egor.tensin
