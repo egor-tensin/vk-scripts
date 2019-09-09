@@ -20,7 +20,15 @@ class FileWriterCSV:
     def __init__(self, fd=sys.stdout):
         self._writer = csv.writer(fd, lineterminator='\n')
 
+    @staticmethod
+    def _convert_row_old_python(row):
+        if isinstance(row, list) or isinstance(row, tuple):
+            return row
+        return list(row)
+
     def write_row(self, row):
+        if sys.version_info < (3, 5):
+            row = self._convert_row_old_python(row)
         self._writer.writerow(row)
 
 @contextmanager
