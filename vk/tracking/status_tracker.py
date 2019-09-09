@@ -4,7 +4,9 @@
 # Distributed under the MIT License.
 
 from collections.abc import Callable
+import contextlib
 import time
+import signal
 
 import vk.error
 from vk.user import UserField
@@ -98,8 +100,23 @@ class StatusTracker:
             for user in self._filter_status_updates(users, updated_users):
                 self._notify_status_update(user)
 
-    def loop(self, uids):
+    @staticmethod
+    @contextlib.contextmanager
+    def _handle_sigint():
+        # Python doesn't raise KeyboardInterrupt in case a real SIGINT is sent
+        # from outside, surprisingly.
+        def _raise_keyboard_interrupt(signum, frame):
+            raise KeyboardInterrupt()
+        old_handler = signal.getsignal(signal.SIGINT)
+        signal.signal(signal.SIGINT, _raise_keyboard_interrupt)
         try:
-            self._do_loop(uids)
-        except KeyboardInterrupt:
-            pass
+            yield
+        finally:
+            signal.signal(signal.SIGINT, old_handler)
+
+    def loop(self, uids):
+        with self._handle_sigint():
+            try:
+                self._do_loop(uids)
+            except KeyboardInterrupt:
+                pass
