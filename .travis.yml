@@ -6,6 +6,9 @@ python:
   - '3.7'
 install:
 script:
-  - python3 -m bin.mutual_friends kreed58 maxkorzh_official
+  - python3 -m bin.mutual_friends --format csv  kreed58 maxkorzh_official
+  - python3 -m bin.mutual_friends --format json kreed58 maxkorzh_official
+
   - python3 -m bin.show_status egor.tensin
+
   - ./.travis/track_status.sh
