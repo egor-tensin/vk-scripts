@@ -12,7 +12,7 @@ track_status() {
     echo "DB file path: $db_path"
 
     local rm_aux_files
-    rm_aux_files="$( printf -- 'rm -f -- %q' "$log_path" "$db_path" )"
+    rm_aux_files="$( printf -- 'rm -f -- %q %q' "$log_path" "$db_path" )"
 
     trap "$rm_aux_files" RETURN
 
