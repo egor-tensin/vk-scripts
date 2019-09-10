@@ -1,6 +1,8 @@
 VK scripts
 ==========
 
+[![Travis (.com) branch](https://img.shields.io/travis/com/egor-tensin/vk-scripts/master?label=Travis)](https://travis-ci.com/egor-tensin/vk-scripts)
+
 A collection of scripts abusing VK.com API.
 
 Prerequisites
