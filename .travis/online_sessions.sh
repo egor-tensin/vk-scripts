@@ -16,7 +16,8 @@ _online_sessions() {
     echo "Running online_sessions.py..."
     python3 -m bin.online_sessions "$@" "$db_path" "$output_path"
 
-    if file --brief --dereference --mime -- "$output_path" | grep --quiet -- '^binary'; then
+    if file --brief --dereference --mime -- "$output_path" | grep --quiet -- 'charset=binary$'; then
+        echo 'Output is a binary file, not going to show that'
         return 0
     fi
 
