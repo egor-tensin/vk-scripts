@@ -10,5 +10,4 @@ script:
 
   - python3 -m bin.show_status egor.tensin
 
-  - ./.travis/track_status.sh
-  - ./.travis/online_sessions.sh
+  - ./.travis/test.sh
