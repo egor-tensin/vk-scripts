@@ -5,5 +5,7 @@
 # For details, see https://github.com/egor-tensin/vk-scripts.
 # Distributed under the MIT License.
 
+set -o xtrace
+
 ./.travis/test/track_status.sh
 ./.travis/test/online_sessions.sh
