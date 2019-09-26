@@ -7,8 +7,6 @@
 
 set -o errexit -o nounset -o pipefail
 
-readonly uid='egor.tensin'
-
 track_status() {
     local log_path
     log_path="$( mktemp )"
@@ -24,7 +22,7 @@ track_status() {
     trap "$rm_aux_files" RETURN
 
     echo 'Running track_status.py...'
-    python3 -m bin.track_status "$uid" --log "$log_path" --format csv --output "$db_path" &
+    python3 -m bin.track_status "$@" --log "$log_path" --format csv --output "$db_path" &
     local pid="$!"
     echo "Its PID is $pid"
 
@@ -44,7 +42,7 @@ track_status() {
 }
 
 main() {
-    track_status
+    track_status egor.tensin
 }
 
 main "$@"

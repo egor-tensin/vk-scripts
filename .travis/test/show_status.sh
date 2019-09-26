@@ -5,9 +5,15 @@
 # For details, see https://github.com/egor-tensin/vk-scripts.
 # Distributed under the MIT License.
 
-set -o xtrace
+set -o errexit -o nounset -o pipefail
 
-./.travis/test/mutual_friends.sh
-./.travis/test/show_status.sh
-./.travis/test/track_status.sh
-./.travis/test/online_sessions.sh
+show_status() {
+    echo 'Running show_status.py...'
+    python3 -m bin.show_status "$@"
+}
+
+main() {
+    show_status egor.tensin
+}
+
+main "$@"
