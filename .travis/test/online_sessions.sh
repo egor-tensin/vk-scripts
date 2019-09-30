@@ -9,6 +9,13 @@ set -o errexit -o nounset -o pipefail
 
 readonly db_path='.travis/test_db.csv'
 
+fix_matplotlib() {
+    # Get rid of:
+    # tkinter.TclError: no display name and no $DISPLAY environment variable
+    mkdir -p -- ~/.config/matplotlib
+    echo 'backend: Agg' > ~/.config/matplotlib/matplotlibrc
+}
+
 _online_sessions() {
     local output_path
     output_path="$( mktemp --dry-run )"
@@ -31,11 +38,6 @@ _online_sessions() {
 }
 
 online_sessions() {
-    # Get rid of:
-    # tkinter.TclError: no display name and no $DISPLAY environment variable
-    mkdir -p -- ~/.config/matplotlib
-    echo 'backend: Agg' > ~/.config/matplotlib/matplotlibrc
-
     _online_sessions --group-by user --output-format csv
     _online_sessions --group-by user --output-format json
 
@@ -46,6 +48,7 @@ online_sessions() {
 }
 
 main() {
+    fix_matplotlib
     online_sessions
 }
 
