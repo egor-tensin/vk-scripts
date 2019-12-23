@@ -7,6 +7,7 @@ from contextlib import contextmanager
 import csv
 import sys
 
+
 class FileWriterCSV:
     def __init__(self, fd=sys.stdout):
         self._fd = fd
@@ -14,7 +15,7 @@ class FileWriterCSV:
 
     @staticmethod
     def _convert_row_old_python(row):
-        if isinstance(row, list) or isinstance(row, tuple):
+        if isinstance(row, (list, tuple)):
             return row
         return list(row)
 
@@ -24,12 +25,14 @@ class FileWriterCSV:
         self._writer.writerow(row)
         self._fd.flush()
 
+
 class FileReaderCSV:
     def __init__(self, fd=sys.stdin):
         self._reader = csv.reader(fd)
 
     def __iter__(self):
         return iter(self._reader)
+
 
 @contextmanager
 def _open_file(path=None, default=None, **kwargs):
@@ -39,11 +42,14 @@ def _open_file(path=None, default=None, **kwargs):
         with open(path, **kwargs) as fd:
             yield fd
 
+
 _DEFAULT_ENCODING = 'utf-8'
+
 
 def open_output_text_file(path=None, mode='w'):
     return _open_file(path, default=sys.stdout, mode=mode,
                       encoding=_DEFAULT_ENCODING)
+
 
 def open_input_text_file(path=None):
     return _open_file(path, default=sys.stdin, mode='r',

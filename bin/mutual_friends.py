@@ -14,10 +14,13 @@ from vk.user import UserField
 
 from .utils import io
 
+
 _OUTPUT_USER_FIELDS = UserField.UID, UserField.FIRST_NAME, UserField.LAST_NAME
+
 
 def _query_friend_list(api, user):
     return api.friends_get(user.get_uid(), fields=_OUTPUT_USER_FIELDS)
+
 
 def _filter_user_fields(user):
     new_user = OrderedDict()
@@ -25,10 +28,12 @@ def _filter_user_fields(user):
         new_user[str(field)] = user[field] if field in user else None
     return new_user
 
+
 class OutputSinkMutualFriends(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def write_mutual_friends(self, friend_list):
         pass
+
 
 class OutputSinkCSV(OutputSinkMutualFriends):
     def __init__(self, fd=sys.stdout):
@@ -38,12 +43,14 @@ class OutputSinkCSV(OutputSinkMutualFriends):
         for user in friend_list:
             self._writer.write_row(user.values())
 
+
 class OutputSinkJSON(OutputSinkMutualFriends):
     def __init__(self, fd=sys.stdout):
         self._writer = io.FileWriterJSON(fd)
 
     def write_mutual_friends(self, friend_list):
         self._writer.write(friend_list)
+
 
 class OutputFormat(Enum):
     CSV = 'csv'
@@ -59,16 +66,17 @@ class OutputFormat(Enum):
     def create_sink(self, fd=sys.stdout):
         if self is OutputFormat.CSV:
             return OutputSinkCSV(fd)
-        elif self is OutputFormat.JSON:
+        if self is OutputFormat.JSON:
             return OutputSinkJSON(fd)
-        else:
-            raise NotImplementedError('unsupported output format: ' + str(self))
+        raise NotImplementedError('unsupported output format: ' + str(self))
+
 
 def _parse_output_format(s):
     try:
         return OutputFormat(s)
     except ValueError:
         raise argparse.ArgumentTypeError('invalid output format: ' + s)
+
 
 def _parse_args(args=None):
     if args is None:
@@ -89,6 +97,7 @@ def _parse_args(args=None):
 
     return parser.parse_args(args)
 
+
 def write_mutual_friends(uids, out_path=None, out_fmt=OutputFormat.CSV):
     api = API()
     users = api.users_get(uids)
@@ -101,8 +110,10 @@ def write_mutual_friends(uids, out_path=None, out_fmt=OutputFormat.CSV):
         sink = out_fmt.create_sink(out_fd)
         sink.write_mutual_friends(mutual_friends)
 
+
 def main(args=None):
     write_mutual_friends(**vars(_parse_args(args)))
+
 
 if __name__ == '__main__':
     main()

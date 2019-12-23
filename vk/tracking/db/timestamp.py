@@ -5,6 +5,7 @@
 
 from datetime import datetime, timezone
 
+
 class Timestamp:
     @staticmethod
     def _new():

@@ -5,6 +5,7 @@
 
 from .. import meta
 
+
 class Writer(meta.Writer):
     def __init__(self):
         pass
@@ -17,6 +18,7 @@ class Writer(meta.Writer):
 
     def on_connection_error(self, e):
         pass
+
 
 class Reader(meta.Reader):
     def __init__(self):

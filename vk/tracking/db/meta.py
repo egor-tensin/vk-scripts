@@ -6,6 +6,7 @@
 import abc
 from collections.abc import Iterable
 
+
 class Writer(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def on_initial_status(self, user):
@@ -18,6 +19,7 @@ class Writer(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def on_connection_error(self, e):
         pass
+
 
 class Reader(Iterable, metaclass=abc.ABCMeta):
     @abc.abstractmethod

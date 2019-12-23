@@ -3,14 +3,17 @@
 # For details, see https://github.com/egor-tensin/vk-scripts.
 # Distributed under the MIT License.
 
-import argparse, sys
+import argparse
+import sys
 
 from vk.api import API
 from vk.tracking import StatusTracker
 from vk.tracking.db import Format as DatabaseFormat
 
+
 DEFAULT_TIMEOUT = StatusTracker.DEFAULT_TIMEOUT
 DEFAULT_DB_FORMAT = DatabaseFormat.CSV
+
 
 def _parse_positive_integer(s):
     try:
@@ -21,11 +24,13 @@ def _parse_positive_integer(s):
         raise argparse.ArgumentTypeError('must be a positive integer: ' + s)
     return n
 
+
 def _parse_database_format(s):
     try:
         return DatabaseFormat(s)
     except ValueError:
         raise argparse.ArgumentTypeError('invalid database format: ' + s)
+
 
 def _parse_args(args=None):
     if args is None:
@@ -52,6 +57,7 @@ def _parse_args(args=None):
 
     return parser.parse_args(args)
 
+
 def track_status(
         uids, timeout=DEFAULT_TIMEOUT,
         log_path=None,
@@ -72,8 +78,10 @@ def track_status(
 
             tracker.loop(uids)
 
+
 def main(args=None):
     track_status(**vars(_parse_args(args)))
+
 
 if __name__ == '__main__':
     main()

@@ -11,6 +11,7 @@ import signal
 import vk.error
 from vk.user import UserField
 
+
 class StatusTracker:
     DEFAULT_TIMEOUT = 5
 
@@ -49,7 +50,8 @@ class StatusTracker:
     _USER_FIELDS = UserField.DOMAIN, UserField.ONLINE, UserField.LAST_SEEN,
 
     def _query_status(self, uids):
-        user_list = self._api.users_get(uids, self._USER_FIELDS, deactivated_users=False)
+        user_list = self._api.users_get(uids, self._USER_FIELDS,
+                                        deactivated_users=False)
         return {user.get_uid(): user for user in user_list}
 
     def _notify_status(self, user):

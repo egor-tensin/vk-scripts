@@ -8,6 +8,7 @@ import sys
 
 from . import backend, io
 
+
 class Format(Enum):
     CSV = 'csv'
     LOG = 'log'
@@ -19,22 +20,20 @@ class Format(Enum):
     def create_writer(self, fd=sys.stdout):
         if self is Format.CSV:
             return backend.csv.Writer(fd)
-        elif self is Format.LOG:
+        if self is Format.LOG:
             return backend.log.Writer(fd)
-        elif self is Format.NULL:
+        if self is Format.NULL:
             return backend.null.Writer()
-        else:
-            raise NotImplementedError('unsupported database format: ' + str(self))
+        raise NotImplementedError('unsupported database format: ' + str(self))
 
     def open_output_file(self, path=None):
         if self is Format.CSV:
             return self._open_output_database_file(path)
-        elif self is Format.LOG:
+        if self is Format.LOG:
             return self._open_output_log_file(path)
-        elif self is Format.NULL:
+        if self is Format.NULL:
             return self._open_output_database_file(None)
-        else:
-            raise NotImplementedError('unsupported database format: ' + str(self))
+        raise NotImplementedError('unsupported database format: ' + str(self))
 
     @staticmethod
     def _open_output_log_file(path):
@@ -47,19 +46,17 @@ class Format(Enum):
     def create_reader(self, fd=sys.stdin):
         if self is Format.CSV:
             return backend.csv.Reader(fd)
-        elif self is Format.LOG:
+        if self is Format.LOG:
             return NotImplementedError('cannot read from a log file')
-        elif self is Format.NULL:
+        if self is Format.NULL:
             return backend.null.Reader()
-        else:
-            raise NotImplementedError('unsupported database format: ' + str(self))
+        raise NotImplementedError('unsupported database format: ' + str(self))
 
     def open_input_file(self, path=None):
         if self is Format.CSV:
             return io.open_input_text_file(path)
-        elif self is Format.LOG:
+        if self is Format.LOG:
             raise NotImplementedError('cannot read from a log file')
-        elif self is Format.NULL:
+        if self is Format.NULL:
             return io.open_input_text_file(None)
-        else:
-            raise NotImplementedError('unsupported database format: ' + str(self))
+        raise NotImplementedError('unsupported database format: ' + str(self))

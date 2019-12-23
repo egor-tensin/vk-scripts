@@ -17,6 +17,7 @@ from vk.user import UserField
 from .utils.bar_chart import BarChartBuilder
 from .utils import io
 
+
 class GroupBy(Enum):
     USER = 'user'
     DATE = 'date'
@@ -30,14 +31,14 @@ class GroupBy(Enum):
         online_streaks = OnlineSessionEnumerator(time_from, time_to)
         if self is GroupBy.USER:
             return online_streaks.group_by_user(db_reader)
-        elif self is GroupBy.DATE:
+        if self is GroupBy.DATE:
             return online_streaks.group_by_date(db_reader)
-        elif self is GroupBy.WEEKDAY:
+        if self is GroupBy.WEEKDAY:
             return online_streaks.group_by_weekday(db_reader)
-        elif self is GroupBy.HOUR:
+        if self is GroupBy.HOUR:
             return online_streaks.group_by_hour(db_reader)
-        else:
-            raise NotImplementedError('unsupported grouping: ' + str(self))
+        raise NotImplementedError('unsupported grouping: ' + str(self))
+
 
 _OUTPUT_USER_FIELDS = (
     UserField.UID,
@@ -46,10 +47,12 @@ _OUTPUT_USER_FIELDS = (
     UserField.DOMAIN,
 )
 
+
 class OutputSinkOnlineSessions(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def process_database(self, group_by, db_reader, time_from=None, time_to=None):
         pass
+
 
 class OutputConverterCSV:
     @staticmethod
@@ -67,6 +70,7 @@ class OutputConverterCSV:
     @staticmethod
     def convert_hour(hour):
         return [str(timedelta(hours=hour))]
+
 
 class OutputSinkCSV(OutputSinkOnlineSessions):
     def __init__(self, fd=sys.stdout):
@@ -90,6 +94,7 @@ class OutputSinkCSV(OutputSinkOnlineSessions):
             row = self._key_to_row(group_by, key)
             row.append(str(duration))
             self._writer.write_row(row)
+
 
 class OutputConverterJSON:
     _DATE_FIELD = 'date'
@@ -125,6 +130,7 @@ class OutputConverterJSON:
         obj[OutputConverterJSON._HOUR_FIELD] = str(timedelta(hours=hour))
         return obj
 
+
 class OutputSinkJSON(OutputSinkOnlineSessions):
     def __init__(self, fd=sys.stdout):
         self._writer = io.FileWriterJSON(fd)
@@ -142,7 +148,7 @@ class OutputSinkJSON(OutputSinkOnlineSessions):
 
     @staticmethod
     def _key_to_object(group_by, key):
-        if not group_by in OutputSinkJSON._CONVERT_KEY:
+        if group_by not in OutputSinkJSON._CONVERT_KEY:
             raise NotImplementedError('unsupported grouping: ' + str(group_by))
         return OutputSinkJSON._CONVERT_KEY[group_by](key)
 
@@ -153,6 +159,7 @@ class OutputSinkJSON(OutputSinkOnlineSessions):
             entry[self._DURATION_FIELD] = str(duration)
             entries.append(entry)
         self._writer.write(entries)
+
 
 class OutputConverterPlot:
     @staticmethod
@@ -170,6 +177,7 @@ class OutputConverterPlot:
     @staticmethod
     def convert_hour(hour):
         return '{}:00'.format(hour)
+
 
 class OutputSinkPlot(OutputSinkOnlineSessions):
     def __init__(self, fd=sys.stdout):
@@ -200,11 +208,11 @@ class OutputSinkPlot(OutputSinkOnlineSessions):
 
     @staticmethod
     def _extract_labels(group_by, durations):
-        return tuple(map(lambda key: OutputSinkPlot._format_key(group_by, key), durations.keys()))
+        return (OutputSinkPlot._format_key(group_by, key) for key in durations.keys())
 
     @staticmethod
     def _extract_values(durations):
-        return tuple(map(OutputSinkPlot._duration_to_seconds, durations.values()))
+        return (OutputSinkPlot._duration_to_seconds(duration) for duration in durations.values())
 
     def process_database(
             self, group_by, db_reader, time_from=None, time_to=None):
@@ -219,8 +227,8 @@ class OutputSinkPlot(OutputSinkOnlineSessions):
                                fontsize='small', rotation=30)
         bar_chart.set_value_label_formatter(self._format_duration)
 
-        labels = self._extract_labels(group_by, durations)
-        durations = self._extract_values(durations)
+        labels = tuple(self._extract_labels(group_by, durations))
+        durations = tuple(self._extract_values(durations))
 
         if group_by is GroupBy.HOUR:
             bar_chart.labels_align_middle = False
@@ -237,6 +245,7 @@ class OutputSinkPlot(OutputSinkOnlineSessions):
         else:
             bar_chart.save(self._fd)
 
+
 class OutputFormat(Enum):
     CSV = 'csv'
     JSON = 'json'
@@ -248,17 +257,17 @@ class OutputFormat(Enum):
     def create_sink(self, fd=sys.stdout):
         if self is OutputFormat.CSV:
             return OutputSinkCSV(fd)
-        elif self is OutputFormat.JSON:
+        if self is OutputFormat.JSON:
             return OutputSinkJSON(fd)
-        elif self is OutputFormat.PLOT:
+        if self is OutputFormat.PLOT:
             return OutputSinkPlot(fd)
-        else:
-            raise NotImplementedError('unsupported output format: ' + str(self))
+        raise NotImplementedError('unsupported output format: ' + str(self))
 
     def open_file(self, path=None):
         if self is OutputFormat.PLOT:
             return io.open_output_binary_file(path)
         return io.open_output_text_file(path)
+
 
 def _parse_group_by(s):
     try:
@@ -266,11 +275,13 @@ def _parse_group_by(s):
     except ValueError:
         raise argparse.ArgumentTypeError('invalid "group by" value: ' + s)
 
+
 def _parse_database_format(s):
     try:
         return DatabaseFormat(s)
     except ValueError:
         raise argparse.ArgumentTypeError('invalid database format: ' + s)
+
 
 def _parse_output_format(s):
     try:
@@ -278,7 +289,9 @@ def _parse_output_format(s):
     except ValueError:
         raise argparse.ArgumentTypeError('invalid output format: ' + s)
 
+
 _DATE_RANGE_LIMIT_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
+
 
 def _parse_date_range_limit(s):
     try:
@@ -288,6 +301,7 @@ def _parse_date_range_limit(s):
         msg = 'invalid date range limit (must be in the \'{}\' format): {}'
         raise argparse.ArgumentTypeError(
             msg.format(_DATE_RANGE_LIMIT_FORMAT, s))
+
 
 def _parse_args(args=None):
     if args is None:
@@ -324,6 +338,7 @@ def _parse_args(args=None):
 
     return parser.parse_args(args)
 
+
 def process_online_sessions(
         db_path=None, db_fmt=DatabaseFormat.CSV,
         out_path=None, out_fmt=OutputFormat.CSV,
@@ -343,8 +358,10 @@ def process_online_sessions(
                 time_from=time_from,
                 time_to=time_to)
 
+
 def main(args=None):
     process_online_sessions(**vars(_parse_args(args)))
+
 
 if __name__ == '__main__':
     main()

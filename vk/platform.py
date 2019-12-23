@@ -6,6 +6,7 @@
 from enum import Enum
 import re
 
+
 class Platform(Enum):
     MOBILE = 1
     IPHONE = 2
@@ -42,6 +43,7 @@ class Platform(Enum):
 
     def get_descr_text_capitalized(self):
         return self._capitalize_first_letter(self.get_descr_text())
+
 
 _PLATFORM_DESCRIPTIONS = {
     Platform.MOBILE: '"mobile" web version (or unrecognized mobile app)',

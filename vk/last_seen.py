@@ -11,6 +11,7 @@ from numbers import Integral, Real
 
 from .platform import Platform
 
+
 def _parse_time(x):
     if isinstance(x, datetime):
         if x.tzinfo is None or x.tzinfo.utcoffset(x) is None:
@@ -20,6 +21,7 @@ def _parse_time(x):
         return datetime.fromtimestamp(x, tz=timezone.utc)
     raise TypeError()
 
+
 def _parse_platform(x):
     if x in Platform:
         return x
@@ -27,12 +29,14 @@ def _parse_platform(x):
         return Platform.from_string(x)
     return Platform(x)
 
+
 class LastSeenField(Enum):
     TIME = 'time'
     PLATFORM = 'platform'
 
     def __str__(self):
         return self.value
+
 
 class LastSeen(MutableMapping):
     @staticmethod

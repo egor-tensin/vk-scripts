@@ -8,6 +8,7 @@ from ..io import FileReaderCSV, FileWriterCSV
 from ..record import Record
 from ..timestamp import Timestamp
 
+
 class Writer(meta.Writer):
     def __init__(self, fd):
         self._writer = FileWriterCSV(fd)
@@ -29,6 +30,7 @@ class Writer(meta.Writer):
     @staticmethod
     def _record_to_row(record):
         return [str(record.get_timestamp())] + [str(record[field]) for field in record]
+
 
 class Reader(meta.Reader):
     def __init__(self, fd):

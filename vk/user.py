@@ -9,30 +9,32 @@ from enum import Enum
 
 from .last_seen import LastSeen
 
+
 def _parse_last_seen(x):
     if isinstance(x, LastSeen):
         return x
-    elif isinstance(x, Mapping):
+    if isinstance(x, Mapping):
         return LastSeen.from_api_response(x)
-    else:
-        raise TypeError()
+    raise TypeError()
+
 
 def _parse_bool(x):
     if isinstance(x, str):
         if str(True) == x:
             return True
-        elif str(False) == x:
+        if str(False) == x:
             return False
-        else:
-            raise ValueError()
-    else:
-        return bool(x)
+        raise ValueError()
+    return bool(x)
+
 
 def _parse_hidden(x):
     return _parse_bool(x)
 
+
 def _parse_online_flag(x):
     return _parse_bool(x)
+
 
 class UserField(Enum):
     UID = 'id'
@@ -48,6 +50,7 @@ class UserField(Enum):
     def __str__(self):
         return self.value
 
+
 class DeactivationReason(Enum):
     DELETED = 'deleted'
     BANNED = 'banned'
@@ -55,8 +58,10 @@ class DeactivationReason(Enum):
     def __str__(self):
         return self.value
 
+
 def _parse_deactivated(s):
     return DeactivationReason(s)
+
 
 class User(Hashable, MutableMapping):
     @staticmethod

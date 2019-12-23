@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from matplotlib import ticker
 import numpy as np
 
+
 class BarChartBuilder:
     _BAR_HEIGHT = .5
 
@@ -129,6 +130,7 @@ class BarChartBuilder:
 
     def save(self, path):
         self._fig.savefig(path, bbox_inches='tight')
+
 
 if __name__ == '__main__':
     import argparse

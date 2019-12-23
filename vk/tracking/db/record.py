@@ -12,6 +12,7 @@ from vk.user import User, UserField
 
 from .timestamp import Timestamp
 
+
 class Record(MutableMapping):
     FIELDS = (
         UserField.UID,

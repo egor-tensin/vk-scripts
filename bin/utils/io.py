@@ -8,6 +8,7 @@ import csv
 import json
 import sys
 
+
 class FileWriterJSON:
     def __init__(self, fd=sys.stdout):
         self._fd = fd
@@ -16,13 +17,14 @@ class FileWriterJSON:
         self._fd.write(json.dumps(something, indent=3, ensure_ascii=False))
         self._fd.write('\n')
 
+
 class FileWriterCSV:
     def __init__(self, fd=sys.stdout):
         self._writer = csv.writer(fd, lineterminator='\n')
 
     @staticmethod
     def _convert_row_old_python(row):
-        if isinstance(row, list) or isinstance(row, tuple):
+        if isinstance(row, (list, tuple)):
             return row
         return list(row)
 
@@ -30,6 +32,7 @@ class FileWriterCSV:
         if sys.version_info < (3, 5):
             row = self._convert_row_old_python(row)
         self._writer.writerow(row)
+
 
 @contextmanager
 def _open_file(path=None, default=None, **kwargs):
@@ -39,8 +42,10 @@ def _open_file(path=None, default=None, **kwargs):
         with open(path, **kwargs) as fd:
             yield fd
 
+
 def open_output_text_file(path=None):
     return _open_file(path, default=sys.stdout, mode='w', encoding='utf-8')
+
 
 def open_output_binary_file(path=None):
     return _open_file(path, default=sys.stdout, mode='wb')

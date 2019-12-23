@@ -3,8 +3,7 @@
 # For details, see https://github.com/egor-tensin/vk-scripts.
 # Distributed under the MIT License.
 
-from collections import Iterable
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from enum import Enum
 import json
 from urllib.error import URLError
@@ -14,21 +13,24 @@ from urllib.request import urlopen
 import vk.error
 from vk.user import User
 
+
 def _split_url(url):
     return urllib.parse.urlsplit(url)[:3]
 
+
 def _is_empty_param_value(value):
     return isinstance(value, str) and not value
+
 
 def _filter_empty_params(params, empty_params=False):
     if empty_params:
         return params
     if isinstance(params, Mapping):
         return {name: value for name, value in params.items() if not _is_empty_param_value(value)}
-    elif isinstance(params, Iterable):
+    if isinstance(params, Iterable):
         return [(name, value) for name, value in params if not _is_empty_param_value(value)]
-    else:
-        raise TypeError()
+    raise TypeError()
+
 
 def _build_url(scheme, host, path, params=None, empty_params=False):
     if params is None:
@@ -43,6 +45,7 @@ def _build_url(scheme, host, path, params=None, empty_params=False):
     path = urllib.parse.quote(path)
     return urllib.parse.urlunsplit((scheme, host, path, params, ''))
 
+
 def _join_param_values(values):
     if isinstance(values, str):
         return values
@@ -50,12 +53,15 @@ def _join_param_values(values):
         return ','.join(map(str, values))
     return values
 
+
 def _join_path(base, url):
     if not base.endswith('/'):
         base += '/'
     return urllib.parse.urljoin(base, url)
 
+
 ACCESS_TOKEN = '9722cef09722cef09722cef071974b8cbe997229722cef0cbabfd816916af6c7bd37006'
+
 
 class Version(Enum):
     V5_73 = '5.73'
@@ -64,12 +70,14 @@ class Version(Enum):
     def __str__(self):
         return self.value
 
+
 class Language(Enum):
     EN = 'en'
     DEFAULT = EN
 
     def __str__(self):
         return self.value
+
 
 class Method(Enum):
     USERS_GET = 'users.get'
@@ -78,6 +86,7 @@ class Method(Enum):
     def __str__(self):
         return self.value
 
+
 class CommonParameters(Enum):
     ACCESS_TOKEN = 'access_token'
     VERSION = 'v'
@@ -85,6 +94,7 @@ class CommonParameters(Enum):
 
     def __str__(self):
         return self.value
+
 
 class API:
     _ROOT_URL = 'https://api.vk.com/method/'
@@ -136,4 +146,5 @@ class API:
             fields=_join_param_values(fields))
         if 'items' not in response:
             raise vk.error.InvalidAPIResponseError(response)
-        return self._filter_response_with_users(response['items'], deactivated_users)
+        return self._filter_response_with_users(response['items'],
+                                                deactivated_users)

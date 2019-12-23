@@ -3,11 +3,13 @@
 # For details, see https://github.com/egor-tensin/vk-scripts.
 # Distributed under the MIT License.
 
-import argparse, sys
+import argparse
+import sys
 
 from vk.api import API
 from vk.tracking import StatusTracker
 from vk.tracking.db import Format as DatabaseFormat
+
 
 def _parse_args(args=None):
     if args is None:
@@ -23,6 +25,7 @@ def _parse_args(args=None):
 
     return parser.parse_args(args)
 
+
 def track_status(uids, log_path=None):
     api = API()
     tracker = StatusTracker(api)
@@ -32,8 +35,10 @@ def track_status(uids, log_path=None):
         tracker.add_database_writer(log_writer)
         tracker.query_status(uids)
 
+
 def main(args=None):
     track_status(**vars(_parse_args(args)))
+
 
 if __name__ == '__main__':
     main()

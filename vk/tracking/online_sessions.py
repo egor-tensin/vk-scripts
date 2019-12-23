@@ -8,6 +8,7 @@ from collections.abc import MutableMapping
 from datetime import timedelta
 from enum import Enum
 
+
 class Weekday(Enum):
     MONDAY = 0
     TUESDAY = 1
@@ -19,6 +20,7 @@ class Weekday(Enum):
 
     def __str__(self):
         return self.name[0] + self.name[1:].lower()
+
 
 class OnlineSessionEnumerator(MutableMapping):
     def __init__(self, time_from=None, time_to=None):
