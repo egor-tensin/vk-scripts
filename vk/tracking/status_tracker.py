@@ -102,23 +102,38 @@ class StatusTracker:
             for user in self._filter_status_updates(users, updated_users):
                 self._notify_status_update(user)
 
+    class StopLooping(RuntimeError):
+        pass
+
+    @staticmethod
+    def _stop_looping(signo, frame):
+        raise StatusTracker.StopLooping()
+
     @staticmethod
     @contextlib.contextmanager
-    def _handle_sigint():
-        # Python doesn't raise KeyboardInterrupt in case a real SIGINT is sent
-        # from outside, surprisingly.
-        def _raise_keyboard_interrupt(signum, frame):
-            raise KeyboardInterrupt()
-        old_handler = signal.getsignal(signal.SIGINT)
-        signal.signal(signal.SIGINT, _raise_keyboard_interrupt)
+    def _handle_signal(signo, handler):
+        old_handler = signal.getsignal(signo)
+        signal.signal(signo, handler)
         try:
             yield
         finally:
             signal.signal(signal.SIGINT, old_handler)
 
+    @staticmethod
+    def _handle_sigint():
+        # Python doesn't raise KeyboardInterrupt in case a real SIGINT is sent
+        # from outside, surprisingly.
+        return StatusTracker._handle_signal(signal.SIGINT,
+                                            StatusTracker._stop_looping)
+
+    @staticmethod
+    def _handle_sigterm():
+        return StatusTracker._handle_signal(signal.SIGTERM,
+                                            StatusTracker._stop_looping)
+
     def loop(self, uids):
-        with self._handle_sigint():
+        with self._handle_sigint(), self._handle_sigterm():
             try:
                 self._do_loop(uids)
-            except KeyboardInterrupt:
+            except (KeyboardInterrupt, StatusTracker.StopLooping):
                 pass
