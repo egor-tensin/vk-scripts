@@ -9,14 +9,7 @@ set -o errexit -o nounset -o pipefail
 
 readonly db_path='.travis/test_db.csv'
 
-fix_matplotlib() {
-    # Get rid of:
-    # tkinter.TclError: no display name and no $DISPLAY environment variable
-    mkdir -p -- ~/.config/matplotlib
-    echo 'backend: Agg' > ~/.config/matplotlib/matplotlibrc
-}
-
-_online_sessions() {
+try_output() {
     local output_path
     output_path="$( mktemp --dry-run )"
 
@@ -25,8 +18,7 @@ _online_sessions() {
 
     trap "$rm_aux_files" RETURN
 
-    echo "Running online_sessions.py..."
-    python3 -m bin.online_sessions "$@" "$db_path" "$output_path"
+    ./.travis/test.sh bin.online_sessions "$@" "$db_path" "$output_path"
 
     if file --brief --dereference --mime -- "$output_path" | grep --quiet -- 'charset=binary$'; then
         echo 'Output is a binary file, not going to show that'
@@ -38,13 +30,20 @@ _online_sessions() {
 }
 
 online_sessions() {
-    _online_sessions --group-by user --output-format csv
-    _online_sessions --group-by user --output-format json
+    try_output --group-by user --output-format csv
+    try_output --group-by user --output-format json
 
-    _online_sessions --group-by user --output-format plot
-    _online_sessions --group-by hour --output-format plot
-    _online_sessions --group-by date --output-format plot
-    _online_sessions --group-by weekday --output-format plot
+    try_output --group-by user --output-format plot
+    try_output --group-by hour --output-format plot
+    try_output --group-by date --output-format plot
+    try_output --group-by weekday --output-format plot
+}
+
+fix_matplotlib() {
+    # Get rid of:
+    # tkinter.TclError: no display name and no $DISPLAY environment variable
+    mkdir -p -- ~/.config/matplotlib
+    echo 'backend: Agg' > ~/.config/matplotlib/matplotlibrc
 }
 
 main() {

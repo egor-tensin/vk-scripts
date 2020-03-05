@@ -1,13 +1,23 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2019 Egor Tensin <Egor.Tensin@gmail.com>
+# Copyright (c) 2020 Egor Tensin <Egor.Tensin@gmail.com>
 # This file is part of the "VK scripts" project.
 # For details, see https://github.com/egor-tensin/vk-scripts.
 # Distributed under the MIT License.
 
-set -o xtrace
+set -o errexit -o nounset -o pipefail
 
-./.travis/test/mutual_friends.sh
-./.travis/test/show_status.sh
-./.travis/test/track_status.sh
-./.travis/test/online_sessions.sh
+run_test() {
+    local arg
+    echo
+    echo ======================================================================
+    for arg; do
+        echo -n "$arg "
+    done
+    echo
+    echo ======================================================================
+
+    python3 -m "$@"
+}
+
+run_test "$@"

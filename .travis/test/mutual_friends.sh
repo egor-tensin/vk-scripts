@@ -7,15 +7,13 @@
 
 set -o errexit -o nounset -o pipefail
 
-mutual_friends() {
-    echo 'Running mutual_friends.py --format csv...'
-    python3 -m bin.mutual_friends --format csv "$@"
-    echo 'Running mutual_friends.py --format json...'
-    python3 -m bin.mutual_friends --format json "$@"
+test_users() {
+    ./.travis/test.sh bin.mutual_friends --format csv "$@"
+    ./.travis/test.sh bin.mutual_friends --format json "$@"
 }
 
 main() {
-    mutual_friends kreed58 maxkorzh_official
+    test_users kreed58 maxkorzh_official
 }
 
 main "$@"

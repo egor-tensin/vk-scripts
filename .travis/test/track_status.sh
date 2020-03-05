@@ -7,33 +7,32 @@
 
 set -o errexit -o nounset -o pipefail
 
-track_status() {
+test_users() {
     local log_path
     log_path="$( mktemp )"
-    echo "Log file path: $log_path"
-
     local db_path
     db_path="$( mktemp --dry-run )"
-    echo "DB file path: $db_path"
 
     local rm_aux_files
     rm_aux_files="$( printf -- 'rm -f -- %q %q' "$log_path" "$db_path" )"
-
     trap "$rm_aux_files" RETURN
 
-    echo 'Running track_status.py...'
-    python3 -m bin.track_status "$@" --log "$log_path" --format csv --output "$db_path" &
+    ./.travis/test.sh bin.track_status "$@" --log "$log_path" --format csv --output "$db_path" &
     local pid="$!"
-    echo "Its PID is $pid"
 
-    local timeout=15
+    sleep 3
+    echo "Log file path: $log_path"
+    echo "DB file path: $db_path"
+    echo "PID: $pid"
+
+    local timeout=10
     echo "Sleeping for $timeout seconds..."
     sleep "$timeout"
 
     echo 'Terminating track_status.py...'
-    kill -SIGINT "$pid"
+    kill "$pid"
     echo 'Waiting for track_status.py to terminate...'
-    wait "$pid"
+    wait "$pid" || true
 
     echo "Log file:"
     cat "$log_path"
@@ -42,7 +41,7 @@ track_status() {
 }
 
 main() {
-    track_status egor.tensin
+    test_users egor.tensin
 }
 
 main "$@"

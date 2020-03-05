@@ -5,14 +5,7 @@
 # For details, see https://github.com/egor-tensin/vk-scripts.
 # Distributed under the MIT License.
 
-set -o errexit -o nounset -o pipefail
-
-test_users() {
-    ./.travis/test.sh bin.show_status "$@"
-}
-
-main() {
-    test_users egor.tensin
-}
-
-main "$@"
+./.travis/test/mutual_friends.sh
+./.travis/test/show_status.sh
+./.travis/test/track_status.sh
+./.travis/test/online_sessions.sh
