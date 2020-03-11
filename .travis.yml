@@ -6,4 +6,4 @@ python:
   - '3.7'
 jobs:
   fast_finish: true
-script: ./.travis/travis.sh
+script: ./.travis/bin/main.sh

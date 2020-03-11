@@ -7,13 +7,17 @@
 
 set -o errexit -o nounset -o pipefail
 
+script_dir="$( dirname -- "${BASH_SOURCE[0]}" )"
+script_dir="$( cd -- "$script_dir" && pwd )"
+readonly script_dir
+
 test_users() {
-    ./.travis/test.sh bin.mutual_friends --format csv "$@"
-    ./.travis/test.sh bin.mutual_friends --format json "$@"
+    "$script_dir/../lib/test.sh" bin.mutual_friends --format csv  "$@"
+    "$script_dir/../lib/test.sh" bin.mutual_friends --format json "$@"
 }
 
 main() {
     test_users kreed58 maxkorzh_official
 }
 
-main "$@"
+main

@@ -7,7 +7,11 @@
 
 set -o errexit -o nounset -o pipefail
 
-readonly db_path='.travis/test_db.csv'
+script_dir="$( dirname -- "${BASH_SOURCE[0]}" )"
+script_dir="$( cd -- "$script_dir" && pwd )"
+readonly script_dir
+
+readonly db_path="$script_dir/../share/test_db.csv"
 
 try_output() {
     local output_path
@@ -18,7 +22,7 @@ try_output() {
 
     trap "$rm_aux_files" RETURN
 
-    ./.travis/test.sh bin.online_sessions "$@" "$db_path" "$output_path"
+    "$script_dir/../lib/test.sh" bin.online_sessions "$@" "$db_path" "$output_path"
 
     if file --brief --dereference --mime -- "$output_path" | grep --quiet -- 'charset=binary$'; then
         echo 'Output is a binary file, not going to show that'
@@ -51,4 +55,4 @@ main() {
     online_sessions
 }
 
-main "$@"
+main

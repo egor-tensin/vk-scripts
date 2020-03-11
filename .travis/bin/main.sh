@@ -7,12 +7,13 @@
 
 set -o errexit -o nounset -o pipefail
 
-test_users() {
-    ./.travis/test.sh bin.show_status "$@"
-}
+script_dir="$( dirname -- "${BASH_SOURCE[0]}" )"
+script_dir="$( cd -- "$script_dir" && pwd )"
+readonly script_dir
 
-main() {
-    test_users egor.tensin
-}
+"$script_dir/mutual_friends.sh"
 
-main "$@"
+"$script_dir/online_sessions.sh"
+
+"$script_dir/show_status.sh"
+"$script_dir/track_status.sh"

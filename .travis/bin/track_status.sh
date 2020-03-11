@@ -7,6 +7,10 @@
 
 set -o errexit -o nounset -o pipefail
 
+script_dir="$( dirname -- "${BASH_SOURCE[0]}" )"
+script_dir="$( cd -- "$script_dir" && pwd )"
+readonly script_dir
+
 test_users() {
     local log_path
     log_path="$( mktemp )"
@@ -17,7 +21,7 @@ test_users() {
     rm_aux_files="$( printf -- 'rm -f -- %q %q' "$log_path" "$db_path" )"
     trap "$rm_aux_files" RETURN
 
-    ./.travis/test.sh bin.track_status "$@" --log "$log_path" --format csv --output "$db_path" &
+    "$script_dir/../lib/test.sh" bin.track_status "$@" --log "$log_path" --format csv --output "$db_path" &
     local pid="$!"
 
     sleep 3
