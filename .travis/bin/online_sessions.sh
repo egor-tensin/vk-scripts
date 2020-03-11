@@ -13,7 +13,7 @@ readonly script_dir
 
 readonly db_path="$script_dir/../share/test_db.csv"
 
-try_output() {
+test_output() {
     local output_path
     output_path="$( mktemp --dry-run )"
 
@@ -29,18 +29,20 @@ try_output() {
         return 0
     fi
 
-    echo "Output:"
     cat "$output_path"
 }
 
-online_sessions() {
-    try_output --group-by user --output-format csv
-    try_output --group-by user --output-format json
+group_by() {
+    test_output --output-format csv  --group-by "$@"
+    test_output --output-format json --group-by "$@"
+    test_output --output-format plot --group-by "$@"
+}
 
-    try_output --group-by user --output-format plot
-    try_output --group-by hour --output-format plot
-    try_output --group-by date --output-format plot
-    try_output --group-by weekday --output-format plot
+online_sessions() {
+    group_by user
+    group_by hour
+    group_by date
+    group_by weekday
 }
 
 fix_matplotlib() {
