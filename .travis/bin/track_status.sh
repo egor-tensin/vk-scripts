@@ -10,6 +10,15 @@ set -o errexit -o nounset -o pipefail
 script_dir="$( dirname -- "${BASH_SOURCE[0]}" )"
 script_dir="$( cd -- "$script_dir" && pwd )"
 readonly script_dir
+script_name="$( basename -- "${BASH_SOURCE[0]}" )"
+readonly script_name
+
+dump() {
+    local msg
+    for msg; do
+        echo "$script_name: $msg"
+    done
+}
 
 test_users() {
     local log_path
@@ -25,22 +34,22 @@ test_users() {
     local pid="$!"
 
     sleep 3
-    echo "Log file path: $log_path"
-    echo "DB file path: $db_path"
-    echo "PID: $pid"
+    dump "Log file path: $log_path"
+    dump "DB file path: $db_path"
+    dump "PID: $pid"
 
     local timeout=10
-    echo "Sleeping for $timeout seconds..."
+    dump "Sleeping for $timeout seconds..."
     sleep "$timeout"
 
-    echo 'Terminating track_status.py...'
+    dump 'Terminating track_status.py...'
     kill "$pid"
-    echo 'Waiting for track_status.py to terminate...'
+    dump 'Waiting for track_status.py to terminate...'
     wait "$pid" || true
 
-    echo "Log file:"
+    dump "Log file:"
     cat "$log_path"
-    echo "DB:"
+    dump "DB:"
     cat "$db_path"
 }
 

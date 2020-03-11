@@ -10,8 +10,17 @@ set -o errexit -o nounset -o pipefail
 script_dir="$( dirname -- "${BASH_SOURCE[0]}" )"
 script_dir="$( cd -- "$script_dir" && pwd )"
 readonly script_dir
+script_name="$( basename -- "${BASH_SOURCE[0]}" )"
+readonly script_name
 
 readonly db_path="$script_dir/../share/test_db.csv"
+
+dump() {
+    local msg
+    for msg; do
+        echo "$script_name: $msg"
+    done
+}
 
 test_output() {
     local output_path
@@ -25,7 +34,7 @@ test_output() {
     "$script_dir/../lib/test.sh" bin.online_sessions "$@" "$db_path" "$output_path"
 
     if file --brief --dereference --mime -- "$output_path" | grep --quiet -- 'charset=binary$'; then
-        echo 'Output is a binary file, not going to show that'
+        dump 'Output is a binary file, not going to show that'
         return 0
     fi
 
