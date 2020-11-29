@@ -1,7 +1,7 @@
 VK scripts
 ==========
 
-[![Travis (.com) branch](https://img.shields.io/travis/com/egor-tensin/vk-scripts/master?label=Travis)](https://travis-ci.com/egor-tensin/vk-scripts)
+[![Test](https://github.com/egor-tensin/vk-scripts/workflows/Test/badge.svg)](https://github.com/egor-tensin/vk-scripts/actions?query=workflow%3ATest)
 
 A collection of scripts abusing VK.com API.
 
