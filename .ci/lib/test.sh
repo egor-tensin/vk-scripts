@@ -21,7 +21,7 @@ run_test() {
     echo
     echo ======================================================================
 
-    PYTHONPATH="$script_dir/../.." python3 -m "$@"
+    PYTHONPATH="$script_dir/../.." python -m "$@"
 }
 
 run_test "$@"
