@@ -23,7 +23,7 @@ def _parse_time(x):
 
 
 def _parse_platform(x):
-    if x in Platform:
+    if isinstance(x, Platform):
         return x
     if isinstance(x, str):
         return Platform.from_string(x)
