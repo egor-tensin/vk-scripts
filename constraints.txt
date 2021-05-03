@@ -1,9 +1,0 @@
-# matplotlib 1.5 is one of the versions that works with Python 3.4, and it
-# doesn't specify the upper bound for its numpy dependency. So pip will try to
-# install the latest version, which doesn't work with 3.4. Putting the numpy
-# and the matplotlib requirements to the same requirements.txt file doesn't
-# work unfortunately, the latest version will still get picked up.
-
-# The lower bound is random, 1.16 is the latest version to support 3.4.
-numpy >=1.11,<1.17 ; python_version == '3.4'
-numpy >=1.17 ; python_version > '3.4'

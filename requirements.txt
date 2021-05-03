@@ -1,3 +1,6 @@
+# The lower bound is random, 1.16 is the latest version to support 3.4.
+numpy >=1.11,<1.17 ; python_version == '3.4'
+numpy >=1.17 ; python_version > '3.4'
 # Some random known-to-work versions.
 matplotlib ~=1.5 ; python_version == '3.4'
 matplotlib ~=2.1 ; python_version == '3.5'
