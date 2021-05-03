@@ -3,15 +3,16 @@
 # For details, see https://github.com/egor-tensin/vk-scripts.
 # Distributed under the MIT License.
 
+from vk.utils.io import FileReaderCSV, FileWriterCSV
+
 from .. import meta
-from ..io import FileReaderCSV, FileWriterCSV
 from ..record import Record
 from ..timestamp import Timestamp
 
 
 class Writer(meta.Writer):
     def __init__(self, fd):
-        self._writer = FileWriterCSV(fd)
+        self._writer = FileWriterCSV(fd, flush=True)
 
     def on_initial_status(self, user):
         self._write_record(user)

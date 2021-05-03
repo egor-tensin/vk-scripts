@@ -18,9 +18,19 @@ class FileWriterJSON:
         self._fd.write('\n')
 
 
+class FileReaderCSV:
+    def __init__(self, fd=sys.stdin):
+        self._reader = csv.reader(fd)
+
+    def __iter__(self):
+        return iter(self._reader)
+
+
 class FileWriterCSV:
-    def __init__(self, fd=sys.stdout):
+    def __init__(self, fd=sys.stdout, flush=False):
+        self._fd = fd
         self._writer = csv.writer(fd, lineterminator='\n')
+        self._flush = flush
 
     @staticmethod
     def _convert_row_old_python(row):
@@ -32,6 +42,8 @@ class FileWriterCSV:
         if sys.version_info < (3, 5):
             row = self._convert_row_old_python(row)
         self._writer.writerow(row)
+        if self._flush:
+            self._fd.flush()
 
 
 @contextmanager
@@ -43,8 +55,17 @@ def _open_file(path=None, default=None, **kwargs):
             yield fd
 
 
-def open_output_text_file(path=None):
-    return _open_file(path, default=sys.stdout, mode='w', encoding='utf-8')
+_DEFAULT_ENCODING = 'utf-8'
+
+
+def open_input_text_file(path=None):
+    return _open_file(path, default=sys.stdin, mode='r',
+                      encoding=_DEFAULT_ENCODING)
+
+
+def open_output_text_file(path=None, mode='w'):
+    return _open_file(path, default=sys.stdout, mode=mode,
+                      encoding=_DEFAULT_ENCODING)
 
 
 def open_output_binary_file(path=None):

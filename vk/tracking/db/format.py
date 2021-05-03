@@ -6,7 +6,9 @@
 from enum import Enum
 import sys
 
-from . import backend, io
+from vk.utils import io
+
+from . import backend
 
 
 class Format(Enum):
