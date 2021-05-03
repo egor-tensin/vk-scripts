@@ -12,7 +12,7 @@ script_dir="$( cd -- "$script_dir" && pwd )"
 readonly script_dir
 
 test_users() {
-    "$script_dir/../lib/test.sh" bin.show_status "$@"
+    "$script_dir/../lib/test.sh" vk.tracking.show_status "$@"
 }
 
 main() {

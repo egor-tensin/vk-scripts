@@ -12,8 +12,8 @@ script_dir="$( cd -- "$script_dir" && pwd )"
 readonly script_dir
 
 test_users() {
-    "$script_dir/../lib/test.sh" bin.mutual_friends --format csv  "$@"
-    "$script_dir/../lib/test.sh" bin.mutual_friends --format json "$@"
+    "$script_dir/../lib/test.sh" vk.mutuals --format csv  "$@"
+    "$script_dir/../lib/test.sh" vk.mutuals --format json "$@"
 }
 
 main() {

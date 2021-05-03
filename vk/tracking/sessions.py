@@ -13,9 +13,8 @@ import sys
 from vk.tracking import OnlineSessionEnumerator
 from vk.tracking.db import Format as DatabaseFormat
 from vk.user import UserField
-
-from .utils.bar_chart import BarChartBuilder
-from .utils import io
+from vk.utils.bar_chart import BarChartBuilder
+from vk.utils import io
 
 
 class GroupBy(Enum):

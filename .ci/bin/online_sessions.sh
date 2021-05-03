@@ -31,7 +31,7 @@ test_output() {
 
     trap "$rm_aux_files" RETURN
 
-    "$script_dir/../lib/test.sh" bin.online_sessions "$@" "$db_path" "$output_path"
+    "$script_dir/../lib/test.sh" vk.tracking.sessions "$@" "$db_path" "$output_path"
 
     if file --brief --dereference --mime -- "$output_path" | grep --quiet -- 'charset=binary$'; then
         dump 'Output is a binary file, not going to show that'

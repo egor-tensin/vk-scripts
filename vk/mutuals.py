@@ -11,8 +11,7 @@ import sys
 
 from vk.api import API
 from vk.user import UserField
-
-from .utils import io
+from vk.utils import io
 
 
 _OUTPUT_USER_FIELDS = UserField.UID, UserField.FIRST_NAME, UserField.LAST_NAME
