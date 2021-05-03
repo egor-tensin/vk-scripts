@@ -11,9 +11,9 @@ script_dir="$( dirname -- "${BASH_SOURCE[0]}" )"
 script_dir="$( cd -- "$script_dir" && pwd )"
 readonly script_dir
 
-"$script_dir/mutual_friends.sh"
+"$script_dir/mutuals.sh"
 
-"$script_dir/online_sessions.sh"
+"$script_dir/sessions.sh"
 
-"$script_dir/show_status.sh"
-"$script_dir/track_status.sh"
+"$script_dir/status_once.sh"
+"$script_dir/status.sh"
