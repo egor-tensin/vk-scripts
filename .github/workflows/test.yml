@@ -38,3 +38,31 @@ jobs:
 
       - name: Run the tests
         run: ./.ci/bin/main.sh
+
+  publish_pypi:
+    needs: [test]
+    runs-on: ubuntu-18.04
+    name: Publish
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3
+      - name: Install tools
+        run: python3 -m pip install --upgrade build
+      - name: Build package
+        run: python3 -m build
+      - name: Upload dist
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: dist
+          if-no-files-found: error
+      - name: Publish package
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: '${{ secrets.PYPI_API_TOKEN }}'
