@@ -1,22 +1,20 @@
-track_status.py
-===============
+vk-status
+=========
 
 Track when people go online/offline.
 
 Usage
 -----
 
-Run from the top-level directory using `python -m`:
-
-    > python -m bin.track_status -h
-    usage: track_status.py [-h] [-t SECONDS] [-l PATH] [-f {csv,log,null}]
-                           [-o PATH]
-                           UID [UID ...]
+    > vk-status -h
+    usage: vk-status [-h] [-t SECONDS] [-O] [-l PATH] [-f {csv,log,null}]
+                     [-o PATH]
+                     UID [UID ...]
     ...
 
 For example (using made up user IDs/"screen names"),
 
-    > python -m bin.track_status john.doe jane.smith
+    > vk-status john.doe jane.smith
     [2016-06-18 01:43:34] John Doe is ONLINE.
     [2016-06-18 01:43:34] John Doe was last seen at 2016-06-18 01:33:58+03:00 using the official iPhone app.
     [2016-06-18 01:43:34] Jane Smith is OFFLINE.
@@ -30,11 +28,9 @@ For example (using made up user IDs/"screen names"),
 By default, the script produces a human-readable log.
 Use the `--log` parameter to write the log to a file.
 If you want to record when people go online/offline for further analysis using
-[online_sessions.py], specify the path to a database using the `--output`
-parameter.
-Be careful: if the file already exists, it will be overwritten!
+[vk-sessions], specify the path to a database using the `--output` parameter.
 
-[online_sessions.py]: online_sessions.md
+[vk-sessions]: sessions.md
 
 See also
 --------
