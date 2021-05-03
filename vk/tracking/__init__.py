@@ -2,6 +2,4 @@
 # This file is licensed under the terms of the MIT License.
 # See LICENSE.txt for details.
 
-from .status import StatusTracker
-
-__all__ = 'sessions', 'status_tracker',
+__all__ = 'sessions', 'status',

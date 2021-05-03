@@ -30,7 +30,7 @@ test_users() {
     rm_aux_files="$( printf -- 'rm -f -- %q %q' "$log_path" "$db_path" )"
     trap "$rm_aux_files" RETURN
 
-    "$script_dir/../lib/test.sh" vk.tracking.track_status "$@" --log "$log_path" --format csv --output "$db_path" &
+    "$script_dir/../lib/test.sh" vk.tracking.status "$@" --log "$log_path" --format csv --output "$db_path" &
     local pid="$!"
 
     sleep 3
