@@ -11,13 +11,13 @@ on:
 jobs:
   test:
     runs-on: ubuntu-18.04
-    env:
-      PIP_DISABLE_PIP_VERSION_CHECK: 1
-      PIP_NO_PYTHON_VERSION_WARNING: 1
     strategy:
       matrix:
         python-version: [3.4, 3.5, 3.6, 3.7, 3.8, 3.9]
     name: 'Python ${{ matrix.python-version }}'
+    env:
+      PIP_DISABLE_PIP_VERSION_CHECK: 1
+      PIP_NO_PYTHON_VERSION_WARNING: 1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -36,6 +36,9 @@ jobs:
     needs: [test]
     runs-on: ubuntu-18.04
     name: Publish
+    env:
+      PIP_DISABLE_PIP_VERSION_CHECK: 1
+      PIP_NO_PYTHON_VERSION_WARNING: 1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
