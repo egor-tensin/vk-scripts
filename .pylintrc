@@ -1,6 +1,6 @@
 [MESSAGES CONTROL]
 
-disable=duplicate-code,invalid-name,missing-docstring,multiple-imports,too-many-public-methods,too-few-public-methods
+disable=invalid-name,missing-docstring,multiple-imports,too-many-public-methods,too-few-public-methods
 
 [BASIC]
 
