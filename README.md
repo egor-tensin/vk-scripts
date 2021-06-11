@@ -3,7 +3,7 @@ VK scripts
 
 [![Test](https://github.com/egor-tensin/vk-scripts/actions/workflows/test.yml/badge.svg)](https://github.com/egor-tensin/vk-scripts/actions/workflows/test.yml)
 
-A collection of scripts abusing VK.com API.
+Scripts to stalk people on VK.
 
 Installation
 ------------
