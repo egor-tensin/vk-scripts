@@ -17,7 +17,8 @@ jobs:
     strategy:
       matrix:
         python-version: [3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 3.x]
-    runs-on: ubuntu-latest
+    # 3.4 is not available on Focal.
+    runs-on: ubuntu-18.04
     name: 'Python ${{ matrix.python-version }}'
     steps:
       - name: Checkout
