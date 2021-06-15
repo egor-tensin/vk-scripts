@@ -1,7 +1,7 @@
 VK scripts
 ==========
 
-[![Test](https://github.com/egor-tensin/vk-scripts/actions/workflows/test.yml/badge.svg)](https://github.com/egor-tensin/vk-scripts/actions/workflows/test.yml)
+[![CI](https://github.com/egor-tensin/vk-scripts/actions/workflows/ci.yml/badge.svg)](https://github.com/egor-tensin/vk-scripts/actions/workflows/ci.yml)
 
 Scripts to stalk people on VK.
 
