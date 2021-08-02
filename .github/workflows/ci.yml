@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Run tests
-        run: ./.ci/bin/main.sh
+        run: ./test/bin/main.sh
 
   publish_pypi:
     needs: [test]
