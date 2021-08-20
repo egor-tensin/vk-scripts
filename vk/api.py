@@ -64,8 +64,8 @@ ACCESS_TOKEN = '9722cef09722cef09722cef071974b8cbe997229722cef0cbabfd816916af6c7
 
 
 class Version(Enum):
-    V5_73 = '5.73'
-    DEFAULT = V5_73
+    V5_131 = '5.131'
+    DEFAULT = V5_131
 
     def __str__(self):
         return self.value
