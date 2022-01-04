@@ -17,6 +17,8 @@ jobs:
     strategy:
       matrix:
         python-version: [3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 3.x]
+      # Random number to prevent exceeding the request frequency limit.
+      max-parallel: 3
     # 3.4 is not available on Focal.
     runs-on: ubuntu-18.04
     name: 'Python ${{ matrix.python-version }}'
