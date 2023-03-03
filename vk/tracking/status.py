@@ -12,8 +12,9 @@ import sys
 
 from vk.api import API
 import vk.error
-from vk.user import UserField
 from vk.tracking.db import Format as DatabaseFormat
+from vk.user import UserField
+import vk.version
 
 
 class StatusTracker:
@@ -170,6 +171,8 @@ def _parse_args(args=None):
 
     parser = argparse.ArgumentParser(
         description='Track when people go online/offline.')
+
+    vk.version.add_to_arg_parser(parser)
 
     parser.add_argument('uids', metavar='UID', nargs='+',
                         help='user IDs or "screen names"')

@@ -15,6 +15,7 @@ from vk.tracking.db import Format as DatabaseFormat
 from vk.user import UserField
 from vk.utils.bar_chart import BarChartBuilder
 from vk.utils import io
+import vk.version
 
 
 class Weekday(Enum):
@@ -435,6 +436,8 @@ def _parse_args(args=None):
 
     parser = argparse.ArgumentParser(
         description='View/visualize the amount of time people spend online.')
+
+    vk.version.add_to_arg_parser(parser)
 
     parser.add_argument('db_path', metavar='input', nargs='?',
                         help='database file path (standard input by default)')

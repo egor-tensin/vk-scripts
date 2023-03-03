@@ -27,12 +27,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '${{ matrix.python-version }}'
       - name: 'Install package & dependencies'
         run: pip install -q -e .
+      - name: Check that scripts are runnable
+        run: |
+          vk-mutuals --version
+          vk-status --version
+          vk-sessions --version
       - name: Run tests
         run: ./test/bin/main.sh
 
@@ -43,6 +50,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v4
         with:

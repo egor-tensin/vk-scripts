@@ -1,17 +1,18 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "vk_scripts"
 description = "Scripts to stalk people on VK"
 license = {text = "MIT"}
-version = "1.0.2"
+dynamic = ["version"]
 authors = [{name = "Egor Tensin", email = "Egor.Tensin@gmail.com"}]
 readme = "README.md"
 requires-python = ">=3.4"
 
 dependencies = [
+    'importlib-metadata ~= 4.0 ; python_version < "3.8"',
     "matplotlib",
 ]
 
@@ -28,3 +29,5 @@ classifiers = [
 vk-sessions = "vk.tracking.sessions:main"
 vk-status = "vk.tracking.status:main"
 vk-mutuals = "vk.mutuals:main"
+
+[tool.setuptools_scm]

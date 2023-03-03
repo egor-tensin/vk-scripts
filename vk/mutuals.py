@@ -12,6 +12,7 @@ import sys
 from vk.api import API
 from vk.user import UserField
 from vk.utils import io
+import vk.version
 
 
 _OUTPUT_USER_FIELDS = UserField.UID, UserField.FIRST_NAME, UserField.LAST_NAME
@@ -83,6 +84,8 @@ def _parse_args(args=None):
 
     parser = argparse.ArgumentParser(
         description='Learn who your ex and her new boyfriend are both friends with.')
+
+    vk.version.add_to_arg_parser(parser)
 
     parser.add_argument('uids', metavar='UID', nargs='+',
                         help='user IDs or "screen names"')
