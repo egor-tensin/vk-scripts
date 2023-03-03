@@ -1,3 +1,30 @@
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "vk_scripts"
+description = "Scripts to stalk people on VK"
+license = {text = "MIT"}
+version = "1.0.2"
+authors = [{name = "Egor Tensin", email = "Egor.Tensin@gmail.com"}]
+readme = "README.md"
+requires-python = ">=3.4"
+
+dependencies = [
+    "matplotlib",
+]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/egor-tensin/vk-scripts"
+"Bug Tracker" = "https://github.com/egor-tensin/vk-scripts/issues"
+
+[project.scripts]
+vk-sessions = "vk.tracking.sessions:main"
+vk-status = "vk.tracking.status:main"
+vk-mutuals = "vk.mutuals:main"
