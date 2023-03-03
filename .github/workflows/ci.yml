@@ -19,7 +19,7 @@ jobs:
   test:
     strategy:
       matrix:
-        python-version: ['3.4', '3.5', '3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
       # Random number to prevent exceeding the request frequency limit.
       max-parallel: 3
     # 3.4 is not available on Focal.
