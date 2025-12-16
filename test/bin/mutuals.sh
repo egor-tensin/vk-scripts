@@ -17,7 +17,7 @@ test_users() {
 }
 
 main() {
-    test_users kreed58 maxkorzh_official
+    test_users kreed58 korya_mc
 }
 
 main
