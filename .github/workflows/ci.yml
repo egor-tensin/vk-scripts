@@ -19,18 +19,18 @@ jobs:
   test:
     strategy:
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
       # Random number to prevent exceeding the request frequency limit.
       max-parallel: 3
     runs-on: ubuntu-latest
     name: 'Python ${{ matrix.python-version }}'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '${{ matrix.python-version }}'
       - name: 'Install package & dependencies'
@@ -49,11 +49,11 @@ jobs:
     name: Publish
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.x'
       - name: Verify package can be installed
@@ -63,7 +63,7 @@ jobs:
       - name: Build package
         run: python -m build
       - name: Publish as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: dist
           path: dist
