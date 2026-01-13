@@ -15,7 +15,7 @@ class Writer(meta.Writer):
         handler = logging.StreamHandler(fd)
         handler.setFormatter(logging.Formatter(
             fmt='[%(asctime)s] %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'))
+            datefmt='%Y-%m-%d %H:%M:%S%z'))
         self._logger.addHandler(handler)
 
         self._reset_last_notification()
