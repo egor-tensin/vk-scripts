@@ -2,12 +2,9 @@ name: CI
 
 on:
   push:
-    branches-ignore:
-      - 'dependabot/**'
     paths-ignore:
       - 'docs/**'
       - 'README.md'
-  pull_request:
   schedule:
     # Weekly, at 6:45 AM on Thursday (somewhat randomly chosen).
     - cron: '45 6 * * 4'
