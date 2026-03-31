@@ -64,6 +64,7 @@ ACCESS_TOKEN = '9722cef09722cef09722cef071974b8cbe997229722cef0cbabfd816916af6c7
 
 
 class Version(Enum):
+    # https://dev.vk.com/en/reference/versions
     V5_199 = '5.199'
     DEFAULT = V5_199
 
