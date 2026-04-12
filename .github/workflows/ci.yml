@@ -6,8 +6,8 @@ on:
       - 'docs/**'
       - 'README.md'
   schedule:
-    # Weekly, at 6:45 AM on Thursday (somewhat randomly chosen).
-    - cron: '45 6 * * 4'
+    # Weekly, at 02:30 on Friday (somewhat randomly chosen).
+    - cron: '30 02 * * 5'
   workflow_dispatch:
 
 env:
