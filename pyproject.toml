@@ -30,3 +30,6 @@ vk-status = "vk.tracking.status:main"
 vk-mutuals = "vk.mutuals:main"
 
 [tool.setuptools_scm]
+
+[tool.black]
+skip-string-normalization = true

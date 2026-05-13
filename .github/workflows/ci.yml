@@ -15,6 +15,21 @@ env:
   PIP_NO_PYTHON_VERSION_WARNING: 1
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Linting
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+      - name: Run black
+        uses: psf/black@stable
+
   test:
     strategy:
       matrix:
@@ -43,7 +58,7 @@ jobs:
         run: ./test/bin/main.sh
 
   publish_pypi:
-    needs: [test]
+    needs: [lint, test]
     runs-on: ubuntu-latest
     name: Publish
     steps:
