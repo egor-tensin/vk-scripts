@@ -8,14 +8,14 @@ import re
 
 
 class Platform(Enum):
+    # https://dev.vk.com/en/reference/objects/user#last_seen
     MOBILE = 1
     IPHONE = 2
     IPAD = 3
     ANDROID = 4
     WINDOWS_PHONE = 5
-    WINDOWS8 = 6
+    WINDOWS10 = 6
     WEB = 7
-    VK_MOBILE = 8
 
     @staticmethod
     def from_string(s):
@@ -36,9 +36,6 @@ class Platform(Enum):
 
     def get_descr_text(self):
         s = _PLATFORM_DESCRIPTIONS[self]
-        if self == Platform.VK_MOBILE:
-            return s
-        s = s.replace('unrecognized', 'an unrecognized')
         return 'the ' + s
 
     def get_descr_text_capitalized(self):
@@ -46,12 +43,11 @@ class Platform(Enum):
 
 
 _PLATFORM_DESCRIPTIONS = {
-    Platform.MOBILE: '"mobile" web version (or unrecognized mobile app)',
+    Platform.MOBILE: '"mobile" web version (or an unrecognized mobile app)',
     Platform.IPHONE: 'official iPhone app',
     Platform.IPAD: 'official iPad app',
     Platform.ANDROID: 'official Android app',
     Platform.WINDOWS_PHONE: 'official Windows Phone app',
-    Platform.WINDOWS8: 'official Windows 8 app',
-    Platform.WEB: 'web version (or unrecognized app)',
-    Platform.VK_MOBILE: 'VK Mobile',
+    Platform.WINDOWS10: 'official Windows 10 app',
+    Platform.WEB: 'web version (or an unrecognized app)',
 }
