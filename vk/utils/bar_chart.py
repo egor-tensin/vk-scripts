@@ -9,7 +9,7 @@ import numpy as np
 
 
 class BarChartBuilder:
-    _BAR_HEIGHT = .5
+    _BAR_HEIGHT = 0.5
 
     THICK_BAR_HEIGHT = _BAR_HEIGHT
     THIN_BAR_HEIGHT = THICK_BAR_HEIGHT / 2
@@ -112,12 +112,11 @@ class BarChartBuilder:
 
         self._get_categories_axis().set_ticklabels(categories)
 
-        bars = self._ax.barh(bar_offsets, values, align='center',
-                             height=bar_height)
+        bars = self._ax.barh(bar_offsets, values, align='center', height=bar_height)
 
         if min(values) >= 0:
             self.set_values_axis_limits(start=0)
-            if np.isclose(max(values), 0.):
+            if np.isclose(max(values), 0.0):
                 self.set_values_axis_limits(end=self._DEFAULT_VALUES_AXIS_MAX)
         elif max(values) < 0:
             self.set_values_axis_limits(end=0)
@@ -134,23 +133,27 @@ class BarChartBuilder:
 
 if __name__ == '__main__':
     import argparse
+
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--categories', nargs='*', metavar='LABEL',
-                        default=[])
-    parser.add_argument('--values', nargs='*', metavar='N',
-                        default=[], type=float)
+    parser.add_argument('--categories', nargs='*', metavar='LABEL', default=[])
+    parser.add_argument('--values', nargs='*', metavar='N', default=[], type=float)
 
     parser.add_argument('--output', '-o', help='set output file path')
 
-    parser.add_argument('--align-middle', action='store_true',
-                        dest='labels_align_middle',
-                        help='align labels to the middle of the bars')
+    parser.add_argument(
+        '--align-middle',
+        action='store_true',
+        dest='labels_align_middle',
+        help='align labels to the middle of the bars',
+    )
 
-    parser.add_argument('--integer-values', action='store_true',
-                        dest='only_integer_values')
-    parser.add_argument('--any-values', action='store_false',
-                        dest='only_integer_values')
+    parser.add_argument(
+        '--integer-values', action='store_true', dest='only_integer_values'
+    )
+    parser.add_argument(
+        '--any-values', action='store_false', dest='only_integer_values'
+    )
 
     parser.add_argument('--grid-categories', action='store_true')
     parser.add_argument('--grid-values', action='store_true')
@@ -160,7 +163,7 @@ if __name__ == '__main__':
     if len(args.categories) < len(args.values):
         parser.error('too many bar values')
     if len(args.categories) > len(args.values):
-        args.values.extend([0.] * (len(args.categories) - len(args.values)))
+        args.values.extend([0.0] * (len(args.categories) - len(args.values)))
 
     builder = BarChartBuilder(labels_align_middle=args.labels_align_middle)
 

@@ -79,7 +79,7 @@ class User(Hashable, MutableMapping):
 
     def __eq__(self, other):
         return self.get_uid() == other.get_uid()
-        #return self._fields == other._fields
+        # return self._fields == other._fields
 
     def __hash__(self):
         return hash(self.get_uid())

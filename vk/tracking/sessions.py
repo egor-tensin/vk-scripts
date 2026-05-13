@@ -339,10 +339,12 @@ class OutputSinkPlot(OutputSinkOnlineSessions):
 
     @staticmethod
     def _extract_values(durations):
-        return (OutputSinkPlot._duration_to_seconds(duration) for duration in durations.values())
+        return (
+            OutputSinkPlot._duration_to_seconds(duration)
+            for duration in durations.values()
+        )
 
-    def process_database(
-            self, group_by, db_reader, time_from=None, time_to=None):
+    def process_database(self, group_by, db_reader, time_from=None, time_to=None):
 
         durations = group_by.group(db_reader, time_from, time_to)
 
@@ -350,8 +352,9 @@ class OutputSinkPlot(OutputSinkOnlineSessions):
         bar_chart.set_title(OutputSinkPlot.TITLE)
         bar_chart.enable_grid_for_values()
         bar_chart.only_integer_values()
-        bar_chart.set_property(bar_chart.get_values_labels(),
-                               fontsize='small', rotation=30)
+        bar_chart.set_property(
+            bar_chart.get_values_labels(), fontsize='small', rotation=30
+        )
         bar_chart.set_value_label_formatter(self._format_duration)
 
         labels = tuple(self._extract_labels(group_by, durations))
@@ -363,9 +366,8 @@ class OutputSinkPlot(OutputSinkOnlineSessions):
         else:
             bar_height = bar_chart.THICK_BAR_HEIGHT
 
-        bars = bar_chart.plot_bars(
-            labels, durations, bar_height=bar_height)
-        bar_chart.set_property(bars, alpha=.33)
+        bars = bar_chart.plot_bars(labels, durations, bar_height=bar_height)
+        bar_chart.set_property(bars, alpha=0.33)
 
         if self._fd is sys.stdout:
             bar_chart.show()
@@ -426,8 +428,7 @@ def _parse_date_range_limit(s):
         return dt.replace(tzinfo=timezone.utc)
     except ValueError:
         msg = 'invalid date range limit (must be in the \'{}\' format): {}'
-        raise argparse.ArgumentTypeError(
-            msg.format(_DATE_RANGE_LIMIT_FORMAT, s))
+        raise argparse.ArgumentTypeError(msg.format(_DATE_RANGE_LIMIT_FORMAT, s))
 
 
 def _parse_args(args=None):
@@ -435,44 +436,78 @@ def _parse_args(args=None):
         args = sys.argv[1:]
 
     parser = argparse.ArgumentParser(
-        description='View/visualize the amount of time people spend online.')
+        description='View/visualize the amount of time people spend online.'
+    )
 
     vk.version.add_to_arg_parser(parser)
 
-    parser.add_argument('db_path', metavar='input', nargs='?',
-                        help='database file path (standard input by default)')
-    parser.add_argument('out_path', metavar='output', nargs='?',
-                        help='output file path (standard output by default)')
-    parser.add_argument('-g', '--group-by',
-                        type=_parse_group_by,
-                        choices=GroupBy,
-                        default=GroupBy.USER,
-                        help='group online sessions by user/date/etc.')
-    parser.add_argument('-i', '--input-format', dest='db_fmt',
-                        type=_parse_database_format,
-                        default=DatabaseFormat.CSV,
-                        choices=DatabaseFormat,
-                        help='specify database format')
-    parser.add_argument('-o', '--output-format', dest='out_fmt',
-                        type=_parse_output_format,
-                        choices=OutputFormat,
-                        default=OutputFormat.CSV,
-                        help='specify output format')
-    parser.add_argument('-a', '--from', dest='time_from',
-                        type=_parse_date_range_limit, default=None,
-                        help='discard online activity prior to this moment')
-    parser.add_argument('-b', '--to', dest='time_to',
-                        type=_parse_date_range_limit, default=None,
-                        help='discard online activity after this moment')
+    parser.add_argument(
+        'db_path',
+        metavar='input',
+        nargs='?',
+        help='database file path (standard input by default)',
+    )
+    parser.add_argument(
+        'out_path',
+        metavar='output',
+        nargs='?',
+        help='output file path (standard output by default)',
+    )
+    parser.add_argument(
+        '-g',
+        '--group-by',
+        type=_parse_group_by,
+        choices=GroupBy,
+        default=GroupBy.USER,
+        help='group online sessions by user/date/etc.',
+    )
+    parser.add_argument(
+        '-i',
+        '--input-format',
+        dest='db_fmt',
+        type=_parse_database_format,
+        default=DatabaseFormat.CSV,
+        choices=DatabaseFormat,
+        help='specify database format',
+    )
+    parser.add_argument(
+        '-o',
+        '--output-format',
+        dest='out_fmt',
+        type=_parse_output_format,
+        choices=OutputFormat,
+        default=OutputFormat.CSV,
+        help='specify output format',
+    )
+    parser.add_argument(
+        '-a',
+        '--from',
+        dest='time_from',
+        type=_parse_date_range_limit,
+        default=None,
+        help='discard online activity prior to this moment',
+    )
+    parser.add_argument(
+        '-b',
+        '--to',
+        dest='time_to',
+        type=_parse_date_range_limit,
+        default=None,
+        help='discard online activity after this moment',
+    )
 
     return parser.parse_args(args)
 
 
 def process_online_sessions(
-        db_path=None, db_fmt=DatabaseFormat.CSV,
-        out_path=None, out_fmt=OutputFormat.CSV,
-        group_by=GroupBy.USER,
-        time_from=None, time_to=None):
+    db_path=None,
+    db_fmt=DatabaseFormat.CSV,
+    out_path=None,
+    out_fmt=OutputFormat.CSV,
+    group_by=GroupBy.USER,
+    time_from=None,
+    time_to=None,
+):
 
     if time_from is not None and time_to is not None:
         if time_from > time_to:
@@ -483,9 +518,8 @@ def process_online_sessions(
         with out_fmt.open_file(out_path) as out_fd:
             out_sink = out_fmt.create_sink(out_fd)
             out_sink.process_database(
-                group_by, db_reader,
-                time_from=time_from,
-                time_to=time_to)
+                group_by, db_reader, time_from=time_from, time_to=time_to
+            )
 
 
 def main(args=None):

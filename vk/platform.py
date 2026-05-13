@@ -29,7 +29,7 @@ class Platform(Enum):
         m = re.search(r'\w', s)
         if m is None:
             return s
-        return s[:m.start()] + m.group().upper() + s[m.end():]
+        return s[: m.start()] + m.group().upper() + s[m.end() :]
 
     def get_descr_header(self):
         return self._capitalize_first_letter(_PLATFORM_DESCRIPTIONS[self])

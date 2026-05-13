@@ -26,9 +26,15 @@ def _filter_empty_params(params, empty_params=False):
     if empty_params:
         return params
     if isinstance(params, Mapping):
-        return {name: value for name, value in params.items() if not _is_empty_param_value(value)}
+        return {
+            name: value
+            for name, value in params.items()
+            if not _is_empty_param_value(value)
+        }
     if isinstance(params, Iterable):
-        return [(name, value) for name, value in params if not _is_empty_param_value(value)]
+        return [
+            (name, value) for name, value in params if not _is_empty_param_value(value)
+        ]
     raise TypeError()
 
 
@@ -116,11 +122,11 @@ class API:
 
     def _call_method(self, method, **params):
         url = self._build_method_url(method, **params)
-        #print(url)
+        # print(url)
         try:
             with urlopen(url) as response:
                 response = json.loads(response.read().decode())
-                #print(response)
+                # print(response)
                 if 'response' not in response:
                     raise vk.error.InvalidAPIResponseError(response)
                 return response['response']
@@ -135,17 +141,19 @@ class API:
         return [user for user in user_list if not user.is_deactivated()]
 
     def users_get(self, user_ids, fields=(), deactivated_users=True):
-        return self._filter_response_with_users(self._call_method(
-            Method.USERS_GET,
-            user_ids=_join_param_values(user_ids),
-            fields=_join_param_values(fields)), deactivated_users)
+        return self._filter_response_with_users(
+            self._call_method(
+                Method.USERS_GET,
+                user_ids=_join_param_values(user_ids),
+                fields=_join_param_values(fields),
+            ),
+            deactivated_users,
+        )
 
     def friends_get(self, user_id, fields=(), deactivated_users=True):
         response = self._call_method(
-            Method.FRIENDS_GET,
-            user_id=user_id,
-            fields=_join_param_values(fields))
+            Method.FRIENDS_GET, user_id=user_id, fields=_join_param_values(fields)
+        )
         if 'items' not in response:
             raise vk.error.InvalidAPIResponseError(response)
-        return self._filter_response_with_users(response['items'],
-                                                deactivated_users)
+        return self._filter_response_with_users(response['items'], deactivated_users)

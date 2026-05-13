@@ -52,11 +52,16 @@ class StatusTracker:
         if not isinstance(fn, Callable):
             raise TypeError()
 
-    _USER_FIELDS = UserField.DOMAIN, UserField.ONLINE, UserField.LAST_SEEN,
+    _USER_FIELDS = (
+        UserField.DOMAIN,
+        UserField.ONLINE,
+        UserField.LAST_SEEN,
+    )
 
     def _query_status(self, uids):
-        user_list = self._api.users_get(uids, self._USER_FIELDS,
-                                        deactivated_users=False)
+        user_list = self._api.users_get(
+            uids, self._USER_FIELDS, deactivated_users=False
+        )
         return {user.get_uid(): user for user in user_list}
 
     def _notify_status(self, user):
@@ -128,13 +133,11 @@ class StatusTracker:
     def _handle_sigint():
         # Python doesn't raise KeyboardInterrupt in case a real SIGINT is sent
         # from outside, surprisingly.
-        return StatusTracker._handle_signal(signal.SIGINT,
-                                            StatusTracker._stop_looping)
+        return StatusTracker._handle_signal(signal.SIGINT, StatusTracker._stop_looping)
 
     @staticmethod
     def _handle_sigterm():
-        return StatusTracker._handle_signal(signal.SIGTERM,
-                                            StatusTracker._stop_looping)
+        return StatusTracker._handle_signal(signal.SIGTERM, StatusTracker._stop_looping)
 
     def loop(self, uids):
         with self._handle_sigint(), self._handle_sigterm():
@@ -169,35 +172,58 @@ def _parse_args(args=None):
     if args is None:
         args = sys.argv[1:]
 
-    parser = argparse.ArgumentParser(
-        description='Track when people go online/offline.')
+    parser = argparse.ArgumentParser(description='Track when people go online/offline.')
 
     vk.version.add_to_arg_parser(parser)
 
-    parser.add_argument('uids', metavar='UID', nargs='+',
-                        help='user IDs or "screen names"')
-    parser.add_argument('-t', '--timeout', metavar='SECONDS',
-                        type=_parse_positive_integer,
-                        default=DEFAULT_TIMEOUT,
-                        help='set refresh interval')
-    parser.add_argument('-O', '--only-once', action='store_true',
-                        help='query the status only once and exit')
-    parser.add_argument('-l', '--log', metavar='PATH', dest='log_path',
-                        help='set log file path (standard output by default)')
-    parser.add_argument('-f', '--format', dest='db_fmt',
-                        type=_parse_database_format,
-                        choices=DatabaseFormat,
-                        default=DEFAULT_DB_FORMAT,
-                        help='specify database format')
-    parser.add_argument('-o', '--output', metavar='PATH', dest='db_path',
-                        help='set database file path')
+    parser.add_argument(
+        'uids', metavar='UID', nargs='+', help='user IDs or "screen names"'
+    )
+    parser.add_argument(
+        '-t',
+        '--timeout',
+        metavar='SECONDS',
+        type=_parse_positive_integer,
+        default=DEFAULT_TIMEOUT,
+        help='set refresh interval',
+    )
+    parser.add_argument(
+        '-O',
+        '--only-once',
+        action='store_true',
+        help='query the status only once and exit',
+    )
+    parser.add_argument(
+        '-l',
+        '--log',
+        metavar='PATH',
+        dest='log_path',
+        help='set log file path (standard output by default)',
+    )
+    parser.add_argument(
+        '-f',
+        '--format',
+        dest='db_fmt',
+        type=_parse_database_format,
+        choices=DatabaseFormat,
+        default=DEFAULT_DB_FORMAT,
+        help='specify database format',
+    )
+    parser.add_argument(
+        '-o', '--output', metavar='PATH', dest='db_path', help='set database file path'
+    )
 
     return parser.parse_args(args)
 
 
 def track_status(
-        uids, timeout=DEFAULT_TIMEOUT, log_path=None,
-        db_path=None, db_fmt=DEFAULT_DB_FORMAT, only_once=False):
+    uids,
+    timeout=DEFAULT_TIMEOUT,
+    log_path=None,
+    db_path=None,
+    db_fmt=DEFAULT_DB_FORMAT,
+    only_once=False,
+):
 
     api = API()
     tracker = StatusTracker(api, timeout)

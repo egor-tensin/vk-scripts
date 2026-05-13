@@ -13,9 +13,11 @@ class Writer(meta.Writer):
         self._logger = logging.getLogger(__file__)
         self._logger.setLevel(logging.INFO)
         handler = logging.StreamHandler(fd)
-        handler.setFormatter(logging.Formatter(
-            fmt='[%(asctime)s] %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S%z'))
+        handler.setFormatter(
+            logging.Formatter(
+                fmt='[%(asctime)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S%z'
+            )
+        )
         self._logger.addHandler(handler)
 
         self._reset_last_notification()
@@ -86,7 +88,8 @@ class Writer(meta.Writer):
         return '{} was last seen at {} using {}.'.format(
             Writer._format_user(user),
             user.get_last_seen_time_local(),
-            user.get_last_seen_platform().get_descr_text())
+            user.get_last_seen_platform().get_descr_text(),
+        )
 
     @staticmethod
     def _format_user_went_online(user):
@@ -98,4 +101,7 @@ class Writer(meta.Writer):
 
     @staticmethod
     def _format_another_connection_error(e):
-        return 'Encountered a connection error which looks like the previous one: ' + str(e)
+        return (
+            'Encountered a connection error which looks like the previous one: '
+            + str(e)
+        )
