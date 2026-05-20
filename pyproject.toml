@@ -1,11 +1,14 @@
 [build-system]
-requires = ["setuptools>=61.0", "setuptools-scm"]
+# The SPDX license identifiers are available from 77.0.3:
+# https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license-and-license-files
+requires = ["setuptools >= 77.0.3", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "vk_scripts"
 description = "Scripts to stalk people on VK"
 license = "MIT"
+license-files = ["LICENSE.txt"]
 dynamic = ["version"]
 authors = [{name = "Egor Tensin", email = "egor@tensin.name"}]
 readme = "README.md"
@@ -17,7 +20,7 @@ dependencies = [
 ]
 
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
 ]
 
 [project.urls]
