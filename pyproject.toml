@@ -7,7 +7,7 @@ name = "vk_scripts"
 description = "Scripts to stalk people on VK"
 license = "MIT"
 dynamic = ["version"]
-authors = [{name = "Egor Tensin", email = "Egor.Tensin@gmail.com"}]
+authors = [{name = "Egor Tensin", email = "egor@tensin.name"}]
 readme = "README.md"
 requires-python = ">=3.4"
 
