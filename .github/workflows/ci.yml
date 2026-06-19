@@ -20,7 +20,7 @@ jobs:
     name: Linting
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Set up Python
@@ -40,7 +40,7 @@ jobs:
     name: 'Python ${{ matrix.python-version }}'
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Set up Python
@@ -63,7 +63,7 @@ jobs:
     name: Publish
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Set up Python
