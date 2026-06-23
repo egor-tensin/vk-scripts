@@ -37,10 +37,3 @@ You can also get a JSON document:
           "domain": "jane.smith"
        }
     ]
-
-See also
---------
-
-* [License]
-
-[License]: ../README.md#license

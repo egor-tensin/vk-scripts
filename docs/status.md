@@ -31,10 +31,3 @@ If you want to record when people go online/offline for further analysis using
 [vk-sessions], specify the path to a database using the `--output` parameter.
 
 [vk-sessions]: sessions.md
-
-See also
---------
-
-* [License]
-
-[License]: ../README.md#license

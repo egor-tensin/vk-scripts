@@ -159,10 +159,3 @@ Known issues
 time (for example, just listening to music), they appear offline.
 Hence the 0:00:00 durations you might sometimes encounter.
 This might also happen using other clients.
-
-See also
---------
-
-* [License]
-
-[License]: ../README.md#license
