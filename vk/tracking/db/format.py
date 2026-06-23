@@ -35,7 +35,7 @@ class Format(Enum):
             return self._open_output_log_file(path)
         if self is Format.NULL:
             return self._open_output_database_file(None)
-        raise NotImplementedError("unsupported database format: " + str(self))
+        raise NotImplementedError(f"unsupported database format: {self}")
 
     @staticmethod
     def _open_output_log_file(path):
@@ -52,7 +52,7 @@ class Format(Enum):
             return NotImplementedError("cannot read from a log file")
         if self is Format.NULL:
             return backend.null.Reader()
-        raise NotImplementedError("unsupported database format: " + str(self))
+        raise NotImplementedError(f"unsupported database format: {self}")
 
     def open_input_file(self, path=None):
         if self is Format.CSV:
@@ -61,4 +61,4 @@ class Format(Enum):
             raise NotImplementedError("cannot read from a log file")
         if self is Format.NULL:
             return io.open_input_text_file(None)
-        raise NotImplementedError("unsupported database format: " + str(self))
+        raise NotImplementedError(f"unsupported database format: {self}")
