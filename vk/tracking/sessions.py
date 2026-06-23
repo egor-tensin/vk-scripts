@@ -144,10 +144,10 @@ class OnlineSessionEnumerator(MutableMapping):
 
 
 class GroupBy(Enum):
-    USER = 'user'
-    DATE = 'date'
-    WEEKDAY = 'weekday'
-    HOUR = 'hour'
+    USER = "user"
+    DATE = "date"
+    WEEKDAY = "weekday"
+    HOUR = "hour"
 
     def __str__(self):
         return self.value
@@ -162,7 +162,7 @@ class GroupBy(Enum):
             return online_streaks.group_by_weekday(db_reader)
         if self is GroupBy.HOUR:
             return online_streaks.group_by_hour(db_reader)
-        raise NotImplementedError(f'unsupported grouping: {self}')
+        raise NotImplementedError(f"unsupported grouping: {self}")
 
 
 _OUTPUT_USER_FIELDS = (
@@ -211,7 +211,7 @@ class OutputSinkCSV(OutputSinkOnlineSessions):
     @staticmethod
     def _key_to_row(group_by, key):
         if group_by not in OutputSinkCSV._CONVERT_KEY:
-            raise NotImplementedError(f'unsupported grouping: {group_by}')
+            raise NotImplementedError(f"unsupported grouping: {group_by}")
         return OutputSinkCSV._CONVERT_KEY[group_by](key)
 
     def process_database(self, group_by, db_reader, time_from=None, time_to=None):
@@ -222,9 +222,9 @@ class OutputSinkCSV(OutputSinkOnlineSessions):
 
 
 class OutputConverterJSON:
-    _DATE_FIELD = 'date'
-    _WEEKDAY_FIELD = 'weekday'
-    _HOUR_FIELD = 'hour'
+    _DATE_FIELD = "date"
+    _WEEKDAY_FIELD = "weekday"
+    _HOUR_FIELD = "hour"
 
     assert _DATE_FIELD not in map(str, _OUTPUT_USER_FIELDS)
     assert _WEEKDAY_FIELD not in map(str, _OUTPUT_USER_FIELDS)
@@ -260,7 +260,7 @@ class OutputSinkJSON(OutputSinkOnlineSessions):
     def __init__(self, fd=sys.stdout):
         self._writer = io.FileWriterJSON(fd)
 
-    _DURATION_FIELD = 'duration'
+    _DURATION_FIELD = "duration"
 
     assert _DURATION_FIELD not in map(str, _OUTPUT_USER_FIELDS)
 
@@ -274,7 +274,7 @@ class OutputSinkJSON(OutputSinkOnlineSessions):
     @staticmethod
     def _key_to_object(group_by, key):
         if group_by not in OutputSinkJSON._CONVERT_KEY:
-            raise NotImplementedError(f'unsupported grouping: {group_by}')
+            raise NotImplementedError(f"unsupported grouping: {group_by}")
         return OutputSinkJSON._CONVERT_KEY[group_by](key)
 
     def process_database(self, group_by, db_reader, time_from=None, time_to=None):
@@ -289,7 +289,7 @@ class OutputSinkJSON(OutputSinkOnlineSessions):
 class OutputConverterPlot:
     @staticmethod
     def convert_user(user):
-        return f'{user.first_name}\n{user.last_name}'
+        return f"{user.first_name}\n{user.last_name}"
 
     @staticmethod
     def convert_date(date):
@@ -301,14 +301,14 @@ class OutputConverterPlot:
 
     @staticmethod
     def convert_hour(hour):
-        return f'{hour}:00'
+        return f"{hour}:00"
 
 
 class OutputSinkPlot(OutputSinkOnlineSessions):
     def __init__(self, fd=sys.stdout):
         self._fd = fd
 
-    TITLE = 'How much time people spend online'
+    TITLE = "How much time people spend online"
 
     _FORMAT_KEY = {
         GroupBy.USER: OutputConverterPlot.convert_user,
@@ -320,7 +320,7 @@ class OutputSinkPlot(OutputSinkOnlineSessions):
     @staticmethod
     def _format_key(group_by, key):
         if group_by not in OutputSinkPlot._FORMAT_KEY:
-            raise NotImplementedError(f'unsupported grouping: {group_by}')
+            raise NotImplementedError(f"unsupported grouping: {group_by}")
         return OutputSinkPlot._FORMAT_KEY[group_by](key)
 
     @staticmethod
@@ -351,7 +351,7 @@ class OutputSinkPlot(OutputSinkOnlineSessions):
         bar_chart.enable_grid_for_values()
         bar_chart.only_integer_values()
         bar_chart.set_property(
-            bar_chart.get_values_labels(), fontsize='small', rotation=30
+            bar_chart.get_values_labels(), fontsize="small", rotation=30
         )
         bar_chart.set_value_label_formatter(self._format_duration)
 
@@ -374,9 +374,9 @@ class OutputSinkPlot(OutputSinkOnlineSessions):
 
 
 class OutputFormat(Enum):
-    CSV = 'csv'
-    JSON = 'json'
-    PLOT = 'plot'
+    CSV = "csv"
+    JSON = "json"
+    PLOT = "plot"
 
     def __str__(self):
         return self.value
@@ -388,7 +388,7 @@ class OutputFormat(Enum):
             return OutputSinkJSON(fd)
         if self is OutputFormat.PLOT:
             return OutputSinkPlot(fd)
-        raise NotImplementedError(f'unsupported output format: {self}')
+        raise NotImplementedError(f"unsupported output format: {self}")
 
     def open_file(self, path=None):
         if self is OutputFormat.PLOT:
@@ -407,17 +407,17 @@ def _parse_database_format(s):
     try:
         return DatabaseFormat(s)
     except ValueError:
-        raise argparse.ArgumentTypeError(f'invalid database format: {s}')
+        raise argparse.ArgumentTypeError(f"invalid database format: {s}")
 
 
 def _parse_output_format(s):
     try:
         return OutputFormat(s)
     except ValueError:
-        raise argparse.ArgumentTypeError(f'invalid output format: {s}')
+        raise argparse.ArgumentTypeError(f"invalid output format: {s}")
 
 
-_DATE_RANGE_LIMIT_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
+_DATE_RANGE_LIMIT_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
 
 def _parse_date_range_limit(s):
@@ -435,64 +435,64 @@ def _parse_args(args=None):
         args = sys.argv[1:]
 
     parser = argparse.ArgumentParser(
-        description='View/visualize the amount of time people spend online.'
+        description="View/visualize the amount of time people spend online."
     )
 
     vk.version.add_to_arg_parser(parser)
 
     parser.add_argument(
-        'db_path',
-        metavar='input',
-        nargs='?',
-        help='database file path (standard input by default)',
+        "db_path",
+        metavar="input",
+        nargs="?",
+        help="database file path (standard input by default)",
     )
     parser.add_argument(
-        'out_path',
-        metavar='output',
-        nargs='?',
-        help='output file path (standard output by default)',
+        "out_path",
+        metavar="output",
+        nargs="?",
+        help="output file path (standard output by default)",
     )
     parser.add_argument(
-        '-g',
-        '--group-by',
+        "-g",
+        "--group-by",
         type=_parse_group_by,
         choices=GroupBy,
         default=GroupBy.USER,
-        help='group online sessions by user/date/etc.',
+        help="group online sessions by user/date/etc.",
     )
     parser.add_argument(
-        '-i',
-        '--input-format',
-        dest='db_fmt',
+        "-i",
+        "--input-format",
+        dest="db_fmt",
         type=_parse_database_format,
         default=DatabaseFormat.CSV,
         choices=DatabaseFormat,
-        help='specify database format',
+        help="specify database format",
     )
     parser.add_argument(
-        '-o',
-        '--output-format',
-        dest='out_fmt',
+        "-o",
+        "--output-format",
+        dest="out_fmt",
         type=_parse_output_format,
         choices=OutputFormat,
         default=OutputFormat.CSV,
-        help='specify output format',
+        help="specify output format",
     )
     parser.add_argument(
-        '-a',
-        '--from',
-        dest='time_from',
+        "-a",
+        "--from",
+        dest="time_from",
         type=_parse_date_range_limit,
         default=None,
-        help='discard online activity prior to this moment',
+        help="discard online activity prior to this moment",
     )
     parser.add_argument(
-        '-b',
-        '--to',
-        dest='time_to',
+        "-b",
+        "--to",
+        dest="time_to",
         type=_parse_date_range_limit,
         default=None,
-        help='discard online activity after this moment',
+        help="discard online activity after this moment",
     )
 
     return parser.parse_args(args)
@@ -525,5 +525,5 @@ def main(args=None):
     process_online_sessions(**vars(_parse_args(args)))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

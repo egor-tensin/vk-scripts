@@ -37,23 +37,23 @@ def _parse_online_flag(x):
 
 
 class UserField(Enum):
-    UID = 'id'
-    FIRST_NAME = 'first_name'
-    LAST_NAME = 'last_name'
-    DEACTIVATED = 'deactivated'
-    HIDDEN = 'hidden'
+    UID = "id"
+    FIRST_NAME = "first_name"
+    LAST_NAME = "last_name"
+    DEACTIVATED = "deactivated"
+    HIDDEN = "hidden"
 
-    DOMAIN = 'domain'
-    ONLINE = 'online'
-    LAST_SEEN = 'last_seen'
+    DOMAIN = "domain"
+    ONLINE = "online"
+    LAST_SEEN = "last_seen"
 
     def __str__(self):
         return self.value
 
 
 class DeactivationReason(Enum):
-    DELETED = 'deleted'
-    BANNED = 'banned'
+    DELETED = "deleted"
+    BANNED = "banned"
 
     def __str__(self):
         return self.value
@@ -135,7 +135,7 @@ class User(Hashable, MutableMapping):
     def full_name(self):
         if not self.has_last_name:
             return self.first_name
-        return f'{self.first_name} {self.last_name}'
+        return f"{self.first_name} {self.last_name}"
 
     @property
     def is_deactivated(self):

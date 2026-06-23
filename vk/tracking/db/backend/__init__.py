@@ -6,7 +6,7 @@
 from . import csv, log, null
 
 __all__ = (
-    'csv',
-    'log',
-    'null',
+    "csv",
+    "log",
+    "null",
 )

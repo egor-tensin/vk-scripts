@@ -25,15 +25,15 @@ class Platform(Enum):
 
     @property
     def descr(self):
-        return f'the {_PLATFORM_DESCRIPTIONS[self]}'
+        return f"the {_PLATFORM_DESCRIPTIONS[self]}"
 
 
 _PLATFORM_DESCRIPTIONS = {
     Platform.MOBILE: '"mobile" web version (or an unrecognized mobile app)',
-    Platform.IPHONE: 'official iPhone app',
-    Platform.IPAD: 'official iPad app',
-    Platform.ANDROID: 'official Android app',
-    Platform.WINDOWS_PHONE: 'official Windows Phone app',
-    Platform.WINDOWS10: 'official Windows 10 app',
-    Platform.WEB: 'web version (or an unrecognized app)',
+    Platform.IPHONE: "official iPhone app",
+    Platform.IPAD: "official iPad app",
+    Platform.ANDROID: "official Android app",
+    Platform.WINDOWS_PHONE: "official Windows Phone app",
+    Platform.WINDOWS10: "official Windows 10 app",
+    Platform.WEB: "web version (or an unrecognized app)",
 }

@@ -31,8 +31,8 @@ def _parse_platform(x):
 
 
 class LastSeenField(Enum):
-    TIME = 'time'
-    PLATFORM = 'platform'
+    TIME = "time"
+    PLATFORM = "platform"
 
     def __str__(self):
         return self.value

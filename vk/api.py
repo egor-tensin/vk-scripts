@@ -49,29 +49,29 @@ def _build_url(scheme, host, path, params=None, empty_params=False):
     else:
         raise TypeError()
     path = urllib.parse.quote(path)
-    return urllib.parse.urlunsplit((scheme, host, path, params, ''))
+    return urllib.parse.urlunsplit((scheme, host, path, params, ""))
 
 
 def _join_param_values(values):
     if isinstance(values, str):
         return values
     if isinstance(values, Iterable):
-        return ','.join(map(str, values))
+        return ",".join(map(str, values))
     return values
 
 
 def _join_path(base, url):
-    if not base.endswith('/'):
-        base += '/'
+    if not base.endswith("/"):
+        base += "/"
     return urllib.parse.urljoin(base, url)
 
 
-ACCESS_TOKEN = '9722cef09722cef09722cef071974b8cbe997229722cef0cbabfd816916af6c7bd37006'
+ACCESS_TOKEN = "9722cef09722cef09722cef071974b8cbe997229722cef0cbabfd816916af6c7bd37006"
 
 
 class Version(Enum):
     # https://dev.vk.com/en/reference/versions
-    V5_199 = '5.199'
+    V5_199 = "5.199"
     DEFAULT = V5_199
 
     def __str__(self):
@@ -79,7 +79,7 @@ class Version(Enum):
 
 
 class Language(Enum):
-    EN = 'en'
+    EN = "en"
     DEFAULT = EN
 
     def __str__(self):
@@ -87,24 +87,24 @@ class Language(Enum):
 
 
 class Method(Enum):
-    USERS_GET = 'users.get'
-    FRIENDS_GET = 'friends.get'
+    USERS_GET = "users.get"
+    FRIENDS_GET = "friends.get"
 
     def __str__(self):
         return self.value
 
 
 class CommonParameters(Enum):
-    ACCESS_TOKEN = 'access_token'
-    VERSION = 'v'
-    LANGUAGE = 'lang'
+    ACCESS_TOKEN = "access_token"
+    VERSION = "v"
+    LANGUAGE = "lang"
 
     def __str__(self):
         return self.value
 
 
 class API:
-    _ROOT_URL = 'https://api.vk.com/method/'
+    _ROOT_URL = "https://api.vk.com/method/"
 
     _SCHEME, _HOST, _ROOT_PATH = _split_url(_ROOT_URL)
 
@@ -127,9 +127,9 @@ class API:
             with urlopen(url) as response:
                 response = json.loads(response.read().decode())
                 # print(response)
-                if 'response' not in response:
+                if "response" not in response:
                     raise vk.error.InvalidAPIResponseError(response)
-                return response['response']
+                return response["response"]
         except (ConnectionError, URLError) as e:
             raise vk.error.APIConnectionError(str(e)) from e
 
@@ -154,6 +154,6 @@ class API:
         response = self._call_method(
             Method.FRIENDS_GET, user_id=user_id, fields=_join_param_values(fields)
         )
-        if 'items' not in response:
+        if "items" not in response:
             raise vk.error.InvalidAPIResponseError(response)
-        return self._filter_response_with_users(response['items'], deactivated_users)
+        return self._filter_response_with_users(response["items"], deactivated_users)

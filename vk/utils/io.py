@@ -15,7 +15,7 @@ class FileWriterJSON:
 
     def write(self, something):
         self._fd.write(json.dumps(something, indent=3, ensure_ascii=False))
-        self._fd.write('\n')
+        self._fd.write("\n")
 
 
 class FileReaderCSV:
@@ -29,7 +29,7 @@ class FileReaderCSV:
 class FileWriterCSV:
     def __init__(self, fd=sys.stdout, flush=False):
         self._fd = fd
-        self._writer = csv.writer(fd, lineterminator='\n')
+        self._writer = csv.writer(fd, lineterminator="\n")
         self._flush = flush
 
     @staticmethod
@@ -55,16 +55,16 @@ def _open_file(path=None, default=None, **kwargs):
             yield fd
 
 
-_DEFAULT_ENCODING = 'utf-8'
+_DEFAULT_ENCODING = "utf-8"
 
 
 def open_input_text_file(path=None):
-    return _open_file(path, default=sys.stdin, mode='r', encoding=_DEFAULT_ENCODING)
+    return _open_file(path, default=sys.stdin, mode="r", encoding=_DEFAULT_ENCODING)
 
 
-def open_output_text_file(path=None, mode='w'):
+def open_output_text_file(path=None, mode="w"):
     return _open_file(path, default=sys.stdout, mode=mode, encoding=_DEFAULT_ENCODING)
 
 
 def open_output_binary_file(path=None):
-    return _open_file(path, default=sys.stdout, mode='wb')
+    return _open_file(path, default=sys.stdout, mode="wb")

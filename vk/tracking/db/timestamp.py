@@ -30,7 +30,7 @@ class Timestamp:
 
     @staticmethod
     def from_string(s):
-        return Timestamp(datetime.strptime(s, '%Y-%m-%dT%H:%M:%SZ'))
+        return Timestamp(datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ"))
 
     def __str__(self):
-        return f'{self.dt.isoformat()}Z'
+        return f"{self.dt.isoformat()}Z"

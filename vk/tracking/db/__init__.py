@@ -5,4 +5,4 @@
 
 from .format import Format
 
-__all__ = ('format',)
+__all__ = ("format",)

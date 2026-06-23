@@ -3,6 +3,6 @@
 # See LICENSE.txt for details.
 
 __all__ = (
-    'sessions',
-    'status',
+    "sessions",
+    "status",
 )

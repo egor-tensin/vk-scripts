@@ -15,7 +15,7 @@ class Writer(meta.Writer):
         handler = logging.StreamHandler(fd)
         handler.setFormatter(
             logging.Formatter(
-                fmt='[%(asctime)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S%z'
+                fmt="[%(asctime)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S%z"
             )
         )
         self._logger.addHandler(handler)
@@ -71,24 +71,24 @@ class Writer(meta.Writer):
 
     @staticmethod
     def _format_user_is_online(user):
-        return f'{user.full_name} is ONLINE.'
+        return f"{user.full_name} is ONLINE."
 
     @staticmethod
     def _format_user_is_offline(user):
-        return f'{user.full_name} is OFFLINE.'
+        return f"{user.full_name} is OFFLINE."
 
     @staticmethod
     def _format_user_last_seen(user):
-        return f'{user.full_name} was last seen at {user.last_seen.time_local} using {user.last_seen.platform.descr}.'
+        return f"{user.full_name} was last seen at {user.last_seen.time_local} using {user.last_seen.platform.descr}."
 
     @staticmethod
     def _format_user_went_online(user):
-        return f'{user.full_name} went ONLINE.'
+        return f"{user.full_name} went ONLINE."
 
     @staticmethod
     def _format_user_went_offline(user):
-        return f'{user.full_name} went OFFLINE.'
+        return f"{user.full_name} went OFFLINE."
 
     @staticmethod
     def _format_another_connection_error(e):
-        return f'Encountered a connection error which looks like the previous one: {e}'
+        return f"Encountered a connection error which looks like the previous one: {e}"

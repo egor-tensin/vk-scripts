@@ -57,8 +57,8 @@ class OutputSinkJSON(OutputSinkMutualFriends):
 
 
 class OutputFormat(Enum):
-    CSV = 'csv'
-    JSON = 'json'
+    CSV = "csv"
+    JSON = "json"
 
     def __str__(self):
         return self.value
@@ -72,14 +72,14 @@ class OutputFormat(Enum):
             return OutputSinkCSV(fd)
         if self is OutputFormat.JSON:
             return OutputSinkJSON(fd)
-        raise NotImplementedError(f'unsupported output format: {self}')
+        raise NotImplementedError(f"unsupported output format: {self}")
 
 
 def _parse_output_format(s):
     try:
         return OutputFormat(s)
     except ValueError:
-        raise argparse.ArgumentTypeError(f'invalid output format: {s}')
+        raise argparse.ArgumentTypeError(f"invalid output format: {s}")
 
 
 def _parse_args(args=None):
@@ -87,29 +87,29 @@ def _parse_args(args=None):
         args = sys.argv[1:]
 
     parser = argparse.ArgumentParser(
-        description='Learn who your ex and her new boyfriend are both friends with.'
+        description="Learn who your ex and her new boyfriend are both friends with."
     )
 
     vk.version.add_to_arg_parser(parser)
 
     parser.add_argument(
-        'uids', metavar='UID', nargs='+', help='user IDs or "screen names"'
+        "uids", metavar="UID", nargs="+", help='user IDs or "screen names"'
     )
     parser.add_argument(
-        '-f',
-        '--format',
-        dest='out_fmt',
+        "-f",
+        "--format",
+        dest="out_fmt",
         type=_parse_output_format,
         default=OutputFormat.CSV,
         choices=OutputFormat,
-        help='specify output format',
+        help="specify output format",
     )
     parser.add_argument(
-        '-o',
-        '--output',
-        metavar='PATH',
-        dest='out_path',
-        help='set output file path (standard output by default)',
+        "-o",
+        "--output",
+        metavar="PATH",
+        dest="out_path",
+        help="set output file path (standard output by default)",
     )
 
     return parser.parse_args(args)
@@ -132,5 +132,5 @@ def main(args=None):
     write_mutual_friends(**vars(_parse_args(args)))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
