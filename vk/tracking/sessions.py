@@ -129,18 +129,18 @@ class OnlineSessionEnumerator(MutableMapping):
         return self._close_user_session(record.to_user())
 
     def _known_user(self, user):
-        return user.get_uid() in self._records
+        return user.uid in self._records
 
     def _unknown_user(self, user):
         return not self._known_user(user)
 
     def _close_user_session(self, user):
-        if user not in self or self[user].is_offline():
+        if user not in self or self[user].is_offline:
             self[user] = user
             return None
-        if user.is_online():
+        if user.is_online:
             return None
-        session = user, self[user].get_last_seen_time(), user.get_last_seen_time()
+        session = user, self[user].last_seen.time, user.last_seen.time
         self[user] = user
         return session
 
@@ -291,7 +291,7 @@ class OutputSinkJSON(OutputSinkOnlineSessions):
 class OutputConverterPlot:
     @staticmethod
     def convert_user(user):
-        return f'{user.get_first_name()}\n{user.get_last_name()}'
+        return f'{user.first_name}\n{user.last_name}'
 
     @staticmethod
     def convert_date(date):

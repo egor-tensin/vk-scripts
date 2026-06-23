@@ -80,20 +80,14 @@ class LastSeen(MutableMapping):
 
     _DEFAULT_FIELD_PARSER = str
 
-    def has_time(self):
-        return LastSeenField.TIME in self
-
-    def get_time(self):
+    @property
+    def time(self):
         return self[LastSeenField.TIME]
 
-    def set_time(self, time):
-        self[LastSeenField.TIME] = time
+    @property
+    def time_local(self):
+        return self.time.astimezone()
 
-    def has_platform(self):
-        return LastSeenField.PLATFORM in self
-
-    def get_platform(self):
+    @property
+    def platform(self):
         return self[LastSeenField.PLATFORM]
-
-    def set_platform(self, platform):
-        self[LastSeenField.PLATFORM] = platform

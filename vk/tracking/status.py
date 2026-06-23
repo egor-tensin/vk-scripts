@@ -62,7 +62,7 @@ class StatusTracker:
         user_list = self._api.users_get(
             uids, self._USER_FIELDS, deactivated_users=False
         )
-        return {user.get_uid(): user for user in user_list}
+        return {user.uid: user for user in user_list}
 
     def _notify_status(self, user):
         for fn in self._on_initial_status:
@@ -95,7 +95,7 @@ class StatusTracker:
     @staticmethod
     def _filter_status_updates(old_users, new_users):
         for uid, user in new_users.items():
-            if old_users[uid].is_online() != user.is_online():
+            if old_users[uid].is_online != user.is_online:
                 old_users[uid] = user
                 yield user
 

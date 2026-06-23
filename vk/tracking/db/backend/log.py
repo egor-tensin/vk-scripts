@@ -47,7 +47,7 @@ class Writer(meta.Writer):
 
     def on_initial_status(self, user):
         self._reset_last_notification()
-        if user.is_online():
+        if user.is_online:
             self.info(self._format_user_is_online(user))
         else:
             self.info(self._format_user_is_offline(user))
@@ -55,7 +55,7 @@ class Writer(meta.Writer):
 
     def on_status_update(self, user):
         self._reset_last_notification()
-        if user.is_online():
+        if user.is_online:
             self.info(self._format_user_went_online(user))
         else:
             self.info(self._format_user_went_offline(user))
@@ -70,37 +70,24 @@ class Writer(meta.Writer):
         self.exception(e)
 
     @staticmethod
-    def _format_user(user):
-        if user.has_last_name():
-            return f'{user.get_first_name()} {user.get_last_name()}'
-        return f'{user.get_first_name()}'
-
-    @staticmethod
     def _format_user_is_online(user):
-        user = Writer._format_user(user)
-        return f'{user} is ONLINE.'
+        return f'{user.full_name} is ONLINE.'
 
     @staticmethod
     def _format_user_is_offline(user):
-        user = Writer._format_user(user)
-        return f'{user} is OFFLINE.'
+        return f'{user.full_name} is OFFLINE.'
 
     @staticmethod
     def _format_user_last_seen(user):
-        last_seen = user.get_last_seen_time_local()
-        platform = user.get_last_seen_platform().get_descr_text()
-        user = Writer._format_user(user)
-        return f'{user} was last seen at {last_seen} using {platform}.'
+        return f'{user.full_name} was last seen at {user.last_seen.time_local} using {user.last_seen.platform.descr}.'
 
     @staticmethod
     def _format_user_went_online(user):
-        user = Writer._format_user(user)
-        return f'{user} went ONLINE.'
+        return f'{user.full_name} went ONLINE.'
 
     @staticmethod
     def _format_user_went_offline(user):
-        user = Writer._format_user(user)
-        return f'{user} went OFFLINE.'
+        return f'{user.full_name} went OFFLINE.'
 
     @staticmethod
     def _format_another_connection_error(e):

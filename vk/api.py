@@ -138,7 +138,7 @@ class API:
         user_list = map(User.from_api_response, user_list)
         if deactivated_users:
             return user_list
-        return [user for user in user_list if not user.is_deactivated()]
+        return [user for user in user_list if not user.is_deactivated]
 
     def users_get(self, user_ids, fields=(), deactivated_users=True):
         return self._filter_response_with_users(

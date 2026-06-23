@@ -73,7 +73,7 @@ class Record(MutableMapping):
             if isinstance(field, UserField):
                 record[field] = user[field]
             elif isinstance(field, LastSeenField):
-                record[field] = user.get_last_seen()[field]
+                record[field] = user.last_seen[field]
             else:
                 assert False
         return record
@@ -98,5 +98,5 @@ class Record(MutableMapping):
             else:
                 assert False
         if last_seen:
-            user.set_last_seen(last_seen)
+            user.last_seen = last_seen
         return user

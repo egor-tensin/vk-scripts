@@ -18,7 +18,7 @@ _OUTPUT_USER_FIELDS = UserField.UID, UserField.FIRST_NAME, UserField.LAST_NAME
 
 
 def _query_friend_list(api, user):
-    return api.friends_get(user.get_uid(), fields=_OUTPUT_USER_FIELDS)
+    return api.friends_get(user.uid, fields=_OUTPUT_USER_FIELDS)
 
 
 def _filter_user_fields(user):

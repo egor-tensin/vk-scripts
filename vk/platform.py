@@ -24,21 +24,9 @@ class Platform(Enum):
     def __str__(self):
         return str(self.value)
 
-    @staticmethod
-    def _capitalize_first_letter(s):
-        m = re.search(r'\w', s)
-        if m is None:
-            return s
-        return s[: m.start()] + m.group().upper() + s[m.end() :]
-
-    def get_descr_header(self):
-        return self._capitalize_first_letter(_PLATFORM_DESCRIPTIONS[self])
-
-    def get_descr_text(self):
+    @property
+    def descr(self):
         return f'the {_PLATFORM_DESCRIPTIONS[self]}'
-
-    def get_descr_text_capitalized(self):
-        return self._capitalize_first_letter(self.get_descr_text())
 
 
 _PLATFORM_DESCRIPTIONS = {

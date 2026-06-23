@@ -78,11 +78,11 @@ class User(Hashable, MutableMapping):
         self._fields = fields
 
     def __eq__(self, other):
-        return self.get_uid() == other.get_uid()
+        return self.uid == other.uid
         # return self._fields == other._fields
 
     def __hash__(self):
-        return hash(self.get_uid())
+        return hash(self.uid)
 
     def __getitem__(self, field):
         return self._fields[field]
@@ -115,74 +115,56 @@ class User(Hashable, MutableMapping):
 
     _DEFAULT_FIELD_PARSER = str
 
-    def get_uid(self):
+    @property
+    def uid(self):
         return self[UserField.UID]
 
-    def get_first_name(self):
+    @property
+    def first_name(self):
         return self[UserField.FIRST_NAME]
 
-    def set_first_name(self, name):
-        self[UserField.FIRST_NAME] = name
-
+    @property
     def has_last_name(self):
-        return UserField.LAST_NAME in self and self.get_last_name()
+        return UserField.LAST_NAME in self and self.last_name
 
-    def get_last_name(self):
+    @property
+    def last_name(self):
         return self[UserField.LAST_NAME]
 
-    def set_last_name(self, name):
-        self[UserField.LAST_NAME] = name
+    @property
+    def full_name(self):
+        if not self.has_last_name:
+            return self.first_name
+        return f'{self.first_name} {self.last_name}'
 
+    @property
     def is_deactivated(self):
         return UserField.DEACTIVATED in self
 
-    def get_deactivation_reason(self):
+    @property
+    def deactivation_reason(self):
         return self[UserField.DEACTIVATED]
 
-    def set_deactivated(self, reason):
-        self[UserField.DEACTIVATED] = reason
-
+    @property
     def is_hidden(self):
         return UserField.HIDDEN in self and self[UserField.HIDDEN]
 
-    def set_hidden(self, value=True):
-        self[UserField.HIDDEN] = value
-
-    def has_domain(self):
-        return UserField.DOMAIN in self
-
-    def get_domain(self):
+    @property
+    def domain(self):
         return self[UserField.DOMAIN]
 
-    def set_domain(self, domain):
-        self[UserField.DOMAIN] = domain
-
-    def has_online_flag(self):
-        return UserField.ONLINE in self
-
+    @property
     def is_online(self):
         return self[UserField.ONLINE]
 
+    @property
     def is_offline(self):
-        return not self.is_online()
+        return not self.is_online
 
-    def set_online_flag(self, value=True):
-        self[UserField.ONLINE] = value
-
-    def has_last_seen(self):
-        return UserField.LAST_SEEN in self
-
-    def get_last_seen(self):
+    @property
+    def last_seen(self):
         return self[UserField.LAST_SEEN]
 
-    def set_last_seen(self, last_seen):
+    @last_seen.setter
+    def last_seen(self, last_seen):
         self[UserField.LAST_SEEN] = last_seen
-
-    def get_last_seen_time(self):
-        return self[UserField.LAST_SEEN].get_time()
-
-    def get_last_seen_time_local(self):
-        return self[UserField.LAST_SEEN].get_time().astimezone()
-
-    def get_last_seen_platform(self):
-        return self[UserField.LAST_SEEN].get_platform()
