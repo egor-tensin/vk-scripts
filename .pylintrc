@@ -6,7 +6,3 @@ disable=
     multiple-imports,
     too-few-public-methods,
     too-many-public-methods,
-
-[BASIC]
-
-bad-functions=

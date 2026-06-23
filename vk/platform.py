@@ -4,7 +4,6 @@
 # Distributed under the MIT License.
 
 from enum import Enum
-import re
 
 
 class Platform(Enum):

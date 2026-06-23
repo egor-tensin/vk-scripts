@@ -57,13 +57,11 @@ class OnlineSessionEnumerator(MutableMapping):
         if self._time_from is not None:
             if ended_at < self._time_from:
                 return None
-            if started_at < self._time_from:
-                started_at = self._time_from
+            started_at = max(started_at, self._time_from)
         if self._time_to is not None:
             if started_at > self._time_to:
                 return None
-            if ended_at > self._time_to:
-                ended_at = self._time_to
+            ended_at = min(ended_at, self._time_to)
         return user, started_at, ended_at
 
     def read_database(self, db_reader):

@@ -43,6 +43,6 @@ class Reader(meta.Reader):
     @staticmethod
     def _record_from_row(row):
         record = Record(Timestamp.from_string(row[0]))
-        for i in range(len(Record.FIELDS)):
-            record[Record.FIELDS[i]] = row[i + 1]
+        for i, field in enumerate(Record.FIELDS):
+            record[field] = row[i + 1]
         return record
