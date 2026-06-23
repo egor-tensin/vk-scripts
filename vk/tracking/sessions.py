@@ -164,7 +164,7 @@ class GroupBy(Enum):
             return online_streaks.group_by_weekday(db_reader)
         if self is GroupBy.HOUR:
             return online_streaks.group_by_hour(db_reader)
-        raise NotImplementedError('unsupported grouping: ' + str(self))
+        raise NotImplementedError(f'unsupported grouping: {self}')
 
 
 _OUTPUT_USER_FIELDS = (
@@ -213,7 +213,7 @@ class OutputSinkCSV(OutputSinkOnlineSessions):
     @staticmethod
     def _key_to_row(group_by, key):
         if group_by not in OutputSinkCSV._CONVERT_KEY:
-            raise NotImplementedError('unsupported grouping: ' + str(group_by))
+            raise NotImplementedError(f'unsupported grouping: {group_by}')
         return OutputSinkCSV._CONVERT_KEY[group_by](key)
 
     def process_database(self, group_by, db_reader, time_from=None, time_to=None):
@@ -276,7 +276,7 @@ class OutputSinkJSON(OutputSinkOnlineSessions):
     @staticmethod
     def _key_to_object(group_by, key):
         if group_by not in OutputSinkJSON._CONVERT_KEY:
-            raise NotImplementedError('unsupported grouping: ' + str(group_by))
+            raise NotImplementedError(f'unsupported grouping: {group_by}')
         return OutputSinkJSON._CONVERT_KEY[group_by](key)
 
     def process_database(self, group_by, db_reader, time_from=None, time_to=None):
@@ -291,7 +291,7 @@ class OutputSinkJSON(OutputSinkOnlineSessions):
 class OutputConverterPlot:
     @staticmethod
     def convert_user(user):
-        return '{}\n{}'.format(user.get_first_name(), user.get_last_name())
+        return f'{user.get_first_name()}\n{user.get_last_name()}'
 
     @staticmethod
     def convert_date(date):
@@ -303,7 +303,7 @@ class OutputConverterPlot:
 
     @staticmethod
     def convert_hour(hour):
-        return '{}:00'.format(hour)
+        return f'{hour}:00'
 
 
 class OutputSinkPlot(OutputSinkOnlineSessions):
@@ -322,7 +322,7 @@ class OutputSinkPlot(OutputSinkOnlineSessions):
     @staticmethod
     def _format_key(group_by, key):
         if group_by not in OutputSinkPlot._FORMAT_KEY:
-            raise NotImplementedError('unsupported grouping: ' + str(group_by))
+            raise NotImplementedError(f'unsupported grouping: {group_by}')
         return OutputSinkPlot._FORMAT_KEY[group_by](key)
 
     @staticmethod
@@ -390,7 +390,7 @@ class OutputFormat(Enum):
             return OutputSinkJSON(fd)
         if self is OutputFormat.PLOT:
             return OutputSinkPlot(fd)
-        raise NotImplementedError('unsupported output format: ' + str(self))
+        raise NotImplementedError(f'unsupported output format: {self}')
 
     def open_file(self, path=None):
         if self is OutputFormat.PLOT:
@@ -402,21 +402,21 @@ def _parse_group_by(s):
     try:
         return GroupBy(s)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid "group by" value: ' + s)
+        raise argparse.ArgumentTypeError(f'invalid "group by" value: {s}')
 
 
 def _parse_database_format(s):
     try:
         return DatabaseFormat(s)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid database format: ' + s)
+        raise argparse.ArgumentTypeError(f'invalid database format: {s}')
 
 
 def _parse_output_format(s):
     try:
         return OutputFormat(s)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid output format: ' + s)
+        raise argparse.ArgumentTypeError(f'invalid output format: {s}')
 
 
 _DATE_RANGE_LIMIT_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
@@ -427,8 +427,9 @@ def _parse_date_range_limit(s):
         dt = datetime.strptime(s, _DATE_RANGE_LIMIT_FORMAT)
         return dt.replace(tzinfo=timezone.utc)
     except ValueError:
-        msg = 'invalid date range limit (must be in the \'{}\' format): {}'
-        raise argparse.ArgumentTypeError(msg.format(_DATE_RANGE_LIMIT_FORMAT, s))
+        raise argparse.ArgumentTypeError(
+            f"invalid date range limit (must be in the '{_DATE_RANGE_LIMIT_FORMAT}' format): {s}"
+        )
 
 
 def _parse_args(args=None):

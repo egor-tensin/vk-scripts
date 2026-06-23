@@ -26,7 +26,7 @@ class Format(Enum):
             return backend.log.Writer(fd)
         if self is Format.NULL:
             return backend.null.Writer()
-        raise NotImplementedError('unsupported database format: ' + str(self))
+        raise NotImplementedError(f'unsupported database format: {self}')
 
     def open_output_file(self, path=None):
         if self is Format.CSV:

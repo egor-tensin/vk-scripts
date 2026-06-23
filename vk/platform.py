@@ -35,8 +35,7 @@ class Platform(Enum):
         return self._capitalize_first_letter(_PLATFORM_DESCRIPTIONS[self])
 
     def get_descr_text(self):
-        s = _PLATFORM_DESCRIPTIONS[self]
-        return 'the ' + s
+        return f'the {_PLATFORM_DESCRIPTIONS[self]}'
 
     def get_descr_text_capitalized(self):
         return self._capitalize_first_letter(self.get_descr_text())

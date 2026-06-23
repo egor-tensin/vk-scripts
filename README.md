@@ -10,8 +10,6 @@ Installation
 
     pip install vk-scripts
 
-
-Python 3.4 or higher is required.
 `vk-sessions` uses [matplotlib].
 
 [matplotlib]: http://matplotlib.org/

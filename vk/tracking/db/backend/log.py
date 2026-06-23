@@ -72,36 +72,36 @@ class Writer(meta.Writer):
     @staticmethod
     def _format_user(user):
         if user.has_last_name():
-            return '{} {}'.format(user.get_first_name(), user.get_last_name())
-        return '{}'.format(user.get_first_name())
+            return f'{user.get_first_name()} {user.get_last_name()}'
+        return f'{user.get_first_name()}'
 
     @staticmethod
     def _format_user_is_online(user):
-        return '{} is ONLINE.'.format(Writer._format_user(user))
+        user = Writer._format_user(user)
+        return f'{user} is ONLINE.'
 
     @staticmethod
     def _format_user_is_offline(user):
-        return '{} is OFFLINE.'.format(Writer._format_user(user))
+        user = Writer._format_user(user)
+        return f'{user} is OFFLINE.'
 
     @staticmethod
     def _format_user_last_seen(user):
-        return '{} was last seen at {} using {}.'.format(
-            Writer._format_user(user),
-            user.get_last_seen_time_local(),
-            user.get_last_seen_platform().get_descr_text(),
-        )
+        last_seen = user.get_last_seen_time_local()
+        platform = user.get_last_seen_platform().get_descr_text()
+        user = Writer._format_user(user)
+        return f'{user} was last seen at {last_seen} using {platform}.'
 
     @staticmethod
     def _format_user_went_online(user):
-        return '{} went ONLINE.'.format(Writer._format_user(user))
+        user = Writer._format_user(user)
+        return f'{user} went ONLINE.'
 
     @staticmethod
     def _format_user_went_offline(user):
-        return '{} went OFFLINE.'.format(Writer._format_user(user))
+        user = Writer._format_user(user)
+        return f'{user} went OFFLINE.'
 
     @staticmethod
     def _format_another_connection_error(e):
-        return (
-            'Encountered a connection error which looks like the previous one: '
-            + str(e)
-        )
+        return f'Encountered a connection error which looks like the previous one: {e}'

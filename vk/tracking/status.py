@@ -155,9 +155,9 @@ def _parse_positive_integer(s):
     try:
         n = int(s)
     except ValueError:
-        raise argparse.ArgumentTypeError('must be a positive integer: ' + s)
+        raise argparse.ArgumentTypeError(f'must be a positive integer: {s}')
     if n < 1:
-        raise argparse.ArgumentTypeError('must be a positive integer: ' + s)
+        raise argparse.ArgumentTypeError(f'must be a positive integer: {s}')
     return n
 
 
@@ -165,7 +165,7 @@ def _parse_database_format(s):
     try:
         return DatabaseFormat(s)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid database format: ' + s)
+        raise argparse.ArgumentTypeError(f'invalid database format: {s}')
 
 
 def _parse_args(args=None):

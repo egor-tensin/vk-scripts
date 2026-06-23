@@ -67,14 +67,14 @@ class OutputFormat(Enum):
             return OutputSinkCSV(fd)
         if self is OutputFormat.JSON:
             return OutputSinkJSON(fd)
-        raise NotImplementedError('unsupported output format: ' + str(self))
+        raise NotImplementedError(f'unsupported output format: {self}')
 
 
 def _parse_output_format(s):
     try:
         return OutputFormat(s)
     except ValueError:
-        raise argparse.ArgumentTypeError('invalid output format: ' + s)
+        raise argparse.ArgumentTypeError(f'invalid output format: {s}')
 
 
 def _parse_args(args=None):

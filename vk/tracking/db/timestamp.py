@@ -33,4 +33,4 @@ class Timestamp:
         return Timestamp(datetime.strptime(s, '%Y-%m-%dT%H:%M:%SZ'))
 
     def __str__(self):
-        return self.dt.isoformat() + 'Z'
+        return f'{self.dt.isoformat()}Z'
