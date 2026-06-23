@@ -14,7 +14,12 @@ from vk.user import UserField
 from vk.utils import io
 import vk.version
 
-_OUTPUT_USER_FIELDS = UserField.UID, UserField.FIRST_NAME, UserField.LAST_NAME
+_OUTPUT_USER_FIELDS = (
+    UserField.UID,
+    UserField.FIRST_NAME,
+    UserField.LAST_NAME,
+    UserField.DOMAIN,
+)
 
 
 def _query_friend_list(api, user):

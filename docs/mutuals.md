@@ -13,8 +13,8 @@ Usage
 For example (using made up user IDs/"screen names"),
 
     > vk-mutuals john.doe jane.doe
-    89497105,John,Smith
-    3698577,Jane,Smith
+    89497105,John,Smith,john.smith
+    3698577,Jane,Smith,jane.smith
 
 In the example above, both "John Doe" and "Jane Doe" are friends with "John
 Smith" and "Jane Smith", whose user IDs are 89497105 and 3698577 respectively.
@@ -27,12 +27,14 @@ You can also get a JSON document:
        {
           "uid": 89497105,
           "first_name": "John",
-          "last_name": "Smith"
+          "last_name": "Smith",
+          "domain": "john.smith"
        },
        {
           "uid": 3698577,
           "first_name": "Jane",
-          "last_name": "Smith"
+          "last_name": "Smith",
+          "domain": "jane.smith"
        }
     ]
 
