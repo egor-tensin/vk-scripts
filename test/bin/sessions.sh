@@ -2,7 +2,7 @@
 
 # Copyright (c) 2019 Egor Tensin <egor@tensin.name>
 # This file is part of the "VK scripts" project.
-# For details, see https://github.com/egor-tensin/vk-scripts.
+# For details, see https://github.com/egor-tensin/vk-scripts
 # Distributed under the MIT License.
 
 set -o errexit -o nounset -o pipefail
