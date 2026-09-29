@@ -1,27 +1,25 @@
-#!/usr/bin/env bash
-
 # Copyright (c) 2020 Egor Tensin <egor@tensin.name>
 # This file is part of the "VK scripts" project.
 # For details, see https://github.com/egor-tensin/vk-scripts
 # Distributed under the MIT License.
 
-set -o errexit -o nounset -o pipefail
+test_should_fail=
+test_root_dir=
 
-script_dir="$( dirname -- "${BASH_SOURCE[0]}" )"
-script_dir="$( cd -- "$script_dir" && pwd )"
-readonly script_dir
+test_setup() {
+    test_root_dir="$( mktemp -d )"
 
-run_test() {
-    local arg
-    echo
-    echo ======================================================================
-    for arg; do
-        echo -n "$arg "
-    done
-    echo
-    echo ======================================================================
-
-    PYTHONPATH="$script_dir/../.." python -m "$@"
+    log "Root directory: $test_root_dir"
 }
 
-run_test "$@"
+test_cleanup_default() {
+    if [ -n "$test_root_dir" ]; then
+        log "Removing test's root directory: $test_root_dir"
+        rm -rf -- "$test_root_dir"
+    fi
+}
+
+test_run_module() {
+    log_run python -m "$@"
+    PYTHONPATH="$script_dir/.." python -m "$@"
+}

@@ -56,7 +56,7 @@ jobs:
           vk-status --version
           vk-sessions --version
       - name: Run tests
-        run: ./test/bin/main.sh
+        run: ./test/main.sh
 
   publish_pypi:
     needs: [lint, test]
