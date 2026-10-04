@@ -29,7 +29,7 @@ jobs:
       - name: Run black
         uses: psf/black@stable
 
-  test:
+  test_python:
     strategy:
       matrix:
         python-version:
@@ -60,8 +60,36 @@ jobs:
       - name: Run tests
         run: ./test/main.sh
 
+  test_ubuntu:
+    strategy:
+      matrix:
+        codename:
+          - focal
+          - jammy
+          - noble
+          - resolute
+    runs-on: ubuntu-latest
+    container:
+      image: 'ubuntu:${{ matrix.codename }}'
+    name: 'Ubuntu: ${{ matrix.codename }}'
+    steps:
+      - name: Install dependencies
+        run: |
+          apt update
+          DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
+              ca-certificates \
+              python3 \
+              python3-matplotlib
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Run tests
+        run: ./test/main.sh
+
   publish_pypi:
-    needs: [lint, test]
+    needs:
+      - lint
+      - test_python
+      - test_ubuntu
     runs-on: ubuntu-latest
     name: Publish
     steps:
