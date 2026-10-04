@@ -20,7 +20,7 @@ test_cleanup_default() {
 }
 
 test_run_module() {
-    local cmd=(python -m "$@")
+    local cmd=(python3 -m "$@")
     log_run "${cmd[@]}"
     PYTHONPATH="$script_dir/.." "${cmd[@]}"
 }
