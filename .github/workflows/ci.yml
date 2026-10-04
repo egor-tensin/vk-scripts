@@ -22,8 +22,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
@@ -34,7 +32,13 @@ jobs:
   test:
     strategy:
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
+        python-version:
+          - '3.9'
+          - '3.10'
+          - '3.11'
+          - '3.12'
+          - '3.13'
+          - '3.14'
       # Random number to prevent exceeding the request frequency limit.
       max-parallel: 3
     runs-on: ubuntu-latest
@@ -42,8 +46,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
@@ -65,8 +67,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
