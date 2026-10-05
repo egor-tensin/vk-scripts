@@ -177,7 +177,10 @@ def _parse_args(args=None):
     vk.version.add_to_arg_parser(parser)
 
     parser.add_argument(
-        "uids", metavar="UID", nargs="+", help='user IDs or "screen names"'
+        "uids",
+        metavar="UID",
+        nargs="+",
+        help='user IDs or "screen names"',
     )
     parser.add_argument(
         "-t",
@@ -210,7 +213,11 @@ def _parse_args(args=None):
         help="specify database format",
     )
     parser.add_argument(
-        "-o", "--output", metavar="PATH", dest="db_path", help="set database file path"
+        "-o",
+        "--output",
+        metavar="PATH",
+        dest="db_path",
+        help="set database file path",
     )
 
     return parser.parse_args(args)

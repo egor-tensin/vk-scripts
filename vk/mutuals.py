@@ -93,7 +93,10 @@ def _parse_args(args=None):
     vk.version.add_to_arg_parser(parser)
 
     parser.add_argument(
-        "uids", metavar="UID", nargs="+", help='user IDs or "screen names"'
+        "uids",
+        metavar="UID",
+        nargs="+",
+        help='user IDs or "screen names"',
     )
     parser.add_argument(
         "-f",
