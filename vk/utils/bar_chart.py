@@ -3,6 +3,9 @@
 # For details, see https://github.com/egor-tensin/vk-scripts
 # Distributed under the MIT License.
 
+import argparse
+import sys
+
 import matplotlib.pyplot as plt
 from matplotlib import ticker
 import numpy as np
@@ -131,30 +134,46 @@ class BarChartBuilder:
         self._fig.savefig(path, bbox_inches="tight")
 
 
-if __name__ == "__main__":
-    import argparse
+def _parse_args(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--categories", nargs="*", metavar="LABEL", default=[])
-    parser.add_argument("--values", nargs="*", metavar="N", default=[], type=float)
-
-    parser.add_argument("--output", "-o", help="set output file path")
-
+    parser.add_argument(
+        "--categories",
+        nargs="*",
+        metavar="LABEL",
+        default=[],
+    )
+    parser.add_argument(
+        "--values",
+        nargs="*",
+        metavar="N",
+        default=[],
+        type=float,
+    )
+    parser.add_argument(
+        "--output",
+        "-o",
+        help="set output file path",
+    )
     parser.add_argument(
         "--align-middle",
         action="store_true",
         dest="labels_align_middle",
         help="align labels to the middle of the bars",
     )
-
     parser.add_argument(
-        "--integer-values", action="store_true", dest="only_integer_values"
+        "--integer-values",
+        action="store_true",
+        dest="only_integer_values",
     )
     parser.add_argument(
-        "--any-values", action="store_false", dest="only_integer_values"
+        "--any-values",
+        action="store_false",
+        dest="only_integer_values",
     )
-
     parser.add_argument("--grid-categories", action="store_true")
     parser.add_argument("--grid-values", action="store_true")
 
@@ -165,6 +184,11 @@ if __name__ == "__main__":
     if len(args.categories) > len(args.values):
         args.values.extend([0.0] * (len(args.categories) - len(args.values)))
 
+    return args
+
+
+def _main(argv=None):
+    args = _parse_args(argv)
     builder = BarChartBuilder(labels_align_middle=args.labels_align_middle)
 
     if args.only_integer_values:
@@ -183,3 +207,7 @@ if __name__ == "__main__":
         builder.show()
     else:
         builder.save(args.output)
+
+
+if __name__ == "__main__":
+    _main()
