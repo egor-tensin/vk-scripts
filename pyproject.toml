@@ -33,3 +33,8 @@ vk-status = "vk.tracking.status:main"
 vk-mutuals = "vk.mutuals:main"
 
 [tool.setuptools_scm]
+
+[tool.pylint."messages control"]
+disable = [
+    "missing-docstring",
+]

@@ -1,8 +1,0 @@
-[MESSAGES CONTROL]
-
-disable=
-    invalid-name,
-    missing-docstring,
-    multiple-imports,
-    too-few-public-methods,
-    too-many-public-methods,
