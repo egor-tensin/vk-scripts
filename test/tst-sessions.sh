@@ -37,15 +37,7 @@ _test_main() {
     _test_group_by weekday
 }
 
-_fix_matplotlib() {
-    # Get rid of:
-    # tkinter.TclError: no display name and no $DISPLAY environment variable
-    mkdir -p -- ~/.config/matplotlib
-    echo 'backend: Agg' > ~/.config/matplotlib/matplotlibrc
-}
-
 test_run() {
     test_setup
-    _fix_matplotlib
     _test_main
 }
