@@ -6,7 +6,7 @@
 from collections import OrderedDict
 from collections.abc import MutableMapping
 from datetime import datetime, timezone
-from enum import Enum
+from enum import auto, StrEnum
 from numbers import Integral, Real
 
 from .platform import Platform
@@ -30,12 +30,9 @@ def _parse_platform(x):
     return Platform(x)
 
 
-class LastSeenField(Enum):
-    TIME = "time"
-    PLATFORM = "platform"
-
-    def __str__(self):
-        return self.value
+class LastSeenField(StrEnum):
+    TIME = auto()
+    PLATFORM = auto()
 
 
 class LastSeen(MutableMapping):

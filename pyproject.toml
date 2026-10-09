@@ -12,7 +12,8 @@ license-files = ["LICENSE.txt"]
 dynamic = ["version"]
 authors = [{name = "Egor Tensin", email = "egor@tensin.name"}]
 readme = "README.md"
-requires-python = ">=3.6"
+requires-python = ">=3.11"
+# ^^^ For enum.StrEnum, at least?
 
 dependencies = [
     'importlib-metadata ~= 4.0 ; python_version < "3.8"',

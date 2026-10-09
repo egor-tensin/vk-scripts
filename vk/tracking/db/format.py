@@ -3,7 +3,7 @@
 # For details, see https://github.com/egor-tensin/vk-scripts
 # Distributed under the MIT License.
 
-from enum import Enum
+from enum import auto, StrEnum
 import sys
 
 from vk.utils import io
@@ -11,13 +11,10 @@ from vk.utils import io
 from . import backend
 
 
-class Format(Enum):
-    CSV = "csv"
-    LOG = "log"
-    NULL = "null"
-
-    def __str__(self):
-        return self.value
+class Format(StrEnum):
+    CSV = auto()
+    LOG = auto()
+    NULL = auto()
 
     def create_writer(self, fd=sys.stdout):
         if self is Format.CSV:

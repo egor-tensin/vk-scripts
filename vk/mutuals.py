@@ -6,7 +6,7 @@
 import abc
 import argparse
 from collections import OrderedDict
-from enum import Enum
+from enum import auto, StrEnum
 import sys
 
 from vk.api import API
@@ -56,12 +56,9 @@ class OutputSinkJSON(OutputSinkMutualFriends):
         self._writer.write(friend_list)
 
 
-class OutputFormat(Enum):
-    CSV = "csv"
-    JSON = "json"
-
-    def __str__(self):
-        return self.value
+class OutputFormat(StrEnum):
+    CSV = auto()
+    JSON = auto()
 
     @staticmethod
     def open_file(path=None):

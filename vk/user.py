@@ -5,7 +5,7 @@
 
 from collections import OrderedDict
 from collections.abc import Hashable, Mapping, MutableMapping
-from enum import Enum
+from enum import auto, StrEnum
 
 from .last_seen import LastSeen
 
@@ -36,27 +36,21 @@ def _parse_online_flag(x):
     return _parse_bool(x)
 
 
-class UserField(Enum):
+class UserField(StrEnum):
     UID = "id"
-    FIRST_NAME = "first_name"
-    LAST_NAME = "last_name"
-    DEACTIVATED = "deactivated"
-    HIDDEN = "hidden"
+    FIRST_NAME = auto()
+    LAST_NAME = auto()
+    DEACTIVATED = auto()
+    HIDDEN = auto()
 
-    DOMAIN = "domain"
-    ONLINE = "online"
-    LAST_SEEN = "last_seen"
-
-    def __str__(self):
-        return self.value
+    DOMAIN = auto()
+    ONLINE = auto()
+    LAST_SEEN = auto()
 
 
-class DeactivationReason(Enum):
-    DELETED = "deleted"
-    BANNED = "banned"
-
-    def __str__(self):
-        return self.value
+class DeactivationReason(StrEnum):
+    DELETED = auto()
+    BANNED = auto()
 
 
 def _parse_deactivated(s):

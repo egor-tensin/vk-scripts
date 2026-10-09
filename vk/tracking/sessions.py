@@ -8,7 +8,7 @@ import argparse
 from collections import OrderedDict
 from collections.abc import MutableMapping
 from datetime import datetime, timedelta, timezone
-from enum import Enum
+from enum import auto, IntEnum, StrEnum
 import sys
 
 from vk.tracking.db import Format as DatabaseFormat
@@ -18,14 +18,14 @@ from vk.utils import io
 import vk.version
 
 
-class Weekday(Enum):
+class Weekday(IntEnum):
     MONDAY = 0
-    TUESDAY = 1
-    WEDNESDAY = 2
-    THURSDAY = 3
-    FRIDAY = 4
-    SATURDAY = 5
-    SUNDAY = 6
+    TUESDAY = auto()
+    WEDNESDAY = auto()
+    THURSDAY = auto()
+    FRIDAY = auto()
+    SATURDAY = auto()
+    SUNDAY = auto()
 
     def __str__(self):
         return self.name[0] + self.name[1:].lower()
@@ -143,14 +143,11 @@ class OnlineSessionEnumerator(MutableMapping):
         return session
 
 
-class GroupBy(Enum):
-    USER = "user"
-    DATE = "date"
-    WEEKDAY = "weekday"
-    HOUR = "hour"
-
-    def __str__(self):
-        return self.value
+class GroupBy(StrEnum):
+    USER = auto()
+    DATE = auto()
+    WEEKDAY = auto()
+    HOUR = auto()
 
     def group(self, db_reader, time_from=None, time_to=None):
         online_streaks = OnlineSessionEnumerator(time_from, time_to)
@@ -373,13 +370,10 @@ class OutputSinkPlot(OutputSinkOnlineSessions):
             bar_chart.save(self._fd)
 
 
-class OutputFormat(Enum):
-    CSV = "csv"
-    JSON = "json"
-    PLOT = "plot"
-
-    def __str__(self):
-        return self.value
+class OutputFormat(StrEnum):
+    CSV = auto()
+    JSON = auto()
+    PLOT = auto()
 
     def create_sink(self, fd=sys.stdout):
         if self is OutputFormat.CSV:

@@ -3,10 +3,10 @@
 # For details, see https://github.com/egor-tensin/vk-scripts
 # Distributed under the MIT License.
 
-from enum import Enum
+from enum import IntEnum
 
 
-class Platform(Enum):
+class Platform(IntEnum):
     # https://dev.vk.com/en/reference/objects/user#last_seen
     MOBILE = 1
     IPHONE = 2
@@ -19,9 +19,6 @@ class Platform(Enum):
     @staticmethod
     def from_string(s):
         return Platform(int(s))
-
-    def __str__(self):
-        return str(self.value)
 
     @property
     def descr(self):

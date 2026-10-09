@@ -4,7 +4,7 @@
 # Distributed under the MIT License.
 
 from collections.abc import Iterable, Mapping
-from enum import Enum
+from enum import auto, StrEnum
 import json
 from urllib.error import URLError
 import urllib.parse
@@ -69,38 +69,26 @@ def _join_path(base, url):
 ACCESS_TOKEN = "3d242bac3d242bac3d242bacd03e66eae033d243d242bac5755894cf6163d769859232d"
 
 
-class Version(Enum):
+class Version(StrEnum):
     # https://dev.vk.com/en/reference/versions
     V5_199 = "5.199"
     DEFAULT = V5_199
 
-    def __str__(self):
-        return self.value
 
-
-class Language(Enum):
-    EN = "en"
+class Language(StrEnum):
+    EN = auto()
     DEFAULT = EN
 
-    def __str__(self):
-        return self.value
 
-
-class Method(Enum):
+class Method(StrEnum):
     USERS_GET = "users.get"
     FRIENDS_GET = "friends.get"
 
-    def __str__(self):
-        return self.value
 
-
-class CommonParameters(Enum):
+class CommonParameters(StrEnum):
     ACCESS_TOKEN = "access_token"
     VERSION = "v"
     LANGUAGE = "lang"
-
-    def __str__(self):
-        return self.value
 
 
 class API:
