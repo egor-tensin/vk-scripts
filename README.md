@@ -26,25 +26,6 @@ with.
 [vk-status]: docs/status.md
 [vk-sessions]: docs/sessions.md
 
-Development
------------
-
-### Linting
-
-Requires [Pylint].
-
-    pylint vk
-
-[Pylint]: https://www.pylint.org/
-
-### Releases
-
-Make a git tag:
-
-    git tag "v$( python -m setuptools_scm --strip-dev )"
-
-You can then review that the tag is fine and push w/ `git push --tags`.
-
 License
 -------
 
