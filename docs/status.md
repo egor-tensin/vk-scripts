@@ -7,8 +7,8 @@ Usage
 -----
 
     > vk-status -h
-    usage: vk-status [-h] [-t SECONDS] [-O] [-l PATH] [-f {csv,log,null}]
-                     [-o PATH]
+    usage: vk-status [-h] [--version] [-t SECONDS] [-O] [-l PATH]
+                     [-f {csv,log,null}] [-o PATH]
                      UID [UID ...]
     ...
 

@@ -7,7 +7,8 @@ Usage
 -----
 
     > vk-mutuals -h
-    usage: vk-mutuals [-h] [-f {csv,json}] [-o PATH] UID [UID ...]
+    usage: vk-mutuals [-h] [--version] [-f {csv,json}] [-o PATH]
+                      UID [UID ...]
     ...
 
 For example (using made up user IDs/"screen names"),

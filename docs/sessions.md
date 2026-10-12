@@ -8,8 +8,9 @@ Usage
 
 ```
 > vk-sessions -h
-usage: vk-sessions [-h] [-g {user,date,weekday,hour}] [-i {csv,log,null}]
-                   [-o {csv,json,plot}] [-a TIME_FROM] [-b TIME_TO]
+usage: vk-sessions [-h] [--version] [-g {user,date,weekday,hour}]
+                   [-i {csv,log,null}] [-o {csv,json,plot}]
+                   [-a TIME_FROM] [-b TIME_TO]
                    [input] [output]
 ```
 
