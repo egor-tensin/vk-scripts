@@ -5,7 +5,7 @@ all:
 
 .PHONY: test
 test:
-	./test/runner/main.sh
+	./test/runner/harness
 
 test/docker/%: DO
 	cd test/docker && \
