@@ -12,7 +12,10 @@ _test_format() {
         return 1
     fi
 
-    if file --brief --dereference --mime -- "$output_path" | grep --quiet -- 'charset=binary$'; then
+    local file_output=
+    file_output="$( file --brief --dereference --mime -- "$output_path" )"
+
+    if echo "$file_output" | grep --quiet -- 'charset=binary$'; then
         log 'Output is a binary file, not going to show that'
         return 0
     fi
