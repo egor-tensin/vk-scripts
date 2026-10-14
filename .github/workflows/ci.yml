@@ -44,6 +44,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          submodules: recursive
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
@@ -56,7 +58,7 @@ jobs:
           vk-status --version
           vk-sessions --version
       - name: Run tests
-        run: ./test/main.sh
+        run: ./test/runner/main.sh
 
   test_ubuntu:
     strategy:
@@ -78,8 +80,10 @@ jobs:
               python3-matplotlib
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          submodules: recursive
       - name: Run tests
-        run: ./test/main.sh
+        run: ./test/runner/main.sh
 
   publish_pypi:
     needs:
@@ -91,6 +95,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          submodules: recursive
       - name: Set up Python
         uses: actions/setup-python@v7
         with:

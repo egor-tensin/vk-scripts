@@ -1,6 +1,4 @@
 test_run() {
-    test_setup
-
     local users=(egor.tensin kreed58)
     local db_path
     db_path="$test_root_dir/db.csv"

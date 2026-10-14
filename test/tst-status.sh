@@ -1,6 +1,4 @@
 test_run() {
-    test_setup
-
     local users=(egor.tensin)
 
     local log_path

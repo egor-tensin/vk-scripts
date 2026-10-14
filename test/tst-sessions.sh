@@ -1,4 +1,4 @@
-test_db_path="$script_dir/data/test_db.csv"
+test_db_path="$tests_dir/data/test_db.csv"
 readonly test_db_path
 
 _test_format() {
@@ -38,6 +38,5 @@ _test_main() {
 }
 
 test_run() {
-    test_setup
     _test_main
 }

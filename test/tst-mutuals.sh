@@ -1,6 +1,4 @@
 test_run() {
-    test_setup
-
     local users=(kreed58 korya_mc)
 
     test_run_module vk.mutuals --format csv "${users[@]}"  > "$test_root_dir/mutuals.csv"
